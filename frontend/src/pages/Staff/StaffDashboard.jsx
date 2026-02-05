@@ -58,11 +58,11 @@ export default function StaffDashboard() {
                         <div className="flex items-center justify-center md:justify-start gap-2 mb-4">
                             <div className="px-3 py-1 bg-emerald-500/20 rounded-full border border-emerald-500/30 flex items-center gap-2">
                                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                <span className="text-[10px] font-black uppercase tracking-widest text-emerald-300 italic">Agent Level 7 Authorized</span>
+                                <span className="text-[10px] font-black uppercase tracking-widest text-emerald-300 italic">Authorized Staff Access</span>
                             </div>
                         </div>
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
-                            Staff <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-emerald-400 to-indigo-400">Work Desk</span>
+                            Staff <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-emerald-400 to-indigo-400">Dashboard</span>
                         </h1>
                         <p className="text-slate-400 mt-4 text-base md:text-lg font-medium max-w-xl">
                             View and manage all customer applications. Keep the workflow smooth and fast.
@@ -73,14 +73,14 @@ export default function StaffDashboard() {
                         <div className="bg-white/5 border border-white/10 rounded-[2rem] p-6 flex flex-col items-center gap-2 backdrop-blur-xl group hover:bg-white/10 transition-colors">
                             <Zap size={24} className="text-blue-400 group-hover:animate-bounce" />
                             <div className="text-center">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Node Sync</p>
+                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">System Health</p>
                                 <p className="text-2xl font-black leading-none">98.4%</p>
                             </div>
                         </div>
                         <div className="bg-white/5 border border-white/10 rounded-[2rem] p-6 flex flex-col items-center gap-2 backdrop-blur-xl group hover:bg-white/10 transition-colors">
                             <Cpu size={24} className="text-emerald-400 group-hover:rotate-90 transition-transform duration-500" />
                             <div className="text-center">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Core Tasks</p>
+                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">My Tasks</p>
                                 <p className="text-2xl font-black leading-none">{myTasks.length}</p>
                             </div>
                         </div>
@@ -98,9 +98,9 @@ export default function StaffDashboard() {
                 <div className="flex items-end justify-between mb-10 px-4">
                     <div>
                         <h2 className={`text-2xl font-black tracking-tight flex items-center gap-3 uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                            <Activity className="text-blue-600" size={28} /> Active Protocol Link
+                            <Activity className="text-blue-600" size={28} /> My Active Tasks
                         </h2>
-                        <p className="text-xs text-slate-400 font-bold uppercase tracking-[0.2em] mt-2 ml-10">Real-time task synchronization</p>
+                        <p className="text-xs text-slate-400 font-bold uppercase tracking-[0.2em] mt-2 ml-10">Applications you are currently working on</p>
                     </div>
                 </div>
 
@@ -111,8 +111,8 @@ export default function StaffDashboard() {
                                 <div className={`w-24 h-24 rounded-[2.5rem] shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] flex items-center justify-center mb-8 mx-auto group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 text-slate-600' : 'bg-white text-slate-300'}`}>
                                     <HardDrive size={48} />
                                 </div>
-                                <h3 className={`text-2xl font-black mb-3 tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>System Idle</h3>
-                                <p className="text-sm text-slate-500 font-bold uppercase tracking-widest max-w-xs">Zero active assignments detected in current neural space.</p>
+                                <h3 className={`text-2xl font-black mb-3 tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>No Active Tasks</h3>
+                                <p className="text-sm text-slate-500 font-bold uppercase tracking-widest max-w-xs">You don't have any ongoing applications assigned.</p>
                             </div>
                             <style jsx>{`
                                 @keyframes pulse-slow {
@@ -134,7 +134,7 @@ export default function StaffDashboard() {
                                             </span>
                                         </div>
                                         <span className={`text-[10px] font-mono font-black tracking-tighter uppercase italic ${theme === 'dark' ? 'text-slate-500' : 'text-slate-300'}`}>
-                                            SEQ #{task.id}
+                                            ID #{task.id}
                                         </span>
                                     </div>
 
@@ -148,7 +148,7 @@ export default function StaffDashboard() {
                                                 {task.customer_name?.[0].toUpperCase()}
                                             </div>
                                             <div className="flex flex-col">
-                                                <p className={`text-[9px] font-black uppercase tracking-widest leading-none mb-1.5 ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>Initiator</p>
+                                                <p className={`text-[9px] font-black uppercase tracking-widest leading-none mb-1.5 ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>Customer</p>
                                                 <p className={`text-base font-black tracking-tight ${theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}`}>{task.customer_name}</p>
                                             </div>
                                         </div>
@@ -176,9 +176,9 @@ export default function StaffDashboard() {
                 <div className="flex items-center justify-between mb-10 px-4">
                     <div>
                         <h2 className={`text-2xl font-black tracking-tight flex items-center gap-3 uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                            <Users className="text-emerald-600" size={28} /> New Incoming Jobs
+                            <Users className="text-emerald-600" size={28} /> New Incoming Requests
                         </h2>
-                        <p className="text-xs text-slate-400 font-bold uppercase tracking-[0.2em] mt-2 ml-10">Select a job from the queue to start working</p>
+                        <p className="text-xs text-slate-400 font-bold uppercase tracking-[0.2em] mt-2 ml-10">Select a request from the queue to start working</p>
                     </div>
                 </div>
 
@@ -189,7 +189,7 @@ export default function StaffDashboard() {
                                 <div className={`w-20 h-20 border rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-inner animate-pulse ${theme === 'dark' ? 'bg-white/5 border-white/10 text-slate-600' : 'bg-slate-50 border-slate-100 text-slate-200'}`}>
                                     <ShieldCheck size={40} />
                                 </div>
-                                <p className="text-slate-400 font-black uppercase tracking-[0.4em] text-[10px]">Matrix Clear · Zero Anomalies</p>
+                                <p className="text-slate-400 font-black uppercase tracking-[0.4em] text-[10px]">All Caught Up · Queue Empty</p>
                             </div>
                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[100px]" />
                         </div>
@@ -198,9 +198,9 @@ export default function StaffDashboard() {
                             <table className="w-full text-left">
                                 <thead className={`border-b ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-slate-50/80 border-slate-100'}`}>
                                     <tr>
-                                        <th className="p-8 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Node Designation</th>
-                                        <th className="p-8 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Requesting Unit</th>
-                                        <th className="p-8 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Time Reference</th>
+                                        <th className="p-8 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Service Name</th>
+                                        <th className="p-8 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Customer Name</th>
+                                        <th className="p-8 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Time Received</th>
                                         <th className="p-8 text-right text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Action</th>
                                     </tr>
                                 </thead>

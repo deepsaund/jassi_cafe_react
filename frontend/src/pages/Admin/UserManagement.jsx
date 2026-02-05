@@ -138,14 +138,14 @@ export default function UserManagement() {
                         <div className="flex items-center gap-3 mb-6">
                             <div className="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 flex items-center gap-2">
                                 <Users size={14} className="text-primary" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">Identity Hub</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">User Management</span>
                             </div>
                         </div>
                         <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none mb-6">
                             USER <span className="text-gradient uppercase">Registry</span>
                         </h1>
                         <p className={`max-w-md font-bold text-xl leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
-                            Synchronize and orchestrate verified entities across the Jassi Cafe network.
+                            Manage user accounts and their roles here.
                         </p>
                     </div>
                     <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
@@ -153,13 +153,13 @@ export default function UserManagement() {
                             <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={20} />
                             <input
                                 className={`w-full h-16 pl-16 pr-6 rounded-[1.5rem] border-none focus:ring-4 focus:ring-primary/10 outline-none font-bold text-sm transition-all ${theme === 'dark' ? 'bg-white/5 text-white focus:bg-white/10' : 'bg-slate-50 text-slate-900 focus:bg-white'}`}
-                                placeholder="Global Search Analysis..."
+                                placeholder="Search users..."
                                 value={searchTerm}
                                 onChange={e => setSearchTerm(e.target.value)}
                             />
                         </div>
                         <Button onClick={() => setShowAddForm(!showAddForm)} variant={showAddForm ? 'danger' : 'primary'} className="rounded-[1.5rem] px-8 h-16 shadow-2xl hover:shadow-primary/20">
-                            {showAddForm ? 'Cancel Operation' : <><Plus size={24} className="mr-3" /> Enroll Identity</>}
+                            {showAddForm ? 'Cancel' : <><Plus size={24} className="mr-3" /> Add New User</>}
                         </Button>
                     </div>
                 </div>
@@ -182,7 +182,7 @@ export default function UserManagement() {
                         active={activeTab === 'staff'}
                         onClick={() => setActiveTab('staff')}
                         icon={ShieldCheck}
-                        label="Staff Nodes"
+                        label="Staff Members"
                         count={counts.staff}
                     />
                     <TabButton
@@ -196,7 +196,7 @@ export default function UserManagement() {
 
                 <div className={`px-6 py-3 rounded-2xl flex items-center gap-3 transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 text-slate-400' : 'bg-emerald-50 text-emerald-600 border border-emerald-100'}`}>
                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">Matrix Database Live</span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">Database Active</span>
                 </div>
             </div>
 
@@ -226,7 +226,7 @@ export default function UserManagement() {
                                 required
                             />
                             <div className="flex flex-col space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 ml-1">Access Protocol (Role)</label>
+                                <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 ml-1">Role</label>
                                 <select
                                     className={`w-full px-5 py-3 border-2 border-transparent rounded-2xl text-sm font-bold focus:outline-none transition-all duration-300 ${theme === 'dark' ? 'bg-[#1e293b] text-white focus:bg-[#1e293b] focus:border-blue-500/20' : 'bg-slate-50 text-slate-900 focus:bg-white focus:border-blue-500/20'}`}
                                     value={editingUser.role}
@@ -276,7 +276,7 @@ export default function UserManagement() {
                         <div className="p-3 bg-indigo-600 text-white rounded-2xl">
                             <Plus size={24} />
                         </div>
-                        <h3 className={`text-2xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Access Provisioning</h3>
+                        <h3 className={`text-2xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Create New User</h3>
                     </div>
                     <form onSubmit={handleAddUser} className="space-y-8">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -296,7 +296,7 @@ export default function UserManagement() {
                                 required
                             />
                             <div className="flex flex-col space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 ml-1">Access Protocol (Role)</label>
+                                <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 ml-1">Role</label>
                                 <select
                                     className={`w-full px-5 py-3 border-2 border-transparent rounded-2xl text-sm font-bold focus:outline-none transition-all duration-300 ${theme === 'dark' ? 'bg-[#1e293b] text-white focus:bg-[#1e293b] focus:border-indigo-500/20' : 'bg-slate-50 text-slate-900 focus:bg-white focus:border-indigo-500/20'}`}
                                     value={newUser.role}
@@ -321,7 +321,7 @@ export default function UserManagement() {
                                 onChange={e => setNewUser({ ...newUser, village: e.target.value })}
                             />
                             <Input
-                                label="Access Key (Password)"
+                                label="Password"
                                 type="password"
                                 placeholder="Set secure password"
                                 value={newUser.password}
@@ -331,7 +331,7 @@ export default function UserManagement() {
                         </div>
                         <div className="flex justify-end pt-4">
                             <Button type="submit" size="lg" className="px-12 bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200">
-                                Confirm & Provision Access
+                                Create User
                             </Button>
                         </div>
                     </form>
@@ -344,10 +344,10 @@ export default function UserManagement() {
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className={`${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50/50'} border-b ${theme === 'dark' ? 'border-white/5' : 'border-slate-100'}`}>
-                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Identity Details</th>
-                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Neural Role</th>
-                                {activeTab === 'customer' && <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Origin Protocol</th>}
-                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 text-right">Operational Actions</th>
+                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">User Details</th>
+                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Role</th>
+                                {activeTab === 'customer' && <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Location</th>}
+                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-slate-50'}`}>
@@ -360,7 +360,7 @@ export default function UserManagement() {
                                             </div>
                                             <div>
                                                 <p className={`text-lg font-black tracking-tight ${theme === 'dark' ? 'text-slate-100' : 'text-slate-900'} group-hover:text-primary transition-colors`}>{user.name}</p>
-                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">REF: NEURAL-{user.id.toString().padStart(6, '0')}</p>
+                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">ID: #{user.id.toString().padStart(6, '0')}</p>
                                             </div>
                                         </div>
                                     </td>
@@ -401,8 +401,8 @@ export default function UserManagement() {
                 {paginatedUsers.length === 0 && (
                     <div className="p-20 text-center">
                         <Users size={80} className="mx-auto text-slate-200 dark:text-white/5 mb-6" />
-                        <h4 className="text-2xl font-black text-slate-300 uppercase tracking-[0.2em]">No Synchronized Entities</h4>
-                        <p className="text-slate-400 font-bold mt-2">The neural filter returned no matches for this sector.</p>
+                        <h4 className="text-2xl font-black text-slate-300 uppercase tracking-[0.2em]">No Users Found</h4>
+                        <p className="text-slate-400 font-bold mt-2">No users found matching your search.</p>
                     </div>
                 )}
                 {filteredUsers.length > itemsPerPage && (
@@ -422,13 +422,13 @@ export default function UserManagement() {
             <Drawer
                 isOpen={isVaultOpen}
                 onClose={() => setIsVaultOpen(false)}
-                title={`NEURAL VAULT ANALYSIS: ${vaultUser?.name}`}
+                title={`Documents: ${vaultUser?.name}`}
             >
                 <div className="space-y-8 p-4">
                     <div className={`p-8 rounded-[2.5rem] relative overflow-hidden transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 text-white' : 'bg-slate-900 text-white'}`}>
                         <div className="relative z-10">
                             <h4 className="font-black text-2xl mb-1 tracking-tighter uppercase">{vaultUser?.name}</h4>
-                            <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">{vaultUser?.role} VERIFICATION STATUS: ACTIVE</p>
+                            <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">{vaultUser?.role} STATUS: ACTIVE</p>
                         </div>
                         <FolderLock className="absolute -right-8 -bottom-8 opacity-10 text-primary" size={150} />
                     </div>
@@ -436,7 +436,7 @@ export default function UserManagement() {
                     {loadingVault ? (
                         <div className="py-24 text-center">
                             <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full mx-auto mb-6"></div>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Deciphering Vault Data...</p>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Loading Documents...</p>
                         </div>
                     ) : vaultDocs.length > 0 ? (
                         <div className="grid grid-cols-1 gap-5">
@@ -448,7 +448,7 @@ export default function UserManagement() {
                                         </div>
                                         <div>
                                             <p className={`font-black text-sm uppercase tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{doc.type.replace('_', ' ')}</p>
-                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{doc.original_name || 'NEURAL_BLOB'}</p>
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{doc.original_name || 'FILE'}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3">
@@ -476,8 +476,8 @@ export default function UserManagement() {
                             <div className="w-20 h-20 bg-slate-50 dark:bg-white/5 rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-slate-100 dark:border-white/5 shadow-inner">
                                 <FolderLock size={36} className="text-slate-200 dark:text-white/10" />
                             </div>
-                            <h4 className="text-xl font-black text-slate-300 uppercase tracking-widest">Vault Void</h4>
-                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-2">No synchronized records found for this entity.</p>
+                            <h4 className="text-xl font-black text-slate-300 uppercase tracking-widest">No Documents</h4>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-2">No documents found for this user.</p>
                         </div>
                     )}
                 </div>

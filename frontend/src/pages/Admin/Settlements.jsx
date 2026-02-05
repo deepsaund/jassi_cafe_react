@@ -30,7 +30,7 @@ export default function Settlements() {
     if (loading) return (
         <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-6">
             <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] animate-pulse">Calculating Ledger Balances...</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] animate-pulse">Loading Transactions...</p>
         </div>
     );
 
@@ -47,19 +47,19 @@ export default function Settlements() {
                         <div className="flex items-center gap-3 mb-6">
                             <div className="px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2">
                                 <Wallet size={14} className="text-emerald-500" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-500">Financial Hub</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-500">Finance</span>
                             </div>
                         </div>
                         <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none mb-6">
                             B2B <span className="text-gradient uppercase">Settlements</span>
                         </h1>
                         <p className={`max-w-md font-bold text-xl leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
-                            Comprehensive reconciliation of commercial transactions and neural wallet cycles.
+                            View all B2B transactions and wallet history.
                         </p>
                     </div>
                     <div className={`px-8 py-4 rounded-[2rem] flex items-center gap-4 transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 text-slate-400' : 'bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-xl shadow-emerald-500/5'}`}>
                         <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_12px_rgba(16,185,129,0.8)]" />
-                        <span className="text-xs font-black uppercase tracking-[0.3em]">Ledger Synchronized</span>
+                        <span className="text-xs font-black uppercase tracking-[0.3em]">Up to Date</span>
                     </div>
                 </div>
                 {/* Background Decoration */}
@@ -74,9 +74,9 @@ export default function Settlements() {
                         <thead>
                             <tr className={`${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50/50'} border-b ${theme === 'dark' ? 'border-white/5' : 'border-slate-100'}`}>
                                 <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Timestamp</th>
-                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">B2B Entity / Operator</th>
-                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 text-right">Settlement Volume</th>
-                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Operational Context</th>
+                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">User / Company</th>
+                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 text-right">Amount</th>
+                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Description</th>
                             </tr>
                         </thead>
                         <tbody className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-slate-50'}`}>
@@ -127,7 +127,7 @@ export default function Settlements() {
                                                     <Activity size={10} />
                                                 </div>
                                                 <p className={`text-xs font-bold leading-relaxed max-w-sm ${theme === 'dark' ? 'text-slate-500' : 'text-slate-600'} group-hover:text-slate-400 transition-colors`}>
-                                                    {tx.description || 'Verified reconciliation entry.'}
+                                                    {tx.description || 'Transaction processed.'}
                                                 </p>
                                             </div>
                                         </td>
@@ -140,8 +140,8 @@ export default function Settlements() {
                 {transactions.length === 0 && (
                     <div className="p-32 text-center">
                         <DollarSign size={80} className="mx-auto text-slate-200 dark:text-white/5 mb-8" />
-                        <h4 className="text-3xl font-black text-slate-300 uppercase tracking-[0.3em]">Ledger Void</h4>
-                        <p className="text-slate-400 font-bold mt-3">No financial movements detected in the current cycle.</p>
+                        <h4 className="text-3xl font-black text-slate-300 uppercase tracking-[0.3em]">No Transactions</h4>
+                        <p className="text-slate-400 font-bold mt-3">No transactions found.</p>
                     </div>
                 )}
                 {transactions.length > itemsPerPage && (

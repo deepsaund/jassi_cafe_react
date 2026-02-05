@@ -5,10 +5,12 @@ import { Card } from '../../components/ui/Card';
 import { Pagination } from '../../components/ui/Pagination';
 import { Plus, Edit, X, Trash2, ListTree, FileCheck, Info, Activity, Layers, Zap, Hexagon } from 'lucide-react';
 import { API_BASE } from '../../config';
+import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 
 export default function ServiceManagement() {
     const { theme } = useTheme();
+    const { user } = useAuth();
     const [services, setServices] = useState([]);
     const [showAddForm, setShowAddForm] = useState(false);
     const [newService, setNewService] = useState({
@@ -69,7 +71,10 @@ export default function ServiceManagement() {
 
             const res = await fetch(`${API_BASE}/admin/services`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `mock_token_${user?.id}`
+                },
                 body: JSON.stringify(payload)
             });
 
@@ -97,18 +102,18 @@ export default function ServiceManagement() {
                         <div className="flex items-center gap-3 mb-6">
                             <div className="px-4 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center gap-2">
                                 <Layers size={14} className="text-indigo-300" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-indigo-300">Service Protocol</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-indigo-300">Service Management</span>
                             </div>
                         </div>
                         <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none mb-6">
-                            SERVICE <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">MATRIX</span>
+                            SERVICE <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">CATALOG</span>
                         </h1>
                         <p className="max-w-md font-bold text-xl leading-relaxed text-slate-400">
-                            Architect and deploy high-performance digital protocols across the neural network.
+                            Create and manage services offered on the platform.
                         </p>
                     </div>
                     <div>
-                        <Button onClick={() => setShowAddForm(!showAddForm)} variant={showAddForm ? 'danger' : 'primary'} className="rounded-[1.5rem] px-8 h-16 shadow-2xl hover:shadow-primary/20">
+                        <Button onClick={() => setShowAddForm(!showAddForm)} variant={showAddForm ? 'danger' : 'primary'} className="rounded-[1.5rem] px-8 h-16 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-1 transition-all duration-300">
                             {showAddForm ? 'Close Designer' : <><Plus size={24} className="mr-3" /> Create New Service</>}
                         </Button>
                     </div>
@@ -127,7 +132,7 @@ export default function ServiceManagement() {
                         </div>
                         <div>
                             <h3 className={`text-2xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Add New Service</h3>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Configure service parameters & validation logic</p>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Configure service details & requirements</p>
                         </div>
                     </div>
 
@@ -143,10 +148,10 @@ export default function ServiceManagement() {
                                     required
                                 />
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 ml-1">Functional Description</label>
+                                    <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 ml-1">Description</label>
                                     <textarea
                                         className={`w-full px-6 py-5 border-none rounded-[1.5rem] text-sm font-bold placeholder:text-slate-400 focus:ring-4 focus:ring-primary/10 outline-none transition-all duration-300 min-h-[150px] ${theme === 'dark' ? 'bg-white/5 text-white focus:bg-white/10' : 'bg-slate-50 text-slate-900 focus:bg-white'}`}
-                                        placeholder="Define the scope and outcomes of this protocol..."
+                                        placeholder="Describe the service..."
                                         value={newService.description}
                                         onChange={e => setNewService({ ...newService, description: e.target.value })}
                                     />
@@ -171,7 +176,7 @@ export default function ServiceManagement() {
                                 />
                                 <div className={`p-6 rounded-[1.5rem] border flex items-center gap-4 transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5 text-slate-400' : 'bg-slate-50 border-slate-100 text-slate-500'}`}>
                                     <Info size={20} className="text-primary flex-shrink-0" />
-                                    <p className="text-xs font-bold leading-relaxed">Rates are synchronized instantly across all neural terminals upon publication.</p>
+                                    <p className="text-xs font-bold leading-relaxed">Rates are synchronized instantly across the user dashboard upon publication.</p>
                                 </div>
                             </div>
                         </div>
@@ -183,7 +188,7 @@ export default function ServiceManagement() {
                                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                                         <FileCheck size={20} />
                                     </div>
-                                    <h4 className={`font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Identity Artifacts Required</h4>
+                                    <h4 className={`font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Documents Required</h4>
                                 </div>
 
                                 <div className="flex flex-wrap gap-3 mb-8">
@@ -195,12 +200,12 @@ export default function ServiceManagement() {
                                             </button>
                                         </span>
                                     ))}
-                                    {docs.length === 0 && <p className="text-xs text-slate-400 font-bold italic py-2">No artifacts defined for this protocol.</p>}
+                                    {docs.length === 0 && <p className="text-xs text-slate-400 font-bold italic py-2">No documents required.</p>}
                                 </div>
 
                                 <div className="flex gap-3">
                                     <input
-                                        placeholder="Add artifact type (e.g. PAN)"
+                                        placeholder="Add document name (e.g. PAN Card)"
                                         value={newDoc}
                                         onChange={e => setNewDoc(e.target.value)}
                                         className={`flex-1 h-12 px-6 rounded-xl border-none outline-none font-bold text-xs transition-all ${theme === 'dark' ? 'bg-white/5 text-white' : 'bg-white text-slate-900 shadow-sm'}`}
@@ -216,7 +221,7 @@ export default function ServiceManagement() {
                                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                                         <ListTree size={20} />
                                     </div>
-                                    <h4 className={`font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Data Intake Fields</h4>
+                                    <h4 className={`font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Form Fields</h4>
                                 </div>
 
                                 <div className="space-y-4 mb-8 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
@@ -236,7 +241,7 @@ export default function ServiceManagement() {
                                             </button>
                                         </div>
                                     ))}
-                                    {fields.length === 0 && <p className="text-xs text-slate-400 font-bold italic text-center py-6">Initialize fields to capture application data.</p>}
+                                    {fields.length === 0 && <p className="text-xs text-slate-400 font-bold italic text-center py-6">Initialize fields to collect user information.</p>}
                                 </div>
 
                                 <div className={`p-6 rounded-[2rem] border transition-all duration-500 ${theme === 'dark' ? 'bg-secondary-dark border-white/5 shadow-inner' : 'bg-white border-slate-100 shadow-inner'} space-y-4`}>
@@ -268,9 +273,9 @@ export default function ServiceManagement() {
                         <div className="flex flex-col md:flex-row items-center justify-between gap-8 pt-10 border-t border-slate-100 dark:border-white/5">
                             <div className="flex items-center gap-4 text-slate-400 font-bold text-sm">
                                 <Info size={18} className="text-primary" />
-                                <span>Deployment status: <span className="text-emerald-500 uppercase tracking-widest text-[10px] font-black">Ready for Synchronization</span></span>
+                                <span>Deployment status: <span className="text-emerald-500 uppercase tracking-widest text-[10px] font-black">Ready to Publish</span></span>
                             </div>
-                            <Button type="submit" size="lg" className="w-full md:w-auto px-16 h-16 rounded-[1.5rem] shadow-2xl shadow-primary/20">Publish Protocol</Button>
+                            <Button type="submit" size="lg" className="w-full md:w-auto px-16 h-16 rounded-[1.5rem] shadow-2xl shadow-primary/20">Save Service</Button>
                         </div>
                     </form>
                 </Card>

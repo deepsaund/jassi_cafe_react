@@ -270,21 +270,21 @@ export default function CustomerDashboard() {
                     value={stats.active}
                     icon={Clock}
                     gradient="from-blue-600 to-indigo-600"
-                    label="Units Processing"
+                    label="Services In Progress"
                 />
                 <StatCard
                     title="Action Required"
                     value={stats.action}
                     icon={AlertCircle}
                     gradient="from-orange-500 to-red-600"
-                    label="Awaiting Input"
+                    label="Needs Your Attention"
                 />
                 <StatCard
                     title="Completed"
                     value={stats.completed}
                     icon={CheckCircle}
                     gradient="from-emerald-600 to-teal-600"
-                    label="Verified Sequence"
+                    label="Services Finished"
                 />
             </div>
 
@@ -294,7 +294,7 @@ export default function CustomerDashboard() {
                 <div className="flex items-end justify-between mb-8 px-2">
                     <div>
                         <h2 className={`text-2xl font-black tracking-tight flex items-center gap-3 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                            <Activity className="text-blue-600" size={28} /> Neural Pipeline
+                            <Activity className="text-blue-600" size={28} /> My Applications
                         </h2>
                         <p className="text-xs text-slate-400 font-bold uppercase tracking-[0.2em] mt-1 ml-10">Real-time application status</p>
                     </div>
@@ -303,7 +303,7 @@ export default function CustomerDashboard() {
                     {loading ? (
                         <div className="p-20 text-center text-slate-400">
                             <div className="animate-spin w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-6"></div>
-                            <p className="font-black text-xs uppercase tracking-widest">Synchronizing Network...</p>
+                            <p className="font-black text-xs uppercase tracking-widest">Loading Applications...</p>
                         </div>
                     ) : orders.length > 0 ? (
                         <div className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-slate-50'}`}>
@@ -316,10 +316,10 @@ export default function CustomerDashboard() {
                             <div className={`w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 border shadow-inner ${theme === 'dark' ? 'bg-white/5 text-slate-700 border-white/5' : 'bg-slate-50 text-slate-200 border-slate-100'}`}>
                                 <FileText size={40} />
                             </div>
-                            <h3 className={`text-xl font-black mb-2 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>No active signals</h3>
-                            <p className="text-slate-400 text-sm font-medium max-w-xs mx-auto mb-8">Your neural pipeline is currently empty. Initiate a new service request to begin.</p>
+                            <h3 className={`text-xl font-black mb-2 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>No applications found</h3>
+                            <p className="text-slate-400 text-sm font-medium max-w-xs mx-auto mb-8">You haven't applied for any services yet. Browse our catalog to get started.</p>
                             <Button variant="primary" className="h-12 px-8 rounded-xl font-black" onClick={() => navigate('/dashboard/services')}>
-                                Browse Catalog
+                                Browse Services
                             </Button>
                         </div>
                     )}

@@ -54,11 +54,11 @@ export default function ServiceCatalog() {
                         <div className="flex items-center justify-center md:justify-start gap-2 mb-4">
                             <div className="px-3 py-1 bg-blue-500/20 rounded-full border border-blue-500/30 flex items-center gap-2">
                                 <Zap size={14} className="text-blue-400 animate-pulse" />
-                                <span className="text-[10px] font-black uppercase tracking-widest text-blue-300">Neural Network Active</span>
+                                <span className="text-[10px] font-black uppercase tracking-widest text-blue-300">System Online</span>
                             </div>
                         </div>
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
-                            Service <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400">Matrix</span>
+                            Service <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400">Catalog</span>
                         </h1>
                         <p className="text-slate-400 mt-4 text-base md:text-lg font-medium max-w-xl">
                             Select any service below to begin your online application. We make the process simple and fast for you.
@@ -70,7 +70,7 @@ export default function ServiceCatalog() {
                             <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within/search:text-blue-400 transition-colors" size={20} />
                             <input
                                 type="text"
-                                placeholder="Search the matrix..."
+                                placeholder="Search services..."
                                 className={`w-full pl-16 pr-6 py-5 border border-white/10 rounded-[2rem] text-white placeholder:text-slate-600 focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:bg-white/10 focus:border-blue-500/50 transition-all font-bold backdrop-blur-xl ${theme === 'dark' ? 'bg-white/5' : 'bg-black/20'}`}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -89,10 +89,10 @@ export default function ServiceCatalog() {
             <section className="relative">
                 <div className="flex items-center justify-between mb-10 px-4">
                     <h2 className={`text-2xl font-black tracking-tight flex items-center gap-3 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                        <Sparkles className="text-blue-600" size={28} /> Optimized Core
+                        <Sparkles className="text-blue-600" size={28} /> Available Services
                     </h2>
                     <div className="flex items-center gap-4">
-                        <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">{filteredServices.length} Nodes Found</span>
+                        <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">{filteredServices.length} Services Found</span>
                         <div className={`h-4 w-[1px] ${theme === 'dark' ? 'bg-white/10' : 'bg-slate-200'}`} />
                         <button className="p-2 text-slate-400 hover:text-blue-600 transition-colors">
                             <Filter size={20} />
@@ -187,14 +187,14 @@ export default function ServiceCatalog() {
                             <Search size={48} />
                             <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full animate-ping" />
                         </div>
-                        <h3 className={`font-extrabold text-3xl tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Node Unreachable</h3>
-                        <p className="text-slate-500 max-w-sm mx-auto mt-4 font-bold uppercase text-xs tracking-widest">No matching services found in current partition.</p>
+                        <h3 className={`font-extrabold text-3xl tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>No Services Found</h3>
+                        <p className="text-slate-500 max-w-sm mx-auto mt-4 font-bold uppercase text-xs tracking-widest">No matching services found.</p>
                         <Button
                             variant="glass"
                             className={`mt-8 font-black uppercase tracking-widest text-[10px] ${theme === 'dark' ? '' : 'text-slate-900 border-slate-200'}`}
                             onClick={() => setSearchTerm("")}
                         >
-                            Reset Neural Filters
+                            Clear Search
                         </Button>
                     </div>
                 )}
@@ -204,7 +204,7 @@ export default function ServiceCatalog() {
             <Drawer
                 isOpen={isDrawerOpen}
                 onClose={() => setIsDrawerOpen(false)}
-                title={`Application Protocol: ${selectedService?.name}`}
+                title={`Application For: ${selectedService?.name}`}
             >
                 {selectedService && (
                     <ServiceApply

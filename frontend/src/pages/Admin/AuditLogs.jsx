@@ -46,7 +46,7 @@ export default function AuditLogs() {
     if (loading) return (
         <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-6">
             <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] animate-pulse">Syncing Neural Ledger...</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] animate-pulse">Loading Logs...</p>
         </div>
     );
 
@@ -63,19 +63,19 @@ export default function AuditLogs() {
                         <div className="flex items-center gap-3 mb-6">
                             <div className="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 flex items-center gap-2">
                                 <ShieldCheck size={14} className="text-primary" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">System Integrity</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">System Logs</span>
                             </div>
                         </div>
                         <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none mb-6">
-                            NEURAL <span className="text-gradient uppercase">Ledger</span>
+                            System <span className="text-gradient uppercase">Audit Logs</span>
                         </h1>
                         <p className={`max-w-md font-bold text-xl leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
-                            An immutable, high-fidelity chronological stream of every event in the operational grid.
+                            A chronological record of all system events.
                         </p>
                     </div>
                     <div className={`px-8 py-4 rounded-[2rem] flex items-center gap-4 transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 text-slate-400' : 'bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-xl shadow-emerald-500/5'}`}>
                         <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_12px_rgba(16,185,129,0.8)]" />
-                        <span className="text-xs font-black uppercase tracking-[0.3em]">Live Matrix Sync Active</span>
+                        <span className="text-xs font-black uppercase tracking-[0.3em]">System Live</span>
                     </div>
                 </div>
                 {/* Background Decoration */}
@@ -90,10 +90,10 @@ export default function AuditLogs() {
                         <thead>
                             <tr className={`${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50/50'} border-b ${theme === 'dark' ? 'border-white/5' : 'border-slate-100'}`}>
                                 <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Timestamp</th>
-                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Authorized Actor</th>
+                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">User</th>
                                 <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Reference ID</th>
-                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Biological Action</th>
-                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Metadata Payload</th>
+                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Action</th>
+                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Details</th>
                             </tr>
                         </thead>
                         <tbody className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-slate-50'}`}>
@@ -118,9 +118,9 @@ export default function AuditLogs() {
                                             </div>
                                             <div>
                                                 <p className={`font-black text-sm tracking-tight ${theme === 'dark' ? 'text-slate-200' : 'text-slate-900'} group-hover:text-primary transition-colors`}>
-                                                    {log.actor_name || 'System Autonomous'}
+                                                    {log.actor_name || 'System'}
                                                 </p>
-                                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Verified Identity</p>
+                                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Verified User</p>
                                             </div>
                                         </div>
                                     </td>
@@ -140,7 +140,7 @@ export default function AuditLogs() {
                                     </td>
                                     <td className="p-8">
                                         <p className={`text-xs font-bold leading-relaxed max-w-sm ${theme === 'dark' ? 'text-slate-500' : 'text-slate-500'} group-hover:text-slate-400 transition-colors italic`}>
-                                            {log.details || 'Baseline operational event synchronized successfully.'}
+                                            {log.details || 'Event recorded successfully.'}
                                         </p>
                                     </td>
                                 </tr>
@@ -151,8 +151,8 @@ export default function AuditLogs() {
                 {logs.length === 0 && (
                     <div className="p-32 text-center">
                         <Database size={80} className="mx-auto text-slate-200 dark:text-white/5 mb-8" />
-                        <h4 className="text-3xl font-black text-slate-300 uppercase tracking-[0.3em]">Ledger Void</h4>
-                        <p className="text-slate-400 font-bold mt-3">The matrix database is currently dormant or empty.</p>
+                        <h4 className="text-3xl font-black text-slate-300 uppercase tracking-[0.3em]">No Logs</h4>
+                        <p className="text-slate-400 font-bold mt-3">No logs found.</p>
                     </div>
                 )}
                 {logs.length > itemsPerPage && (

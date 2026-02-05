@@ -164,7 +164,7 @@ export default function VerificationPage() {
                         ) : (
                             <div className="text-slate-700 text-center">
                                 <Eye size={80} className="mx-auto mb-6 opacity-10" />
-                                <p className="font-black uppercase tracking-widest text-xs">{documents.length > 0 ? 'Select a terminal to preview' : 'No signal data'}</p>
+                                <p className="font-black uppercase tracking-widest text-xs">{documents.length > 0 ? 'Select a document to preview' : 'No document selected'}</p>
                             </div>
                         )}
                     </div>
@@ -175,28 +175,28 @@ export default function VerificationPage() {
                     <div className="flex-1 overflow-y-auto custom-scrollbar">
                         {/* Section: Application Data */}
                         <div className={`p-8 border-b ${theme === 'dark' ? 'border-white/5' : 'border-slate-100'}`}>
-                            <h3 className="text-[10px] uppercase font-black text-slate-500 tracking-[0.2em] mb-6">Application Intelligence</h3>
+                            <h3 className="text-[10px] uppercase font-black text-slate-500 tracking-[0.2em] mb-6">Application Details</h3>
                             <div className={`space-y-4 p-6 rounded-[2rem] border ${theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-slate-50 border-slate-100'}`}>
                                 {Object.entries(formData).map(([k, v]) => (
                                     <div key={k} className="group">
                                         <span className={`text-[10px] font-black uppercase tracking-widest block mb-1.5 transition-colors ${theme === 'dark' ? 'text-slate-500 group-hover:text-blue-400' : 'text-slate-400 group-hover:text-blue-600'}`}>{k.replace(/_/g, ' ')}</span>
-                                        <p className={`text-sm font-bold break-all ${theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}`}>{v || "NOT_PROVIDED"}</p>
+                                        <p className={`text-sm font-bold break-all ${theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}`}>{v || "Not provided"}</p>
                                     </div>
                                 ))}
-                                {Object.keys(formData).length === 0 && <p className="text-sm italic text-slate-500">No form data in packet.</p>}
+                                {Object.keys(formData).length === 0 && <p className="text-sm italic text-slate-500">No form data provided.</p>}
                             </div>
                         </div>
 
                         {/* Section: Internal Notes */}
                         <div className={`p-8 border-b ${theme === 'dark' ? 'border-white/5' : 'border-slate-100'}`}>
-                            <h3 className="text-[10px] uppercase font-black text-slate-500 tracking-[0.2em] mb-6">Internal Staff Uplink</h3>
+                            <h3 className="text-[10px] uppercase font-black text-slate-500 tracking-[0.2em] mb-6">Internal Notes</h3>
                             <textarea
                                 className={`w-full rounded-[1.5rem] p-5 text-sm font-bold outline-none transition-all ${theme === 'dark'
-                                        ? 'bg-amber-500/5 border border-amber-500/10 text-amber-200 placeholder:text-amber-500/30 focus:border-amber-500/30 ring-amber-500/5 focus:ring-4'
-                                        : 'bg-amber-50/50 border border-amber-100 text-slate-800 placeholder:text-amber-200 focus:ring-amber-500/20 focus:ring-4'
+                                    ? 'bg-amber-500/5 border border-amber-500/10 text-amber-200 placeholder:text-amber-500/30 focus:border-amber-500/30 ring-amber-500/5 focus:ring-4'
+                                    : 'bg-amber-50/50 border border-amber-100 text-slate-800 placeholder:text-amber-200 focus:ring-amber-500/20 focus:ring-4'
                                     }`}
                                 rows={4}
-                                placeholder="Secure internal notes..."
+                                placeholder="Type internal notes..."
                                 value={internalNote}
                                 onChange={(e) => setInternalNote(e.target.value)}
                             />
@@ -204,7 +204,7 @@ export default function VerificationPage() {
 
                         {/* Section: Chat Integration */}
                         <div className="p-8">
-                            <h3 className="text-[10px] uppercase font-black text-slate-500 tracking-[0.2em] mb-6">Neural Communications</h3>
+                            <h3 className="text-[10px] uppercase font-black text-slate-500 tracking-[0.2em] mb-6">Messages</h3>
                             <div className="rounded-[2rem] overflow-hidden border border-transparent">
                                 <OrderChat orderId={order.id} />
                             </div>

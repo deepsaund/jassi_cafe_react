@@ -255,7 +255,7 @@ export default function ServiceApply({ serviceId: propId, onComplete }) {
                                 <div className="p-2 bg-blue-600 text-white rounded-xl">
                                     <FileText size={18} />
                                 </div>
-                                <h3 className="font-black text-slate-900 tracking-tight">Assisted Workflow: Customer Selection</h3>
+                                <h3 className="font-black text-slate-900 tracking-tight">Select Customer</h3>
                             </div>
 
                             {!targetUserId ? (
@@ -311,7 +311,7 @@ export default function ServiceApply({ serviceId: propId, onComplete }) {
                                         <form onSubmit={handleQuickRegister} className="space-y-4 bg-white p-6 rounded-3xl border border-indigo-100 shadow-sm animate-in zoom-in-95 duration-300">
                                             <div className="flex justify-between items-center mb-2">
                                                 <h4 className="font-black text-indigo-900 flex items-center gap-2">
-                                                    <UserPlus size={18} /> New Customer Registration
+                                                    <UserPlus size={18} /> Register New Customer
                                                 </h4>
                                                 <button type="button" onClick={() => setShowRegister(false)} className="text-slate-400 hover:text-red-500 p-1">
                                                     <X size={20} />

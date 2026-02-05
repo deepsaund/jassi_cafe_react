@@ -184,22 +184,18 @@ class OrderController {
         if ($action === 'claim') {
             $query = "UPDATE orders SET assigned_staff_id = :sid, status = 'processing' WHERE id = :oid AND assigned_staff_id IS NULL";
             $logAction = "Staff Claimed";
-        } elseif ($action === 'approve_doc') {
-             // Logic for Doc verification would be improved in real app
-             // For now just logging
-             echo json_encode(["message" => "Document approved"]);
-             return;
+        } elseif ($action === 'approve_docs') {
+             // Reset rejection flags, keep in processing
+             $query = "UPDATE orders SET status = 'processing', rejected_docs = NULL, rejection_reason = NULL WHERE id = :oid AND assigned_staff_id = :sid";
+             $logAction = "Documents Approved";
         } elseif ($action === 'reject') {
-             $reason = $data['reason'] ?? 'Document Rejected';
+             $reason = $data['reason'] ?? 'Order Rejected';
              $query = "UPDATE orders SET status = 'action_required', rejection_reason = :reason WHERE id = :oid AND assigned_staff_id = :sid";
              $logAction = "Order/Doc Rejected: " . $reason;
         } elseif ($action === 'complete') {
              $outDocs = isset($data['output_docs']) ? json_encode($data['output_docs']) : null;
-             if ($outDocs) {
-                 $query = "UPDATE orders SET status = 'completed', output_document_ids = :outdocs WHERE id = :oid AND assigned_staff_id = :sid";
-             } else {
-                 $query = "UPDATE orders SET status = 'completed' WHERE id = :oid AND assigned_staff_id = :sid";
-             }
+             $query = "UPDATE orders SET status = 'completed', output_document_ids = :outdocs WHERE id = :oid AND assigned_staff_id = :sid";
+             $logAction = "Application Completed";
         } elseif ($action === 'reject_doc') {
              $docType = $data['doc_type'] ?? '';
              $reason = $data['reason'] ?? 'Document Rejected';

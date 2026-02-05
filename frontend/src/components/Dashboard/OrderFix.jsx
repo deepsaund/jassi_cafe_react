@@ -70,9 +70,20 @@ export function OrderFix({ order, onClose, onUpdate }) {
 
     if (loading) return <div className="p-8 text-center"><Loader2 className="animate-spin mx-auto text-blue-600" /></div>;
 
-    const requiredDocs = service?.documents_required_json ? JSON.parse(service.documents_required_json) : [];
-    const currentDocs = order.document_ids ? JSON.parse(order.document_ids) : {};
-    const rejectedDocs = order.rejected_docs ? (typeof order.rejected_docs === 'string' ? JSON.parse(order.rejected_docs) : order.rejected_docs) : [];
+    const requiredDocs = service?.documents_required_json ? (typeof service.documents_required_json === 'string' ? JSON.parse(service.documents_required_json) : service.documents_required_json) : [];
+    const currentDocs = order.document_ids ? (typeof order.document_ids === 'string' ? JSON.parse(order.document_ids) : order.document_ids) : {};
+
+    // Robust parsing for rejected_docs
+    let rejectedDocs = [];
+    try {
+        if (order.rejected_docs) {
+            rejectedDocs = typeof order.rejected_docs === 'string' ? JSON.parse(order.rejected_docs) : order.rejected_docs;
+        }
+    } catch (e) { console.error("Error parsing rejected_docs", e); }
+
+    if (!Array.isArray(rejectedDocs)) rejectedDocs = [];
+
+    console.log("Required:", requiredDocs, "Rejected:", rejectedDocs);
 
     return (
         <div className="space-y-6">

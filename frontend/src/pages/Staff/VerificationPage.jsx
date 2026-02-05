@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Eye, XCircle, CheckCircle, ExternalLink, MessageSquare, PanelRightClose, PanelRightOpen } from 'lucide-react';
+import { ArrowLeft, Eye, XCircle, CheckCircle, ExternalLink, MessageSquare, PanelRightClose, PanelRightOpen, Upload } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { useAuth } from '../../context/AuthContext';
 import { OrderChat } from '../../components/Dashboard/OrderChat';
@@ -18,6 +18,8 @@ export default function VerificationPage() {
     const [internalNote, setInternalNote] = useState("");
     const [isProcessing, setIsProcessing] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [isDelivering, setIsDelivering] = useState(false);
+    const [deliverableFile, setDeliverableFile] = useState(null);
 
     useEffect(() => {
         if (!user) return;
@@ -60,7 +62,7 @@ export default function VerificationPage() {
     const handleAction = async (action, reason = '', docType = null) => {
         setIsProcessing(true);
         try {
-            await fetch(`${API_BASE}/staff/orders/update`, {
+            const res = await fetch(`${API_BASE}/staff/orders/update`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -68,15 +70,60 @@ export default function VerificationPage() {
                 },
                 body: JSON.stringify({ action, order_id: order.id, reason, doc_type: docType, internal_note: internalNote })
             });
-            if (action !== 'reject_doc') navigate('/dashboard/staff');
-            else {
-                // Update local state for doc rejection if needed
-                alert("Document rejected. Customer will be notified.");
+
+            if (res.ok) {
+                if (action === 'approve_docs') {
+                    alert("Documents verified. Order remains in Processing.");
+                    window.location.reload();
+                } else if (action === 'reject_doc') {
+                    alert("Document rejected. Customer will be notified.");
+                } else {
+                    navigate('/dashboard/staff');
+                }
             }
         } catch (err) {
             console.error(err);
         } finally {
             setIsProcessing(false);
+        }
+    };
+
+    const handleDeliver = async () => {
+        if (!deliverableFile) return;
+        setIsDelivering(true);
+        try {
+            const body = new FormData();
+            body.append('file', deliverableFile);
+            body.append('type', 'deliverable');
+            body.append('target_user_id', order.user_id);
+
+            const uploadRes = await fetch(`${API_BASE}/documents/upload`, {
+                method: 'POST',
+                headers: { 'Authorization': `mock_token_${user.id}` },
+                body
+            });
+            const uploadData = await uploadRes.json();
+
+            if (uploadRes.ok) {
+                await fetch(`${API_BASE}/staff/orders/update`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `mock_token_${user.id}`
+                    },
+                    body: JSON.stringify({
+                        action: 'complete',
+                        order_id: order.id,
+                        output_docs: { result: uploadData.id },
+                        internal_note: internalNote
+                    })
+                });
+                navigate('/dashboard/staff');
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setIsDelivering(false);
         }
     };
 
@@ -122,20 +169,20 @@ export default function VerificationPage() {
                         className={`rounded-xl px-6 border border-red-500/30 ${theme === 'dark' ? 'text-red-400 hover:bg-red-500 hover:text-white' : 'text-red-600 hover:bg-red-600 hover:text-white'}`}
                         loading={isProcessing}
                         onClick={() => {
-                            const r = prompt("Rejection Reason:");
+                            const r = prompt("Full Rejection Reason:");
                             if (r) handleAction('reject', r);
                         }}
                     >
-                        <XCircle size={16} className="mr-2" /> Reject
+                        <XCircle size={16} className="mr-2" /> Deny All
                     </Button>
                     <Button
                         variant="primary"
                         size="sm"
-                        className="bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/20 rounded-xl px-8 border-none text-white"
+                        className="bg-blue-600 hover:bg-blue-700 shadow-xl shadow-blue-500/20 rounded-xl px-8 border-none text-white"
                         loading={isProcessing}
-                        onClick={() => handleAction('complete')}
+                        onClick={() => handleAction('approve_docs')}
                     >
-                        <CheckCircle size={16} className="mr-2" /> Approve & Complete
+                        <CheckCircle size={16} className="mr-2" /> Approve Documents
                     </Button>
                 </div>
             </div>
@@ -147,6 +194,8 @@ export default function VerificationPage() {
                         {documents.length > 0 ? (
                             documents.map(doc => {
                                 const active = currentDoc?.id === doc.id;
+                                const isRejected = order.rejected_docs && (typeof order.rejected_docs === 'string' ? JSON.parse(order.rejected_docs) : order.rejected_docs).includes(doc.type);
+
                                 return (
                                     <Button
                                         key={doc.id}
@@ -155,7 +204,8 @@ export default function VerificationPage() {
                                         onClick={() => setCurrentDoc(doc)}
                                         className={`whitespace-nowrap transition-all ${!active ? 'border-transparent opacity-60 hover:opacity-100' : 'scale-105'}`}
                                     >
-                                        <Eye size={14} /> {doc.name}
+                                        <Eye size={14} className="mr-2" /> {doc.name}
+                                        {isRejected && <span className="ml-2 w-2 h-2 rounded-full bg-red-500"></span>}
                                     </Button>
                                 );
                             })
@@ -201,6 +251,39 @@ export default function VerificationPage() {
                 {/* Right Side: Data & Chat */}
                 <div className={`transition-all duration-500 ease-in-out flex flex-col shadow-2xl z-20 overflow-hidden ${isSidebarOpen ? 'w-[480px] border-l' : 'w-0 border-none'} ${theme === 'dark' ? 'bg-[#0f172a] border-white/5' : 'bg-white border-slate-200'}`}>
                     <div className="flex-1 overflow-y-auto custom-scrollbar min-w-[480px]">
+
+                        {/* Section: Final Delivery (NEW) */}
+                        <div className={`p-8 border-b ${theme === 'dark' ? 'border-white/5' : 'border-slate-100'}`}>
+                            <div className="flex items-center justify-between mb-6">
+                                <h3 className="text-[10px] uppercase font-black text-slate-400 tracking-[0.2em]">Final Delivery</h3>
+                                <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${theme === 'dark' ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20' : 'bg-orange-100 text-orange-700'}`}>In Action</span>
+                            </div>
+
+                            <div className={`p-8 rounded-[2.5rem] border-2 border-dashed transition-all duration-500 ${deliverableFile ? 'border-emerald-500/40 bg-emerald-500/5 shadow-2xl shadow-emerald-500/5' : (theme === 'dark' ? 'bg-white/5 border-white/10 hover:border-blue-500/30' : 'bg-slate-50 border-slate-200 hover:border-blue-500/20')}`}>
+                                <input type="file" id="deliver-upload" className="hidden" onChange={(e) => setDeliverableFile(e.target.files[0])} />
+                                <label htmlFor="deliver-upload" className="flex flex-col items-center cursor-pointer">
+                                    <div className={`w-16 h-16 rounded-3xl flex items-center justify-center mb-4 transition-all duration-500 ${deliverableFile ? 'bg-emerald-500 text-white scale-110 shadow-lg shadow-emerald-500/40' : (theme === 'dark' ? 'bg-white/5 text-slate-500 group-hover:text-blue-400' : 'bg-white text-slate-400')}`}>
+                                        <Upload size={30} />
+                                    </div>
+                                    <p className={`text-[10px] font-black uppercase tracking-widest text-center ${deliverableFile ? 'text-emerald-500' : 'text-slate-500'}`}>
+                                        {deliverableFile ? deliverableFile.name : 'Upload Final Result'}
+                                    </p>
+                                    <p className="text-[9px] font-bold text-slate-600 mt-2 uppercase tracking-tighter">PDF, PNG or JPG Supported</p>
+                                </label>
+
+                                {deliverableFile && (
+                                    <Button
+                                        variant="primary"
+                                        className="w-full mt-8 bg-emerald-600 hover:bg-emerald-700 border-none text-white shadow-emerald-500/20"
+                                        onClick={handleDeliver}
+                                        loading={isDelivering}
+                                    >
+                                        <CheckCircle size={18} className="mr-2" /> Complete Application
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+
                         {/* Section: Application Data */}
                         <div className={`p-8 border-b ${theme === 'dark' ? 'border-white/5' : 'border-slate-100'}`}>
                             <h3 className="text-[10px] uppercase font-black text-slate-500 tracking-[0.2em] mb-6">Application Details</h3>

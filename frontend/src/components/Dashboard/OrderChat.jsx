@@ -29,9 +29,7 @@ export const OrderChat = ({ orderId }) => {
         return () => clearInterval(interval);
     }, [orderId]);
 
-    useEffect(() => {
-        scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+    // Removed auto-scroll on message updates to allow user to read history without jumping
 
     const handleSend = async (e) => {
         e.preventDefault();

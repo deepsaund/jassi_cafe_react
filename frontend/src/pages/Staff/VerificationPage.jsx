@@ -150,7 +150,7 @@ export default function VerificationPage() {
                                 return (
                                     <Button
                                         key={doc.id}
-                                        variant={active ? 'white' : 'glass'}
+                                        variant={active ? (theme === 'dark' ? 'neural' : 'white') : 'glass'}
                                         size="sm"
                                         onClick={() => setCurrentDoc(doc)}
                                         className={`whitespace-nowrap transition-all ${!active ? 'border-transparent opacity-60 hover:opacity-100' : 'scale-105'}`}
@@ -166,10 +166,10 @@ export default function VerificationPage() {
                             </div>
                         )}
                     </div>
-                    <div className="flex-1 p-8 flex items-center justify-center overflow-auto bg-slate-950/40">
+                    <div className={`flex-1 p-8 flex items-center justify-center overflow-auto transition-colors duration-700 ${theme === 'dark' ? 'bg-[#0a0f1d]' : 'bg-slate-950/40'}`}>
                         {currentDoc ? (
                             <div className="relative group max-w-full">
-                                <img src={currentDoc.url} alt="Doc" className="rounded-2xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] max-h-[75vh] object-contain bg-white transition-transform duration-500 group-hover:scale-[1.01]" />
+                                <img src={currentDoc.url} alt="Doc" className={`rounded-2xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] max-h-[75vh] object-contain transition-all duration-500 group-hover:scale-[1.01] ${theme === 'dark' ? 'bg-[#1e293b] border border-white/5' : 'bg-white'}`} />
                                 <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                                     <a href={currentDoc.url} target="_blank" className="w-12 h-12 flex items-center justify-center bg-slate-900/90 text-white rounded-2xl backdrop-blur-md hover:bg-blue-600 shadow-xl">
                                         <ExternalLink size={20} />

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
-import { Bell, CheckCircle, AlertCircle, Info, Clock, Trash2, CheckCircle2, MoreVertical } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { Bell, CheckCircle, AlertCircle, Info, Clock, Trash2, CheckCircle2, MoreVertical, Lock } from 'lucide-react';
 
 const Card = ({ children, className = "" }) => {
     const { theme } = useTheme();
@@ -13,6 +14,7 @@ const Card = ({ children, className = "" }) => {
 
 export default function Notifications() {
     const { theme } = useTheme();
+    const { user } = useAuth();
 
     const [notifications, setNotifications] = useState([
         { id: 1, title: 'Identity Verified', message: 'Your Aadhaar Card verification is complete. You can now apply for Tier 2 services.', type: 'success', time: '2 hours ago', unread: true },
@@ -46,6 +48,23 @@ export default function Notifications() {
             default: return <Bell size={18} />;
         }
     };
+
+    if (user?.role === 'admin' || user?.role === 'staff') {
+        return (
+            <div className="h-[60vh] flex flex-col items-center justify-center text-center space-y-6">
+                <div className="w-24 h-24 bg-red-500/10 rounded-[3rem] flex items-center justify-center text-red-500 mb-4 animate-pulse">
+                    <Lock size={48} />
+                </div>
+                <div>
+                    <h2 className={`text-2xl font-black uppercase tracking-tighter ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Security Protocol</h2>
+                    <p className="text-slate-500 font-bold text-xs uppercase tracking-[0.25em] mt-2">Notification feed is exclusive to Customer Identity Channels.</p>
+                </div>
+                <div className="max-w-md text-[10px] text-slate-500 font-bold uppercase leading-relaxed opacity-50">
+                    System-wide broadcasts can be managed through the Admin Control Panel. Personal notification logs are restricted to end-users for privacy compliance.
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-8 max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">

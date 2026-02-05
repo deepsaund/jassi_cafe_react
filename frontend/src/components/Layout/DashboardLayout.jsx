@@ -21,8 +21,13 @@ import {
     Sun,
     Database,
     PhoneCall,
-    MessageCircle
+    MessageCircle,
+    Search,
+    FolderLock,
+    Eye,
+    Download
 } from 'lucide-react';
+import { Drawer } from '../ui/Drawer';
 import { API_BASE } from '../../config';
 import { useTheme } from '../../context/ThemeContext';
 
@@ -38,7 +43,6 @@ const SidebarItem = ({ icon: Icon, label, onClick, active }) => {
                     : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
                 }`}
         >
-            {/* Active Indicator Bar */}
             {active && (
                 <div className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
             )}
@@ -47,8 +51,6 @@ const SidebarItem = ({ icon: Icon, label, onClick, active }) => {
             <span className={`font-bold text-xs uppercase tracking-[0.15em] transition-all duration-500 ${active ? 'opacity-100' : 'opacity-70 group-hover:opacity-100 group-hover:tracking-[0.2em]'}`}>
                 {label}
             </span>
-
-            {/* Subtle Hover Glow */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
         </button>
     );
@@ -62,16 +64,7 @@ export default function DashboardLayout() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [broadcast, setBroadcast] = useState(null);
 
-    useEffect(() => {
-        fetch(`${API_BASE}/admin/settings`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.global_broadcast_status === 'enabled' && data.global_broadcast_message) {
-                    setBroadcast(data.global_broadcast_message);
-                }
-            })
-            .catch(err => console.error("Broadcast fetch error:", err));
-    }, []);
+
 
     const handleLogout = () => {
         logout();
@@ -82,7 +75,7 @@ export default function DashboardLayout() {
 
     const navContent = (
         <div className={`flex flex-col h-full border-r ${theme === 'dark' ? 'bg-[#0a0f1c] border-white/5' : 'bg-white border-slate-100'} relative overflow-hidden`}>
-            {/* Background Neural Grid (Visual Only) */}
+            {/* Background Neural Grid */}
             <div className={`absolute inset-0 opacity-[0.02] pointer-events-none ${theme === 'dark' ? 'bg-[radial-gradient(#3b82f6_1px,transparent_1px)]' : 'bg-[radial-gradient(#2563eb_1px,transparent_1px)]'} [background-size:20px_20px]`} />
 
             <div className="p-8 relative z-10 flex items-center justify-between">
@@ -97,7 +90,7 @@ export default function DashboardLayout() {
                 </div>
             </div>
 
-            <nav className="flex-1 space-y-2 overflow-y-auto custom-scrollbar relative z-10 pt-4">
+            <nav className="flex-1 space-y-2 overflow-y-auto custom-scrollbar relative z-10 pt-4 pb-20">
                 <div className="px-8 mb-4">
                     <p className="text-[10px] font-black uppercase text-slate-500 tracking-[0.25em]">Main Menu</p>
                 </div>
@@ -142,6 +135,8 @@ export default function DashboardLayout() {
                     </div>
                     <SidebarItem icon={PhoneCall} label="Get Help" active={false} onClick={() => window.open('https://wa.me/91999999999', '_blank')} />
                 </div>
+
+
             </nav>
 
             {/* User Agent Card */}
@@ -211,25 +206,8 @@ export default function DashboardLayout() {
                 </header>
 
                 <div className="flex-1 overflow-auto custom-scrollbar relative px-4 md:px-0">
-                    {/* Floating Broadcast - Only if exists */}
-                    {broadcast && (
-                        <div className="sticky top-6 left-1/2 -translate-x-1/2 z-40 w-full max-w-4xl px-4 animate-in fade-in zoom-in duration-500">
-                            <div className={`backdrop-blur-2xl border p-4 rounded-[2.5rem] shadow-2xl flex items-center gap-4 group ${theme === 'dark' ? 'bg-gradient-to-r from-primary/20 via-neural-indigo/20 to-neural-cyan/20 border-white/10 text-white' : 'bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-blue-100 text-blue-900'}`}>
-                                <div className={`p-3 rounded-2xl border ${theme === 'dark' ? 'bg-primary/20 border-primary/20' : 'bg-primary/10 border-blue-200'}`}>
-                                    <Bell size={18} className={`${theme === 'dark' ? 'text-primary-light' : 'text-primary'} animate-[bounce_2s_infinite]`} />
-                                </div>
-                                <div className="flex-1">
-                                    <p className={`text-[9px] font-black uppercase tracking-[0.3em] mb-0.5 ${theme === 'dark' ? 'text-primary-light drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]' : 'text-primary'}`}>System Notification</p>
-                                    <p className={`text-sm font-bold tracking-tight ${theme === 'dark' ? 'text-slate-100' : 'text-slate-800'}`}>{broadcast}</p>
-                                </div>
-                                <button className={`p-2 rounded-full transition-colors ${theme === 'dark' ? 'hover:bg-white/10' : 'hover:bg-black/5'}`} onClick={() => setBroadcast(null)}>
-                                    <X size={18} className="opacity-50 hover:opacity-100" />
-                                </button>
-                            </div>
-                        </div>
-                    )}
 
-                    {/* Floating WhatsApp Support Button */}
+
                     <button
                         onClick={() => window.open('https://wa.me/91999999999', '_blank')}
                         className={`fixed bottom-6 right-6 z-50 p-4 rounded-2xl shadow-2xl transition-all duration-500 hover:scale-110 active:scale-95 group overflow-hidden ${theme === 'dark' ? 'bg-[#25D366] text-white shadow-[#25D366]/20' : 'bg-[#25D366] text-white shadow-[#25D366]/40'}`}
@@ -241,12 +219,12 @@ export default function DashboardLayout() {
                         <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                     </button>
 
-                    {/* The Page Content Slot */}
                     <div className="p-4 md:p-8 lg:p-10 min-h-screen">
                         <Outlet />
                     </div>
                 </div>
             </main>
+
         </div>
     );
 }

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { Users, FileText, Settings, CreditCard, Activity, ShieldCheck, Zap, Globe, Wallet, RefreshCw, BarChart2, TrendingUp, Award, Bell, Radio } from 'lucide-react';
+import { Users, FileText, Settings, CreditCard, Activity, ShieldCheck, Zap, Globe, Wallet, RefreshCw, BarChart2, TrendingUp, Award, Bell, Radio, Search, FolderLock, Eye, Download, X } from 'lucide-react';
+import { Drawer } from '../../components/ui/Drawer';
 import { API_BASE } from '../../config';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -24,6 +25,50 @@ export default function AdminDashboard() {
     const [broadcast, setBroadcast] = useState('');
     const [broadcastStatus, setBroadcastStatus] = useState('disabled');
     const [savingBroadcast, setSavingBroadcast] = useState(false);
+
+    // User Search & Vault State
+    const [userSearch, setUserSearch] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [searching, setSearching] = useState(false);
+    const [vaultUser, setVaultUser] = useState(null);
+    const [vaultDocs, setVaultDocs] = useState([]);
+    const [isVaultOpen, setIsVaultOpen] = useState(false);
+    const [loadingVault, setLoadingVault] = useState(false);
+
+    useEffect(() => {
+        if (!userSearch || userSearch.length < 2) {
+            setSearchResults([]);
+            return;
+        }
+        setSearching(true);
+        const timeout = setTimeout(() => {
+            fetch(`${API_BASE}/admin/users?search=${userSearch}`)
+                .then(res => res.json())
+                .then(data => {
+                    setSearchResults(Array.isArray(data) ? data : []);
+                    setSearching(false);
+                })
+                .catch(() => setSearching(false));
+        }, 300);
+        return () => clearTimeout(timeout);
+    }, [userSearch]);
+
+    const openVault = async (targetUser) => {
+        setVaultUser(targetUser);
+        setIsVaultOpen(true);
+        setLoadingVault(true);
+        setUserSearch('');
+        setSearchResults([]);
+        try {
+            const res = await fetch(`${API_BASE}/admin/documents?user_id=${targetUser.id}`);
+            const data = await res.json();
+            setVaultDocs(Array.isArray(data) ? data : []);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoadingVault(false);
+        }
+    };
 
     useEffect(() => {
         // Fetch Settings
@@ -377,6 +422,63 @@ export default function AdminDashboard() {
                 </Card>
             </div>
 
+            {/* 3.5. Quick Identity Search (NEW) */}
+            <section className="space-y-6">
+                <div className="px-4">
+                    <h2 className={`text-2xl font-black tracking-tight flex items-center gap-3 uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                        <Users className="text-blue-500" size={28} /> Identity Search
+                    </h2>
+                    <p className="text-xs text-slate-400 font-bold uppercase tracking-[0.2em] mt-2 ml-10">Search and access any user's document vault</p>
+                </div>
+
+                <div className="relative group max-w-2xl mx-auto px-4">
+                    <div className={`relative flex items-center transition-all duration-500 rounded-[2rem] border-2 ${theme === 'dark' ? 'bg-white/5 border-white/5 focus-within:border-blue-500/50 focus-within:shadow-[0_0_50px_rgba(37,99,235,0.1)]' : 'bg-white border-slate-100 focus-within:border-blue-500/30 focus-within:shadow-2xl focus-within:shadow-blue-500/10'}`}>
+                        <div className="pl-8 text-slate-400">
+                            <Search size={22} className="group-focus-within:text-blue-500 transition-colors" />
+                        </div>
+                        <input
+                            type="text"
+                            placeholder="Enter Name or Phone Number to find user..."
+                            value={userSearch}
+                            onChange={(e) => setUserSearch(e.target.value)}
+                            className="w-full h-16 bg-transparent border-none outline-none font-black text-sm px-6 placeholder:text-slate-500/50"
+                        />
+                        {searching && (
+                            <div className="pr-8">
+                                <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Results Overlay */}
+                    {searchResults.length > 0 && (
+                        <Card className={`absolute top-full left-4 right-4 mt-4 z-50 p-2 overflow-hidden shadow-2xl animate-in slide-in-from-top-4 duration-300 ${theme === 'dark' ? 'bg-[#0f172a] border-white/10' : 'bg-white border-slate-100'}`}>
+                            <div className="max-h-[300px] overflow-y-auto custom-scrollbar">
+                                {searchResults.map(res => (
+                                    <button
+                                        key={res.id}
+                                        onClick={() => openVault(res)}
+                                        className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all text-left group/res ${theme === 'dark' ? 'hover:bg-white/5' : 'hover:bg-blue-50'}`}
+                                    >
+                                        <div className="w-10 h-10 rounded-xl bg-blue-600/10 flex items-center justify-center text-blue-500 font-black">
+                                            {res.name[0]}
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className={`text-sm font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{res.name}</p>
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{res.phone} • {res.role}</p>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-blue-500 opacity-0 group-hover/res:opacity-100 pr-2 transition-opacity">
+                                            <span className="text-[8px] font-black uppercase tracking-widest">Open Vault</span>
+                                            <FolderLock size={14} />
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </Card>
+                    )}
+                </div>
+            </section>
+
             {/* 4. Service Applications Management (NEW) */}
             <section className="space-y-6">
                 <div className="flex flex-col md:flex-row md:items-end justify-between px-4 gap-4">
@@ -533,6 +635,75 @@ export default function AdminDashboard() {
 
                 <Activity size={250} className="absolute -left-20 -bottom-20 opacity-[0.03] text-primary pointer-events-none" />
             </Card>
+
+            {/* User Vault Drawer */}
+            <Drawer
+                isOpen={isVaultOpen}
+                onClose={() => setIsVaultOpen(false)}
+                title={`User Vault: ${vaultUser?.name}`}
+            >
+                <div className="space-y-6">
+                    <div className={`p-6 rounded-[2.5rem] relative overflow-hidden transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 text-white border border-white/10' : 'bg-slate-900 text-white'}`}>
+                        <div className="relative z-10">
+                            <h4 className="font-black text-2xl mb-1 tracking-tighter uppercase">{vaultUser?.name}</h4>
+                            <div className="flex items-center gap-4">
+                                <span className="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em]">ID: #{vaultUser?.id?.toString().padStart(6, '0')}</span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                                <span className="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em]">{vaultUser?.role} Access</span>
+                            </div>
+                        </div>
+                        <FolderLock className="absolute -right-8 -bottom-8 opacity-10 text-blue-500" size={150} />
+                    </div>
+
+                    {loadingVault ? (
+                        <div className="py-24 text-center">
+                            <div className="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-6"></div>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Retrieving Encrypted Assets...</p>
+                        </div>
+                    ) : vaultDocs.length > 0 ? (
+                        <div className="grid grid-cols-1 gap-4">
+                            {vaultDocs.map(doc => (
+                                <div key={doc.id} className={`p-6 border rounded-[2rem] flex items-center justify-between group transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5 hover:bg-white/10' : 'bg-slate-50 border-slate-100 hover:bg-white hover:shadow-2xl hover:shadow-primary/5'}`}>
+                                    <div className="flex items-center gap-5">
+                                        <div className="w-14 h-14 rounded-2xl bg-blue-600/10 flex items-center justify-center text-blue-500 shadow-lg shadow-blue-500/10 group-hover:scale-110 transition-transform duration-500">
+                                            <FileText size={28} />
+                                        </div>
+                                        <div>
+                                            <p className={`font-black text-sm uppercase tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{doc.type?.replace('_', ' ')}</p>
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{doc.original_name || 'vault_file.dat'}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <a
+                                            href={`${API_BASE.replace('/api', '')}${doc.file_path}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-blue-500/20 hover:text-blue-400' : 'bg-white text-slate-400 hover:bg-blue-50 hover:text-blue-600 shadow-lg shadow-blue-100'}`}
+                                        >
+                                            <Eye size={20} />
+                                        </a>
+                                        <a
+                                            href={`${API_BASE.replace('/api', '')}${doc.file_path}`}
+                                            download
+                                            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-emerald-500/20 hover:text-emerald-400' : 'bg-white text-slate-400 hover:bg-emerald-50 hover:text-emerald-600 shadow-lg shadow-emerald-100'}`}
+                                        >
+                                            <Download size={20} />
+                                        </a>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="py-24 text-center">
+                            <div className="w-20 h-20 bg-slate-50 dark:bg-white/5 rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-slate-100 dark:border-white/5 shadow-inner">
+                                <FolderLock size={36} className="text-slate-200 dark:text-white/10" />
+                            </div>
+                            <h4 className="text-xl font-black text-slate-300 uppercase tracking-widest">Vault Empty</h4>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-2 italic">Nothing has been stored in this identity sector yet.</p>
+                        </div>
+                    )}
+                </div>
+            </Drawer>
         </div>
     );
 }

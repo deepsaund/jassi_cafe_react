@@ -107,9 +107,20 @@ export default function AdminDashboard() {
         }
     };
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
+
     const activeOrders = orders.filter(o => o.status !== 'completed');
     const historyOrders = orders.filter(o => o.status === 'completed');
     const displayOrders = activeTab === 'active' ? activeOrders : historyOrders;
+
+    const totalPages = Math.ceil(displayOrders.length / itemsPerPage);
+    const paginatedOrders = displayOrders.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    // Reset page when tab changes
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [activeTab]);
 
     return (
         <div className="space-y-10 animate-in fade-in duration-700 max-w-7xl mx-auto pb-20 px-4 md:px-0">
@@ -295,7 +306,7 @@ export default function AdminDashboard() {
                                     </tr>
                                 </thead>
                                 <tbody className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-slate-50'}`}>
-                                    {displayOrders.slice(0, 10).map((order) => (
+                                    {paginatedOrders.map((order) => (
                                         <tr key={order.id} className="group hover:bg-blue-600/5 transition-all duration-300">
                                             <td className="px-8 py-6">
                                                 <div className="flex items-center gap-4">
@@ -322,6 +333,31 @@ export default function AdminDashboard() {
                                     ))}
                                 </tbody>
                             </table>
+
+                            {/* Pagination Controls */}
+                            {totalPages > 1 && (
+                                <div className={`p-6 border-t flex items-center justify-between ${theme === 'dark' ? 'border-white/5 bg-white/5' : 'border-slate-50 bg-slate-50/30'}`}>
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                                        Page <span className="text-blue-500">{currentPage}</span> of {totalPages}
+                                    </p>
+                                    <div className="flex gap-2">
+                                        <button
+                                            disabled={currentPage === 1}
+                                            onClick={() => setCurrentPage(prev => prev - 1)}
+                                            className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${currentPage === 1 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-blue-600 hover:text-white border border-white/10'}`}
+                                        >
+                                            Prev
+                                        </button>
+                                        <button
+                                            disabled={currentPage === totalPages}
+                                            onClick={() => setCurrentPage(prev => prev + 1)}
+                                            className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${currentPage === totalPages ? 'opacity-30 cursor-not-allowed' : 'hover:bg-blue-600 hover:text-white border border-white/10'}`}
+                                        >
+                                            Next
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
                 </Card>

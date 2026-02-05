@@ -129,12 +129,14 @@ export default function DashboardLayout() {
                     </div>
                 )}
 
-                <div className="pt-6 pb-2 space-y-2">
-                    <div className="px-8 mb-4">
-                        <p className="text-[10px] font-black uppercase text-slate-500 tracking-[0.25em]">Help & Support</p>
+                {user?.role === 'customer' && (
+                    <div className="pt-6 pb-2 space-y-2">
+                        <div className="px-8 mb-4">
+                            <p className="text-[10px] font-black uppercase text-slate-500 tracking-[0.25em]">Help & Support</p>
+                        </div>
+                        <SidebarItem icon={PhoneCall} label="Get Help" active={false} onClick={() => window.open('https://wa.me/91999999999', '_blank')} />
                     </div>
-                    <SidebarItem icon={PhoneCall} label="Get Help" active={false} onClick={() => window.open('https://wa.me/91999999999', '_blank')} />
-                </div>
+                )}
 
 
             </nav>
@@ -208,16 +210,18 @@ export default function DashboardLayout() {
                 <div className="flex-1 overflow-auto custom-scrollbar relative px-4 md:px-0">
 
 
-                    <button
-                        onClick={() => window.open('https://wa.me/91999999999', '_blank')}
-                        className={`fixed bottom-6 right-6 z-50 p-4 rounded-2xl shadow-2xl transition-all duration-500 hover:scale-110 active:scale-95 group overflow-hidden ${theme === 'dark' ? 'bg-[#25D366] text-white shadow-[#25D366]/20' : 'bg-[#25D366] text-white shadow-[#25D366]/40'}`}
-                    >
-                        <div className="relative z-10 flex items-center gap-2">
-                            <MessageCircle size={24} />
-                            <span className="font-black text-xs uppercase tracking-widest max-w-0 group-hover:max-w-xs transition-all duration-500 overflow-hidden whitespace-nowrap">Chat with Us</span>
-                        </div>
-                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                    </button>
+                    {user?.role === 'customer' && (
+                        <button
+                            onClick={() => window.open('https://wa.me/91999999999', '_blank')}
+                            className={`fixed bottom-6 right-6 z-50 p-4 rounded-2xl shadow-2xl transition-all duration-500 hover:scale-110 active:scale-95 group overflow-hidden ${theme === 'dark' ? 'bg-[#25D366] text-white shadow-[#25D366]/20' : 'bg-[#25D366] text-white shadow-[#25D366]/40'}`}
+                        >
+                            <div className="relative z-10 flex items-center gap-2">
+                                <MessageCircle size={24} />
+                                <span className="font-black text-xs uppercase tracking-widest max-w-0 group-hover:max-w-xs transition-all duration-500 overflow-hidden whitespace-nowrap">Chat with Us</span>
+                            </div>
+                            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                        </button>
+                    )}
 
                     <div className="p-4 md:p-8 lg:p-10 min-h-screen">
                         <Outlet />

@@ -270,7 +270,7 @@ export default function DocumentVault() {
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-6 text-[10px] font-bold text-slate-500 whitespace-nowrap">
-                                                    {formatDate(doc.created_at)}
+                                                    {formatDate(doc.upload_date)}
                                                 </td>
                                                 <td className="px-8 py-6 text-right">
                                                     <div className="flex items-center justify-end gap-3 translate-x-2 group-hover:translate-x-0 transition-transform duration-500">

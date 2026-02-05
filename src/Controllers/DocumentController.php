@@ -25,7 +25,7 @@ class DocumentController {
             return;
         }
 
-        $query = "SELECT * FROM documents WHERE user_id = :user_id";
+        $query = "SELECT * FROM documents WHERE user_id = :user_id ORDER BY upload_date DESC";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(":user_id", $userId);
         $stmt->execute();
@@ -130,7 +130,7 @@ class DocumentController {
             return;
         }
 
-        $query = "SELECT * FROM documents WHERE user_id = :user_id ORDER BY created_at DESC";
+        $query = "SELECT * FROM documents WHERE user_id = :user_id ORDER BY upload_date DESC";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(":user_id", $targetUserId);
         $stmt->execute();

@@ -18,7 +18,10 @@ import {
     LayoutGrid,
     ShieldCheck,
     Moon,
-    Sun
+    Sun,
+    Database,
+    PhoneCall,
+    MessageCircle
 } from 'lucide-react';
 import { API_BASE } from '../../config';
 import { useTheme } from '../../context/ThemeContext';
@@ -89,27 +92,36 @@ export default function DashboardLayout() {
                     </div>
                     <div className="flex flex-col">
                         <h2 className={`text-xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'} tracking-tighter leading-none`}>JASSI<span className="text-blue-500 font-black">PORTAL</span></h2>
-                        <span className="text-[10px] text-blue-400 font-bold uppercase tracking-[0.3em] mt-1 opacity-60">Neural Core v2</span>
+                        <span className="text-[10px] text-blue-400 font-bold uppercase tracking-[0.3em] mt-1 opacity-60">Customer Hub</span>
                     </div>
                 </div>
             </div>
 
             <nav className="flex-1 space-y-2 overflow-y-auto custom-scrollbar relative z-10 pt-4">
                 <div className="px-8 mb-4">
-                    <p className="text-[10px] font-black uppercase text-slate-500 tracking-[0.25em]">Navigation Nodes</p>
+                    <p className="text-[10px] font-black uppercase text-slate-500 tracking-[0.25em]">Main Menu</p>
                 </div>
 
-                <SidebarItem icon={LayoutGrid} label="Dashboard" active={isActive('/dashboard')} onClick={() => { navigate('/dashboard'); setMobileMenuOpen(false); }} />
+                <SidebarItem icon={LayoutGrid} label="Home" active={isActive('/dashboard')} onClick={() => { navigate('/dashboard'); setMobileMenuOpen(false); }} />
                 <SidebarItem icon={FileText} label="Services" active={isActive('/dashboard/services')} onClick={() => { navigate('/dashboard/services'); setMobileMenuOpen(false); }} />
+                <SidebarItem icon={Database} label="Document Vault" active={isActive('/dashboard/vault')} onClick={() => { navigate('/dashboard/vault'); setMobileMenuOpen(false); }} />
+                <SidebarItem icon={Bell} label="Notifications" active={isActive('/dashboard/notifications')} onClick={() => { navigate('/dashboard/notifications'); setMobileMenuOpen(false); }} />
 
                 {user?.role === 'b2b' && (
                     <SidebarItem icon={FileSpreadsheet} label="Bulk Portal" active={isActive('/dashboard/bulk')} onClick={() => { navigate('/dashboard/bulk'); setMobileMenuOpen(false); }} />
                 )}
 
+                <div className="pt-6 pb-2 space-y-2">
+                    <div className="px-8 mb-4">
+                        <p className="text-[10px] font-black uppercase text-slate-500 tracking-[0.25em]">Account</p>
+                    </div>
+                    <SidebarItem icon={User} label="Profile" active={isActive('/dashboard/profile')} onClick={() => { navigate('/dashboard/profile'); setMobileMenuOpen(false); }} />
+                </div>
+
                 {(user?.role === 'staff' || user?.role === 'admin') && (
-                    <div className="pt-8 pb-2 space-y-2">
+                    <div className="pt-6 pb-2 space-y-2">
                         <div className="px-8 mb-4">
-                            <p className="text-[10px] font-black uppercase text-slate-500 tracking-[0.25em]">Internal Matrix</p>
+                            <p className="text-[10px] font-black uppercase text-slate-500 tracking-[0.25em]">Work Area</p>
                         </div>
                         <SidebarItem icon={ShieldCheck} label="Staff Hub" active={location.pathname.includes('/staff')} onClick={() => { navigate('/dashboard/staff'); setMobileMenuOpen(false); }} />
                     </div>
@@ -118,11 +130,18 @@ export default function DashboardLayout() {
                 {user?.role === 'admin' && (
                     <div className="pt-6 pb-2 space-y-2">
                         <div className="px-8 mb-4">
-                            <p className="text-[10px] font-black uppercase text-slate-500 tracking-[0.25em]">Admin Command</p>
+                            <p className="text-[10px] font-black uppercase text-slate-500 tracking-[0.25em]">Admin Area</p>
                         </div>
-                        <SidebarItem icon={Settings} label="Console" active={location.pathname.includes('/admin')} onClick={() => { navigate('/dashboard/admin'); setMobileMenuOpen(false); }} />
+                        <SidebarItem icon={Settings} label="Admin Console" active={location.pathname.includes('/admin')} onClick={() => { navigate('/dashboard/admin'); setMobileMenuOpen(false); }} />
                     </div>
                 )}
+
+                <div className="pt-6 pb-2 space-y-2">
+                    <div className="px-8 mb-4">
+                        <p className="text-[10px] font-black uppercase text-slate-500 tracking-[0.25em]">Help & Support</p>
+                    </div>
+                    <SidebarItem icon={PhoneCall} label="Get Help" active={false} onClick={() => window.open('https://wa.me/91999999999', '_blank')} />
+                </div>
             </nav>
 
             {/* User Agent Card */}
@@ -133,12 +152,12 @@ export default function DashboardLayout() {
                             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-700 flex items-center justify-center text-white font-black shadow-lg">
                                 {user?.name ? user.name[0].toUpperCase() : 'U'}
                             </div>
-                            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-[#0a0f1c] rounded-full animate-pulse" title="Agent Online" />
+                            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-[#0a0f1c] rounded-full animate-pulse" title="Online" />
                         </div>
                         <div className="flex-1 overflow-hidden">
-                            <p className={`text-sm font-black truncate tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{user?.name || 'Authorized Agent'}</p>
+                            <p className={`text-sm font-black truncate tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{user?.name || 'User'}</p>
                             <div className="flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
                                 <p className="text-[9px] text-blue-400 font-black uppercase tracking-widest leading-none">{user?.role || 'Guest'}</p>
                             </div>
                         </div>
@@ -209,6 +228,18 @@ export default function DashboardLayout() {
                             </div>
                         </div>
                     )}
+
+                    {/* Floating WhatsApp Support Button */}
+                    <button
+                        onClick={() => window.open('https://wa.me/91999999999', '_blank')}
+                        className={`fixed bottom-6 right-6 z-50 p-4 rounded-2xl shadow-2xl transition-all duration-500 hover:scale-110 active:scale-95 group overflow-hidden ${theme === 'dark' ? 'bg-[#25D366] text-white shadow-[#25D366]/20' : 'bg-[#25D366] text-white shadow-[#25D366]/40'}`}
+                    >
+                        <div className="relative z-10 flex items-center gap-2">
+                            <MessageCircle size={24} />
+                            <span className="font-black text-xs uppercase tracking-widest max-w-0 group-hover:max-w-xs transition-all duration-500 overflow-hidden whitespace-nowrap">Chat with Us</span>
+                        </div>
+                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                    </button>
 
                     {/* The Page Content Slot */}
                     <div className="p-4 md:p-8 lg:p-10 min-h-screen">

@@ -72,7 +72,7 @@ class DocumentController {
         }
 
         // Upload dir
-        $uploadDir = __DIR__ . '/../../uploads/';
+        $uploadDir = __DIR__ . '/../../public/uploads/';
         if (!file_exists($uploadDir)) mkdir($uploadDir, 0777, true);
         
         $fileName = uniqid() . "_u" . $ownerId . "." . $ext;

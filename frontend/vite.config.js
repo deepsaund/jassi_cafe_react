@@ -8,7 +8,12 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost/WEBSITE/public', // Assumption: User runs PHP on localhost/WEBSITE
+        target: 'http://localhost/WEBSITE/public',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/uploads': {
+        target: 'http://localhost/WEBSITE/public',
         changeOrigin: true,
         secure: false,
       }

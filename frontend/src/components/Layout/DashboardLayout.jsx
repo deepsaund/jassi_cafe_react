@@ -152,8 +152,8 @@ export default function DashboardLayout() {
                     <button
                         onClick={handleLogout}
                         className={`w-full py-3 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl border transition-all duration-300 flex items-center justify-center gap-2 group/logout ${theme === 'dark'
-                                ? 'bg-red-500/5 hover:bg-red-500/10 text-red-400 border-red-500/10 hover:border-red-500/30'
-                                : 'bg-red-50 hover:bg-red-100 text-red-600 border-red-100 hover:border-red-200'
+                            ? 'bg-red-500/5 hover:bg-red-500/10 text-red-400 border-red-500/10 hover:border-red-500/30'
+                            : 'bg-red-50 hover:bg-red-100 text-red-600 border-red-100 hover:border-red-200'
                             }`}
                     >
                         <LogOut size={14} className="group-hover/logout:translate-x-0.5 group-hover/logout:-translate-y-0.5 transition-transform" />
@@ -165,7 +165,7 @@ export default function DashboardLayout() {
     );
 
     return (
-        <div className={`flex h-screen font-sans selection:bg-blue-500/30 transition-colors duration-500 ${theme === 'dark' ? 'bg-[#070b14] text-slate-300' : 'bg-slate-50 text-slate-900'}`}>
+        <div className={`flex h-screen font-sans selection:bg-primary/30 transition-colors duration-500 ${theme === 'dark' ? 'bg-background-dark text-slate-300' : 'bg-background-light text-slate-900'}`}>
             {/* Desktop Sidebar */}
             <aside className="w-80 hidden md:flex flex-col z-30">
                 {navContent}
@@ -182,12 +182,12 @@ export default function DashboardLayout() {
             {/* Main Content Pane */}
             <main className="flex-1 flex flex-col overflow-hidden relative">
                 {/* Mobile Header Overlay */}
-                <header className={`px-6 py-4 flex md:hidden items-center justify-between border-b backdrop-blur-xl z-20 ${theme === 'dark' ? 'border-white/5 bg-[#0a0f1c]/80 text-white' : 'border-slate-200 bg-white/80 text-slate-900'}`}>
+                <header className={`px-6 py-4 flex md:hidden items-center justify-between border-b backdrop-blur-xl z-20 ${theme === 'dark' ? 'border-white/5 bg-secondary-darker/80 text-white' : 'border-slate-200 bg-white/80 text-slate-900'}`}>
                     <div className="flex items-center gap-3">
                         <button onClick={() => setMobileMenuOpen(true)} className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${theme === 'dark' ? 'bg-white/5 text-white' : 'bg-slate-100 text-slate-900'}`}>
                             <Menu size={20} />
                         </button>
-                        <span className="font-black text-lg tracking-tighter uppercase">JASSI<span className="text-blue-500">PORTAL</span></span>
+                        <span className="font-black text-lg tracking-tighter uppercase whitespace-nowrap">JASSI<span className="text-primary">PORTAL</span></span>
                     </div>
                 </header>
 
@@ -195,12 +195,12 @@ export default function DashboardLayout() {
                     {/* Floating Broadcast - Only if exists */}
                     {broadcast && (
                         <div className="sticky top-6 left-1/2 -translate-x-1/2 z-40 w-full max-w-4xl px-4 animate-in fade-in zoom-in duration-500">
-                            <div className={`backdrop-blur-2xl border p-4 rounded-[2rem] shadow-2xl flex items-center gap-4 group ${theme === 'dark' ? 'bg-gradient-to-r from-blue-600/20 via-indigo-600/20 to-purple-600/20 border-white/10 text-white' : 'bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-blue-100 text-blue-900'}`}>
-                                <div className={`p-3 rounded-2xl border ${theme === 'dark' ? 'bg-blue-500/20 border-blue-500/20' : 'bg-blue-600/10 border-blue-200'}`}>
-                                    <Bell size={18} className={`${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'} animate-[bounce_2s_infinite]`} />
+                            <div className={`backdrop-blur-2xl border p-4 rounded-[2.5rem] shadow-2xl flex items-center gap-4 group ${theme === 'dark' ? 'bg-gradient-to-r from-primary/20 via-neural-indigo/20 to-neural-cyan/20 border-white/10 text-white' : 'bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-blue-100 text-blue-900'}`}>
+                                <div className={`p-3 rounded-2xl border ${theme === 'dark' ? 'bg-primary/20 border-primary/20' : 'bg-primary/10 border-blue-200'}`}>
+                                    <Bell size={18} className={`${theme === 'dark' ? 'text-primary-light' : 'text-primary'} animate-[bounce_2s_infinite]`} />
                                 </div>
                                 <div className="flex-1">
-                                    <p className={`text-[9px] font-black uppercase tracking-[0.3em] mb-0.5 ${theme === 'dark' ? 'text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]' : 'text-blue-600'}`}>System Notification</p>
+                                    <p className={`text-[9px] font-black uppercase tracking-[0.3em] mb-0.5 ${theme === 'dark' ? 'text-primary-light drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]' : 'text-primary'}`}>System Notification</p>
                                     <p className={`text-sm font-bold tracking-tight ${theme === 'dark' ? 'text-slate-100' : 'text-slate-800'}`}>{broadcast}</p>
                                 </div>
                                 <button className={`p-2 rounded-full transition-colors ${theme === 'dark' ? 'hover:bg-white/10' : 'hover:bg-black/5'}`} onClick={() => setBroadcast(null)}>

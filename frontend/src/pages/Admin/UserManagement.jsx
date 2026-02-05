@@ -77,6 +77,16 @@ export default function UserManagement() {
 
     const deleteUser = async (id) => {
         if (!window.confirm("Are you sure? This will revoke all access for this user.")) return;
+        try {
+            const res = await fetch(`${API_BASE}/admin/users/${id}`, {
+                method: 'DELETE'
+            });
+            if (res.ok) {
+                fetchUsers();
+            }
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     const openVault = async (user) => {
@@ -84,9 +94,7 @@ export default function UserManagement() {
         setIsVaultOpen(true);
         setLoadingVault(true);
         try {
-            const res = await fetch(`${API_BASE}/admin/documents?user_id=${user.id}`, {
-                headers: { 'Authorization': `mock_token_${user.id}` } // Admin usually has their own token but for now using this pattern
-            });
+            const res = await fetch(`${API_BASE}/admin/documents?user_id=${user.id}`);
             const data = await res.json();
             setVaultDocs(Array.isArray(data) ? data : []);
         } catch (err) {
@@ -122,64 +130,83 @@ export default function UserManagement() {
     };
 
     return (
-        <div className="space-y-8 animate-in fade-in duration-700 max-w-7xl mx-auto">
-            <div className={`flex flex-col md:flex-row justify-between items-start md:items-center gap-6 p-8 rounded-[2rem] relative overflow-hidden transition-all duration-500 ${theme === 'dark' ? 'bg-[#0f172a] text-white shadow-none' : 'bg-white text-slate-900 border border-slate-100 shadow-2xl shadow-blue-900/10'}`}>
-                <div className="relative z-10">
-                    <h1 className="text-3xl font-black tracking-tight flex items-center gap-3">
-                        <Users className="text-blue-400" size={32} />
-                        Identity Manager
-                    </h1>
-                    <p className="text-slate-400 mt-1 font-medium italic">Directory of all registered entities and operational personnel.</p>
-                </div>
-                <div className="flex items-center gap-3 w-full md:w-auto relative z-10">
-                    <div className="relative flex-1 md:w-80">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                        <input
-                            className="w-full pl-12 pr-4 py-3.5 bg-white/10 border border-white/20 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:bg-white focus:text-slate-900 outline-none font-bold text-sm transition-all"
-                            placeholder="Global Search..."
-                            value={searchTerm}
-                            onChange={e => setSearchTerm(e.target.value)}
-                        />
+        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 max-w-7xl mx-auto pb-20 px-4 md:px-0">
+            {/* Header section with Neural aesthetic */}
+            <div className={`relative group overflow-hidden p-10 md:p-14 rounded-[3.5rem] transition-all duration-700 ${theme === 'dark' ? 'bg-secondary-darker text-white shadow-2xl shadow-black/40' : 'bg-white text-slate-900 border border-slate-100 shadow-2xl shadow-primary/5'}`}>
+                <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
+                    <div>
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 flex items-center gap-2">
+                                <Users size={14} className="text-primary" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">Identity Hub</span>
+                            </div>
+                        </div>
+                        <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none mb-6">
+                            USER <span className="text-gradient uppercase">Registry</span>
+                        </h1>
+                        <p className={`max-w-md font-bold text-xl leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
+                            Synchronize and orchestrate verified entities across the Jassi Cafe network.
+                        </p>
                     </div>
-                    <Button onClick={() => setShowAddForm(!showAddForm)} variant={showAddForm ? 'danger' : 'white'} size="lg">
-                        {showAddForm ? 'Cancel' : <><Plus size={20} className="mr-2" /> Provision New Identity</>}
-                    </Button>
+                    <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+                        <div className="relative flex-1 md:w-96 group">
+                            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={20} />
+                            <input
+                                className={`w-full h-16 pl-16 pr-6 rounded-[1.5rem] border-none focus:ring-4 focus:ring-primary/10 outline-none font-bold text-sm transition-all ${theme === 'dark' ? 'bg-white/5 text-white focus:bg-white/10' : 'bg-slate-50 text-slate-900 focus:bg-white'}`}
+                                placeholder="Global Search Analysis..."
+                                value={searchTerm}
+                                onChange={e => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+                        <Button onClick={() => setShowAddForm(!showAddForm)} variant={showAddForm ? 'danger' : 'primary'} className="rounded-[1.5rem] px-8 h-16 shadow-2xl hover:shadow-primary/20">
+                            {showAddForm ? 'Cancel Operation' : <><Plus size={24} className="mr-3" /> Enroll Identity</>}
+                        </Button>
+                    </div>
                 </div>
-                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl -mr-32 -mt-32" />
+                {/* Background Decoration */}
+                <div className={`absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l pointer-events-none ${theme === 'dark' ? 'from-primary/10 to-transparent' : 'from-primary/5 to-transparent'}`} />
+                <Users size={400} className="absolute -right-24 -bottom-24 opacity-[0.02] rotate-6 group-hover:rotate-0 transition-transform duration-1000 pointer-events-none" />
             </div>
 
             {/* Tab System */}
-            <div className={`flex gap-2 p-1.5 rounded-[1.5rem] w-fit transition-all duration-500 ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-100'}`}>
-                <TabButton
-                    active={activeTab === 'customer'}
-                    onClick={() => setActiveTab('customer')}
-                    icon={User}
-                    label="Customers"
-                    count={counts.customer}
-                />
-                <TabButton
-                    active={activeTab === 'staff'}
-                    onClick={() => setActiveTab('staff')}
-                    icon={ShieldCheck}
-                    label="Staff Team"
-                    count={counts.staff}
-                />
-                <TabButton
-                    active={activeTab === 'b2b'}
-                    onClick={() => setActiveTab('b2b')}
-                    icon={Building2}
-                    label="B2B Partners"
-                    count={counts.b2b}
-                />
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className={`flex gap-2 p-2 rounded-[2rem] transition-all duration-500 ${theme === 'dark' ? 'bg-white/5' : 'bg-white border border-slate-100 shadow-xl shadow-primary/5'}`}>
+                    <TabButton
+                        active={activeTab === 'customer'}
+                        onClick={() => setActiveTab('customer')}
+                        icon={User}
+                        label="Customers"
+                        count={counts.customer}
+                    />
+                    <TabButton
+                        active={activeTab === 'staff'}
+                        onClick={() => setActiveTab('staff')}
+                        icon={ShieldCheck}
+                        label="Staff Nodes"
+                        count={counts.staff}
+                    />
+                    <TabButton
+                        active={activeTab === 'b2b'}
+                        onClick={() => setActiveTab('b2b')}
+                        icon={Briefcase}
+                        label="Business B2B"
+                        count={counts.b2b}
+                    />
+                </div>
+
+                <div className={`px-6 py-3 rounded-2xl flex items-center gap-3 transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 text-slate-400' : 'bg-emerald-50 text-emerald-600 border border-emerald-100'}`}>
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">Matrix Database Live</span>
+                </div>
             </div>
 
             {editingUser && (
-                <Card className="p-10 border-none shadow-2xl shadow-blue-200/50 bg-white rounded-[2.5rem] animate-in slide-in-from-top-6 duration-500">
+                <Card className={`p-10 border-none rounded-[2.5rem] animate-in slide-in-from-top-6 duration-500 ${theme === 'dark' ? 'bg-secondary-darker shadow-black/40' : 'bg-white shadow-2xl shadow-blue-200/50'}`}>
                     <div className="flex items-center gap-3 mb-8">
                         <div className="p-3 bg-blue-600 text-white rounded-2xl">
                             <User size={24} />
                         </div>
-                        <h3 className="text-2xl font-black text-slate-900 tracking-tight">Edit User Profile</h3>
+                        <h3 className={`text-2xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Edit User Profile</h3>
                     </div>
                     <form onSubmit={handleEditUser} className="space-y-8">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -244,12 +271,12 @@ export default function UserManagement() {
             )}
 
             {showAddForm && (
-                <Card className="p-10 border-none shadow-2xl shadow-indigo-200/50 bg-white rounded-[2.5rem] animate-in slide-in-from-top-6 duration-500">
+                <Card className={`p-10 border-none rounded-[2.5rem] animate-in slide-in-from-top-6 duration-500 ${theme === 'dark' ? 'bg-secondary-darker shadow-black/40' : 'bg-white shadow-2xl shadow-indigo-200/50'}`}>
                     <div className="flex items-center gap-3 mb-8">
                         <div className="p-3 bg-indigo-600 text-white rounded-2xl">
                             <Plus size={24} />
                         </div>
-                        <h3 className="text-2xl font-black text-slate-900 tracking-tight">Access Provisioning</h3>
+                        <h3 className={`text-2xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Access Provisioning</h3>
                     </div>
                     <form onSubmit={handleAddUser} className="space-y-8">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -311,160 +338,146 @@ export default function UserManagement() {
                 </Card>
             )}
 
-            <div className={`rounded-[2.5rem] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border overflow-hidden transition-all duration-500 ${theme === 'dark' ? 'bg-[#0f172a] border-white/5 shadow-none' : 'bg-white border-slate-100'}`}>
-                <table className="w-full text-left">
-                    <thead>
-                        <tr className={`border-b transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-slate-50/80 border-slate-100'}`}>
-                            <th className="p-6 font-black text-slate-400 uppercase text-[10px] tracking-widest bg-white/50">Details</th>
-                            <th className="p-6 font-black text-slate-400 uppercase text-[10px] tracking-widest text-center">Protocol Role</th>
-                            {activeTab === 'customer' && <th className="p-6 font-black text-slate-400 uppercase text-[10px] tracking-widest">Village/Area</th>}
-                            {activeTab === 'staff' && <th className="p-6 font-black text-slate-400 uppercase text-[10px] tracking-widest">Security Access</th>}
-                            <th className="p-6 font-black text-slate-400 uppercase text-[10px] tracking-widest text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className={`divide-y transition-all duration-500 ${theme === 'dark' ? 'divide-white/5' : 'divide-slate-50'}`}>
-                        {paginatedUsers.map(user => (
-                            <tr key={user.id} className={`transition-all group ${theme === 'dark' ? 'hover:bg-white/5' : 'hover:bg-slate-50/50'}`}>
-                                <td className="p-6">
-                                    <div className="flex items-center gap-5">
-                                        <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center transition-all group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white">
-                                            <User size={20} />
-                                        </div>
-                                        <div>
-                                            <p className={`font-black text-base leading-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{user.name}</p>
-                                            <p className="text-sm text-slate-400 font-bold mt-0.5">{user.phone}</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="p-6 text-center">
-                                    <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm ring-1 ring-inset ${user.role === 'admin' ? 'bg-purple-50 text-purple-700 ring-purple-100' :
-                                        user.role === 'staff' ? 'bg-blue-50 text-blue-700 ring-blue-100' :
-                                            user.role === 'b2b' ? 'bg-amber-50 text-amber-700 ring-amber-100' :
-                                                'bg-slate-50 text-slate-600 ring-slate-100'
-                                        }`}>
-                                        {user.role}
-                                    </span>
-                                </td>
-                                {activeTab === 'customer' && (
-                                    <td className="p-6">
-                                        <div className="flex items-center gap-2 text-slate-600 font-bold text-sm">
-                                            <MapPin size={16} className="text-blue-500" />
-                                            {user.village || 'Undefined'}
-                                        </div>
-                                    </td>
-                                )}
-                                {activeTab === 'staff' && (
-                                    <td className="p-6">
-                                        <div className="flex items-center gap-2 text-emerald-600 font-black text-[10px] uppercase tracking-wider">
-                                            <ShieldCheck size={16} /> Fully Authorized
-                                        </div>
-                                    </td>
-                                )}
-                                <td className="p-6 text-right">
-                                    <div className="flex justify-end gap-2">
-                                        <button
-                                            onClick={() => openVault(user)}
-                                            className="p-2.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all group/vault"
-                                            title="View Document Vault"
-                                        >
-                                            <FolderLock size={20} className="group-hover/vault:scale-110 transition-transform" />
-                                        </button>
-                                        <button
-                                            onClick={() => setEditingUser({ ...user, password: '' })}
-                                            className="p-2.5 text-slate-300 hover:text-blue-500 hover:bg-blue-50 rounded-xl transition-all"
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
-                                        </button>
-                                        <button
-                                            onClick={() => deleteUser(user.id)}
-                                            className="p-2.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
-                                        >
-                                            <Trash2 size={20} />
-                                        </button>
-                                    </div>
-                                </td>
+            {/* Main User Grid/Table */}
+            <Card className="p-0 overflow-hidden relative border-none">
+                <div className="overflow-x-auto custom-scrollbar">
+                    <table className="w-full text-left border-collapse">
+                        <thead>
+                            <tr className={`${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50/50'} border-b ${theme === 'dark' ? 'border-white/5' : 'border-slate-100'}`}>
+                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Identity Details</th>
+                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Neural Role</th>
+                                {activeTab === 'customer' && <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Origin Protocol</th>}
+                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 text-right">Operational Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-                {paginatedUsers.length === 0 && filteredUsers.length === 0 && (
+                        </thead>
+                        <tbody className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-slate-50'}`}>
+                            {paginatedUsers.map(user => (
+                                <tr key={user.id} className={`group transition-all duration-300 ${theme === 'dark' ? 'hover:bg-white/5' : 'hover:bg-primary/5'}`}>
+                                    <td className="p-8">
+                                        <div className="flex items-center gap-5">
+                                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary/10 to-neural-indigo/10 flex items-center justify-center font-black text-primary text-xl shadow-inner group-hover:scale-110 transition-transform">
+                                                {user.name[0]}
+                                            </div>
+                                            <div>
+                                                <p className={`text-lg font-black tracking-tight ${theme === 'dark' ? 'text-slate-100' : 'text-slate-900'} group-hover:text-primary transition-colors`}>{user.name}</p>
+                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">REF: NEURAL-{user.id.toString().padStart(6, '0')}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className="p-8">
+                                        <div className="flex flex-col gap-2">
+                                            <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest inline-flex items-center gap-2 w-fit ${user.role === 'admin' ? 'bg-red-500/10 text-red-500 border border-red-500/20' : (user.role === 'staff' ? 'bg-primary/10 text-primary border border-primary/20' : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20')}`}>
+                                                <div className={`w-1.5 h-1.5 rounded-full ${user.role === 'admin' ? 'bg-red-500' : (user.role === 'staff' ? 'bg-primary' : 'bg-emerald-500')}`} />
+                                                {user.role}
+                                            </span>
+                                            <p className={`text-[10px] font-black tracking-widest ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{user.phone}</p>
+                                        </div>
+                                    </td>
+                                    {activeTab === 'customer' && (
+                                        <td className="p-8">
+                                            <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">
+                                                <MapPin size={10} className="text-primary" /> {user.village || 'Undefined'}
+                                            </div>
+                                        </td>
+                                    )}
+                                    <td className="p-8">
+                                        <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all duration-300">
+                                            <button onClick={() => openVault(user)} className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-primary/20 hover:text-primary' : 'bg-slate-100 text-slate-600 hover:bg-primary hover:text-white shadow-lg shadow-primary/20'}`}>
+                                                <FolderLock size={20} />
+                                            </button>
+                                            <button onClick={() => setEditingUser({ ...user, password: '' })} className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-emerald-500/20 hover:text-emerald-500' : 'bg-slate-100 text-slate-600 hover:bg-emerald-500 hover:text-white shadow-lg shadow-emerald-500/20'}`}>
+                                                <Eye size={20} />
+                                            </button>
+                                            <button onClick={() => deleteUser(user.id)} className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-red-500/20 hover:text-red-500' : 'bg-slate-100 text-slate-600 hover:bg-red-500 hover:text-white shadow-lg shadow-red-500/20'}`}>
+                                                <Trash2 size={20} />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                {paginatedUsers.length === 0 && (
                     <div className="p-20 text-center">
-                        <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Users size={32} className="text-slate-200" />
-                        </div>
-                        <p className="text-slate-400 font-bold">No registered profiles found in this category.</p>
+                        <Users size={80} className="mx-auto text-slate-200 dark:text-white/5 mb-6" />
+                        <h4 className="text-2xl font-black text-slate-300 uppercase tracking-[0.2em]">No Synchronized Entities</h4>
+                        <p className="text-slate-400 font-bold mt-2">The neural filter returned no matches for this sector.</p>
                     </div>
                 )}
-                {filteredUsers.length > 0 && (
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={setCurrentPage}
-                        itemsPerPage={itemsPerPage}
-                        totalItems={filteredUsers.length}
-                    />
+                {filteredUsers.length > itemsPerPage && (
+                    <div className={`p-8 border-t ${theme === 'dark' ? 'border-white/5 bg-white/[0.02]' : 'border-slate-50 bg-slate-50/30'}`}>
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={setCurrentPage}
+                            itemsPerPage={itemsPerPage}
+                            totalItems={filteredUsers.length}
+                        />
+                    </div>
                 )}
-            </div>
-            {/* User Vault Drawer */}
+            </Card>
+
+            {/* Identity Vault Drawer */}
             <Drawer
                 isOpen={isVaultOpen}
                 onClose={() => setIsVaultOpen(false)}
-                title={`Identity Vault: ${vaultUser?.name}`}
+                title={`NEURAL VAULT ANALYSIS: ${vaultUser?.name}`}
             >
-                <div className="space-y-6">
-                    <div className="p-6 bg-slate-900 rounded-3xl text-white relative overflow-hidden">
+                <div className="space-y-8 p-4">
+                    <div className={`p-8 rounded-[2.5rem] relative overflow-hidden transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 text-white' : 'bg-slate-900 text-white'}`}>
                         <div className="relative z-10">
-                            <h4 className="font-black text-xl mb-1">{vaultUser?.name}</h4>
-                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{vaultUser?.phone} • {vaultUser?.role}</p>
+                            <h4 className="font-black text-2xl mb-1 tracking-tighter uppercase">{vaultUser?.name}</h4>
+                            <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">{vaultUser?.role} VERIFICATION STATUS: ACTIVE</p>
                         </div>
-                        <FolderLock className="absolute -right-4 -bottom-4 opacity-10 text-white" size={100} />
+                        <FolderLock className="absolute -right-8 -bottom-8 opacity-10 text-primary" size={150} />
                     </div>
 
                     {loadingVault ? (
-                        <div className="py-20 text-center">
-                            <div className="animate-spin w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-                            <p className="text-xs font-black text-slate-400 uppercase tracking-widest">Searching Vault...</p>
+                        <div className="py-24 text-center">
+                            <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full mx-auto mb-6"></div>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Deciphering Vault Data...</p>
                         </div>
                     ) : vaultDocs.length > 0 ? (
-                        <div className="grid grid-cols-1 gap-4">
+                        <div className="grid grid-cols-1 gap-5">
                             {vaultDocs.map(doc => (
-                                <div key={doc.id} className="p-5 bg-white border border-slate-100 rounded-3xl flex items-center justify-between group hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-50 transition-all">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600">
-                                            <FileText size={24} />
+                                <div key={doc.id} className={`p-6 border rounded-[2rem] flex items-center justify-between group transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5 hover:bg-white/10' : 'bg-slate-50 border-slate-100 hover:bg-white hover:shadow-2xl hover:shadow-primary/5'}`}>
+                                    <div className="flex items-center gap-5">
+                                        <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/10">
+                                            <FileText size={28} />
                                         </div>
                                         <div>
-                                            <p className="font-black text-slate-900 text-sm uppercase">{doc.type.replace('_', ' ')}</p>
-                                            <p className="text-[10px] font-bold text-slate-400">{doc.original_name || 'unnamed_file'}</p>
+                                            <p className={`font-black text-sm uppercase tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{doc.type.replace('_', ' ')}</p>
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{doc.original_name || 'NEURAL_BLOB'}</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-3">
                                         <a
                                             href={`${API_BASE.replace('/api', '')}${doc.file_path}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="p-2.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all"
+                                            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:text-primary' : 'bg-white text-slate-400 hover:text-primary shadow-lg shadow-primary/10'}`}
                                         >
-                                            <Eye size={18} />
+                                            <Eye size={20} />
                                         </a>
                                         <a
                                             href={`${API_BASE.replace('/api', '')}${doc.file_path}`}
                                             download
-                                            className="p-2.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-all"
+                                            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:text-emerald-500' : 'bg-white text-slate-400 hover:text-emerald-500 shadow-lg shadow-emerald-500/10'}`}
                                         >
-                                            <Download size={18} />
+                                            <Download size={20} />
                                         </a>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <div className="py-20 text-center">
-                            <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100">
-                                <FolderLock size={32} className="text-slate-200" />
+                        <div className="py-24 text-center">
+                            <div className="w-20 h-20 bg-slate-50 dark:bg-white/5 rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-slate-100 dark:border-white/5 shadow-inner">
+                                <FolderLock size={36} className="text-slate-200 dark:text-white/10" />
                             </div>
-                            <p className="text-slate-400 font-bold">Vault is empty.</p>
-                            <p className="text-[10px] text-slate-400 uppercase mt-1">No documents uploaded by this user yet.</p>
+                            <h4 className="text-xl font-black text-slate-300 uppercase tracking-widest">Vault Void</h4>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-2">No synchronized records found for this entity.</p>
                         </div>
                     )}
                 </div>
@@ -473,18 +486,21 @@ export default function UserManagement() {
     );
 }
 
-const TabButton = ({ active, onClick, icon: Icon, label, count }) => (
-    <button
-        onClick={onClick}
-        className={`flex items-center gap-3 px-6 py-3 rounded-2xl text-sm font-black transition-all duration-300 ${active
-            ? 'bg-white text-slate-900 shadow-xl shadow-slate-200/50 scale-105'
-            : 'text-slate-500 hover:bg-white/50 hover:text-slate-700'
-            }`}
-    >
-        <Icon size={18} className={active ? 'text-blue-600' : 'text-slate-400'} />
-        {label}
-        <span className={`text-[10px] px-2 py-0.5 rounded-lg ${active ? 'bg-blue-100 text-blue-700' : 'bg-slate-200 text-slate-500'}`}>
-            {count}
-        </span>
-    </button>
-);
+const TabButton = ({ active, onClick, icon: Icon, label, count }) => {
+    const { theme } = useTheme();
+    return (
+        <button
+            onClick={onClick}
+            className={`flex items-center gap-4 px-8 py-4 rounded-[1.5rem] font-black transition-all duration-500 select-none ${active
+                ? (theme === 'dark' ? 'bg-white/10 text-white shadow-2xl scale-105' : 'bg-slate-900 text-white shadow-2xl scale-105')
+                : (theme === 'dark' ? 'text-slate-500 hover:text-slate-300 hover:bg-white/5' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50')
+                }`}
+        >
+            <Icon size={20} className={active ? 'text-primary' : ''} />
+            <span className="text-[11px] uppercase tracking-[0.2em]">{label}</span>
+            <span className={`text-[9px] px-2.5 py-1 rounded-full ${active ? 'bg-primary/20 text-primary-light' : 'bg-slate-200 dark:bg-white/5 text-slate-500'}`}>
+                {count}
+            </span>
+        </button>
+    );
+};

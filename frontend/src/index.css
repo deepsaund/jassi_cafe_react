@@ -19,7 +19,7 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-slate-400/20 rounded-full;
+    @apply bg-blue-500/20 rounded-full;
     border: 1px solid transparent;
     background-clip: padding-box;
   }
@@ -28,34 +28,51 @@
     @apply bg-blue-500/40;
   }
 
+  /* Neural Aesthetics */
+  .neural-card-hover {
+    @apply hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500;
+  }
+
+  .glass-effect {
+    @apply backdrop-blur-xl bg-white/70 border border-white/20;
+  }
+
+  .dark .glass-effect {
+    @apply bg-secondary-darker/70 border-white/5;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-neural-indigo to-neural-cyan;
+  }
+
   /* Global Scrollbar Overrides */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-slate-50;
+    @apply bg-background-light;
   }
 
   .dark ::-webkit-scrollbar-track {
-    @apply bg-[#070b14];
+    @apply bg-background-dark;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-slate-200 rounded-full border-2 border-slate-50;
+    @apply bg-slate-200 rounded-full border-2 border-background-light;
   }
 
   .dark ::-webkit-scrollbar-thumb {
-    @apply bg-slate-800 rounded-full border-2 border-[#070b14];
+    @apply bg-slate-800 rounded-full border-2 border-background-dark;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-blue-600;
+    @apply bg-primary;
   }
 
   /* Dark mode select dropdown fix */
   .dark select option {
-    @apply bg-[#1e293b] text-white;
+    @apply bg-secondary text-white;
   }
 }

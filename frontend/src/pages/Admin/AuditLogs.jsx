@@ -50,6 +50,10 @@ export default function AuditLogs() {
         </div>
     );
 
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedLogs = logs.slice(startIndex, endIndex);
+
     return (
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 max-w-7xl mx-auto pb-20 px-4 md:px-0">
             {/* Header section with Neural aesthetic */}
@@ -93,61 +97,54 @@ export default function AuditLogs() {
                             </tr>
                         </thead>
                         <tbody className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-slate-50'}`}>
-                            {(() => {
-                                const totalPages = Math.ceil(logs.length / itemsPerPage);
-                                const startIndex = (currentPage - 1) * itemsPerPage;
-                                const endIndex = startIndex + itemsPerPage;
-                                const paginatedLogs = logs.slice(startIndex, endIndex);
-
-                                return paginatedLogs.map(log => (
-                                    <tr key={log.id} className={`group transition-all duration-300 ${theme === 'dark' ? 'hover:bg-white/5' : 'hover:bg-primary/5'}`}>
-                                        <td className="p-8">
-                                            <div className={`flex items-center gap-3 font-black text-xs tracking-tight ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
-                                                <div className={`p-2 rounded-lg ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-100'}`}>
-                                                    <Clock size={14} className="text-primary" />
-                                                </div>
-                                                <span>
-                                                    {new Date(log.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric', year: '2-digit' })}
-                                                    <span className="opacity-40 mx-2">|</span>
-                                                    {new Date(log.timestamp).toLocaleTimeString([], { hour12: true, hour: '2-digit', minute: '2-digit' })}
-                                                </span>
+                            {paginatedLogs.map((log) => (
+                                <tr key={log.id} className={`group transition-all duration-300 ${theme === 'dark' ? 'hover:bg-white/5' : 'hover:bg-primary/5'}`}>
+                                    <td className="p-8">
+                                        <div className={`flex items-center gap-3 font-black text-xs tracking-tight ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
+                                            <div className={`p-2 rounded-lg ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-100'}`}>
+                                                <Clock size={14} className="text-primary" />
                                             </div>
-                                        </td>
-                                        <td className="p-8">
-                                            <div className="flex items-center gap-4">
-                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 shadow-inner' : 'bg-slate-100 text-slate-500 shadow-inner'}`}>
-                                                    <Fingerprint size={18} />
-                                                </div>
-                                                <div>
-                                                    <p className={`font-black text-sm tracking-tight ${theme === 'dark' ? 'text-slate-200' : 'text-slate-900'} group-hover:text-primary transition-colors`}>
-                                                        {log.actor_name || 'System Autonomous'}
-                                                    </p>
-                                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Verified Identity</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="p-8">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                                                <span className={`font-black text-xs font-mono tracking-wider ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
-                                                    REF-{log.order_ref || 'INTERNAL'}
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td className="p-8">
-                                            <span className={`px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest inline-flex items-center gap-2.5 transition-all duration-500 shadow-sm ${getActionStyle(log.action)}`}>
-                                                <div className="w-1.5 h-1.5 rounded-full bg-current opacity-60" />
-                                                {log.action}
+                                            <span>
+                                                {new Date(log.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric', year: '2-digit' })}
+                                                <span className="opacity-40 mx-2">|</span>
+                                                {new Date(log.timestamp).toLocaleTimeString([], { hour12: true, hour: '2-digit', minute: '2-digit' })}
                                             </span>
-                                        </td>
-                                        <td className="p-8">
-                                            <p className={`text-xs font-bold leading-relaxed max-w-sm ${theme === 'dark' ? 'text-slate-500' : 'text-slate-500'} group-hover:text-slate-400 transition-colors italic`}>
-                                                {log.details || 'Baseline operational event synchronized successfully.'}
-                                            </p>
-                                        </td>
-                                    </tr>
-                                );
-                            })()}
+                                        </div>
+                                    </td>
+                                    <td className="p-8">
+                                        <div className="flex items-center gap-4">
+                                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 shadow-inner' : 'bg-slate-100 text-slate-500 shadow-inner'}`}>
+                                                <Fingerprint size={18} />
+                                            </div>
+                                            <div>
+                                                <p className={`font-black text-sm tracking-tight ${theme === 'dark' ? 'text-slate-200' : 'text-slate-900'} group-hover:text-primary transition-colors`}>
+                                                    {log.actor_name || 'System Autonomous'}
+                                                </p>
+                                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Verified Identity</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className="p-8">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                                            <span className={`font-black text-xs font-mono tracking-wider ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
+                                                REF-{log.order_ref || 'INTERNAL'}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td className="p-8">
+                                        <span className={`px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest inline-flex items-center gap-2.5 transition-all duration-500 shadow-sm ${getActionStyle(log.action)}`}>
+                                            <div className="w-1.5 h-1.5 rounded-full bg-current opacity-60" />
+                                            {log.action}
+                                        </span>
+                                    </td>
+                                    <td className="p-8">
+                                        <p className={`text-xs font-bold leading-relaxed max-w-sm ${theme === 'dark' ? 'text-slate-500' : 'text-slate-500'} group-hover:text-slate-400 transition-colors italic`}>
+                                            {log.details || 'Baseline operational event synchronized successfully.'}
+                                        </p>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>

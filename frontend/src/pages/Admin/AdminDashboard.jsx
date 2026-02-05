@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { Users, FileText, Settings, CreditCard, Activity, ShieldCheck, Zap, Globe, Wallet, RefreshCw, BarChart2, TrendingUp, Award, Bell } from 'lucide-react';
+import { Users, FileText, Settings, CreditCard, Activity, ShieldCheck, Zap, Globe, Wallet, RefreshCw, BarChart2, TrendingUp, Award, Bell, Radio } from 'lucide-react';
 import { API_BASE } from '../../config';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -404,7 +404,8 @@ const MetricCard = ({ title, value, trend, icon: Icon, color }) => {
     );
 };
 
-const ProtocolItem = ({ icon: Icon, label, desc, status, onToggle, syncing, danger, theme }) => {
+const ProtocolItem = ({ icon: Icon, label, desc, status, onToggle, syncing, danger }) => {
+    const { theme } = useTheme();
     return (
         <div className={`p-6 rounded-[2rem] border flex items-center justify-between group transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5 hover:bg-white/10' : 'bg-slate-50 border-slate-100 hover:bg-white hover:shadow-2xl hover:shadow-primary/5'}`}>
             <div className="flex items-center gap-5">

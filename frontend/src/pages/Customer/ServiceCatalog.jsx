@@ -48,8 +48,8 @@ export default function ServiceCatalog() {
     return (
         <div className="max-w-7xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-1000 pb-20">
             {/* Futuristic Header */}
-            <header className={`relative group overflow-hidden p-10 md:p-14 rounded-[3.5rem] transition-all duration-500 ${theme === 'dark' ? 'bg-[#0f172a] text-white shadow-none' : 'bg-white text-slate-900 shadow-[0_35px_60px_-15px_rgba(30,58,138,0.15)] border border-slate-100'}`}>
-                <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-10">
+            <header className={`relative group overflow-hidden p-6 md:p-8 rounded-3xl transition-all duration-500 ${theme === 'dark' ? 'bg-[#0f172a] text-white shadow-none' : 'bg-white text-slate-900 shadow-[0_35px_60px_-15px_rgba(30,58,138,0.15)] border border-slate-100'}`}>
+                <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
                     <div className="text-center md:text-left">
                         <div className="flex items-center justify-center md:justify-start gap-2 mb-4">
                             <div className="px-3 py-1 bg-blue-500/20 rounded-full border border-blue-500/30 flex items-center gap-2">
@@ -57,10 +57,10 @@ export default function ServiceCatalog() {
                                 <span className="text-[10px] font-black uppercase tracking-widest text-blue-300">System Online</span>
                             </div>
                         </div>
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
                             Service <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400">Catalog</span>
                         </h1>
-                        <p className="text-slate-400 mt-4 text-base md:text-lg font-medium max-w-xl">
+                        <p className="text-slate-400 mt-2 text-sm md:text-base font-medium max-w-xl">
                             Select any service below to begin your online application. We make the process simple and fast for you.
                         </p>
                     </div>
@@ -71,7 +71,7 @@ export default function ServiceCatalog() {
                             <input
                                 type="text"
                                 placeholder="Search services..."
-                                className={`w-full pl-16 pr-6 py-5 border border-white/10 rounded-[2rem] text-white placeholder:text-slate-600 focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:bg-white/10 focus:border-blue-500/50 transition-all font-bold backdrop-blur-xl ${theme === 'dark' ? 'bg-white/5' : 'bg-black/20'}`}
+                                className={`w-full pl-16 pr-6 py-3 border border-white/10 rounded-2xl text-white placeholder:text-slate-600 focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:bg-white/10 focus:border-blue-500/50 transition-all font-bold backdrop-blur-xl ${theme === 'dark' ? 'bg-white/5' : 'bg-black/20'}`}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
@@ -82,7 +82,7 @@ export default function ServiceCatalog() {
                 {/* Background Decorations */}
                 <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] -mr-32 -mt-32" />
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-600/20 rounded-full blur-[100px] -ml-20 -mb-20" />
-                <Layers size={300} className="absolute -right-10 -bottom-10 opacity-[0.03] rotate-12 group-hover:rotate-6 transition-transform duration-[2000ms]" />
+                <Layers size={250} className="absolute -right-10 -bottom-10 opacity-[0.03] rotate-12 group-hover:rotate-6 transition-transform duration-[2000ms]" />
             </header>
 
             {/* Service Grid Section */}
@@ -182,12 +182,12 @@ export default function ServiceCatalog() {
 
                 {/* Empty State */}
                 {!loading && filteredServices.length === 0 && (
-                    <div className={`text-center py-32 rounded-[4rem] border-2 border-dashed ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-slate-50/50 border-slate-200'}`}>
-                        <div className={`w-24 h-24 rounded-[2rem] shadow-2xl flex items-center justify-center mx-auto mb-8 relative ${theme === 'dark' ? 'bg-[#0f172a] text-slate-700 border border-white/5' : 'bg-white text-slate-200'}`}>
-                            <Search size={48} />
+                    <div className={`text-center py-20 rounded-3xl border-2 border-dashed ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-slate-50/50 border-slate-200'}`}>
+                        <div className={`w-20 h-20 rounded-2xl shadow-2xl flex items-center justify-center mx-auto mb-6 relative ${theme === 'dark' ? 'bg-[#0f172a] text-slate-700 border border-white/5' : 'bg-white text-slate-200'}`}>
+                            <Search size={40} />
                             <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full animate-ping" />
                         </div>
-                        <h3 className={`font-extrabold text-3xl tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>No Services Found</h3>
+                        <h3 className={`font-extrabold text-2xl tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>No Services Found</h3>
                         <p className="text-slate-500 max-w-sm mx-auto mt-4 font-bold uppercase text-xs tracking-widest">No matching services found.</p>
                         <Button
                             variant="glass"

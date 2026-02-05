@@ -41,30 +41,30 @@ export default function Settlements() {
     return (
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 max-w-7xl mx-auto pb-20 px-4 md:px-0">
             {/* Header section with Neural aesthetic */}
-            <div className={`relative group overflow-hidden p-10 md:p-14 rounded-[3.5rem] transition-all duration-700 ${theme === 'dark' ? 'bg-secondary-darker text-white shadow-2xl shadow-black/40' : 'bg-white text-slate-900 border-2 border-slate-200 shadow-2xl shadow-slate-900/10'}`}>
-                <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
+            <div className={`relative group overflow-hidden p-6 md:p-8 rounded-3xl transition-all duration-700 ${theme === 'dark' ? 'bg-secondary-darker text-white shadow-2xl shadow-black/40' : 'bg-white text-slate-900 border-2 border-slate-200 shadow-2xl shadow-slate-900/10'}`}>
+                <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div>
-                        <div className="flex items-center gap-3 mb-6">
+                        <div className="flex items-center gap-3 mb-4">
                             <div className="px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2">
                                 <Wallet size={14} className="text-emerald-500" />
                                 <span className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-500">Finance</span>
                             </div>
                         </div>
-                        <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none mb-6">
+                        <h1 className="text-3xl md:text-4xl font-black tracking-tighter leading-none mb-4">
                             B2B <span className="text-gradient uppercase">Settlements</span>
                         </h1>
-                        <p className={`max-w-md font-bold text-xl leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
+                        <p className={`max-w-md font-bold text-lg leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
                             View all B2B transactions and wallet history.
                         </p>
                     </div>
-                    <div className={`px-8 py-4 rounded-[2rem] flex items-center gap-4 transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 text-slate-400' : 'bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-xl shadow-emerald-500/5'}`}>
+                    <div className={`px-6 py-3 rounded-2xl flex items-center gap-3 transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 text-slate-400' : 'bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-xl shadow-emerald-500/5'}`}>
                         <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_12px_rgba(16,185,129,0.8)]" />
                         <span className="text-xs font-black uppercase tracking-[0.3em]">Up to Date</span>
                     </div>
                 </div>
                 {/* Background Decoration */}
                 <div className={`absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l pointer-events-none ${theme === 'dark' ? 'from-emerald-500/10 to-transparent' : 'from-emerald-500/5 to-transparent'}`} />
-                <CreditCard size={400} className="absolute -right-24 -bottom-24 opacity-[0.02] rotate-6 group-hover:rotate-0 transition-transform duration-1000 pointer-events-none" />
+                <CreditCard size={250} className="absolute -right-24 -bottom-24 opacity-[0.02] rotate-6 group-hover:rotate-0 transition-transform duration-1000 pointer-events-none" />
             </div>
 
             {/* Settlements Table */}
@@ -73,10 +73,10 @@ export default function Settlements() {
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className={`${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50/50'} border-b ${theme === 'dark' ? 'border-white/5' : 'border-slate-100'}`}>
-                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Timestamp</th>
-                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">User / Company</th>
-                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 text-right">Amount</th>
-                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Description</th>
+                                <th className="p-5 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Timestamp</th>
+                                <th className="p-5 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">User / Company</th>
+                                <th className="p-5 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 text-right">Amount</th>
+                                <th className="p-5 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Description</th>
                             </tr>
                         </thead>
                         <tbody className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-slate-50'}`}>
@@ -86,10 +86,10 @@ export default function Settlements() {
 
                                 return (
                                     <tr key={tx.id} className={`group transition-all duration-300 ${theme === 'dark' ? 'hover:bg-white/5' : 'hover:bg-primary/5'}`}>
-                                        <td className="p-8">
+                                        <td className="p-5">
                                             <div className={`flex items-center gap-3 font-black text-xs tracking-tight ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
                                                 <div className={`p-2 rounded-lg ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50'}`}>
-                                                    <Clock size={14} className="text-primary" />
+                                                    <Clock size={12} className="text-primary" />
                                                 </div>
                                                 <span>
                                                     {new Date(tx.created_at).toLocaleDateString([], { month: 'short', day: 'numeric', year: '2-digit' })}
@@ -98,35 +98,35 @@ export default function Settlements() {
                                                 </span>
                                             </div>
                                         </td>
-                                        <td className="p-8">
-                                            <div className="flex items-center gap-4">
-                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 shadow-inner' : 'bg-slate-100 text-slate-500 shadow-inner'}`}>
-                                                    {tx.company_name ? <Briefcase size={18} /> : <User size={18} />}
+                                        <td className="p-5">
+                                            <div className="flex items-center gap-3">
+                                                <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 shadow-inner' : 'bg-slate-100 text-slate-500 shadow-inner'}`}>
+                                                    {tx.company_name ? <Briefcase size={16} /> : <User size={16} />}
                                                 </div>
                                                 <div>
-                                                    <p className={`font-black text-sm tracking-tight ${theme === 'dark' ? 'text-slate-200' : 'text-slate-900'} group-hover:text-primary transition-colors`}>
+                                                    <p className={`font-black text-xs tracking-tight ${theme === 'dark' ? 'text-slate-200' : 'text-slate-900'} group-hover:text-primary transition-colors`}>
                                                         {tx.company_name || tx.user_name}
                                                     </p>
-                                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">
+                                                    <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mt-0.5">
                                                         {tx.company_name ? 'B2B PARTNER' : 'OPERATOR'} • {tx.email}
                                                     </p>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="p-8 text-right">
-                                            <div className={`inline-flex items-center gap-3 px-5 py-2 rounded-[1.25rem] font-black font-mono tracking-tighter text-lg transition-all duration-500 shadow-sm ${isCredit
+                                        <td className="p-5 text-right">
+                                            <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-2xl font-black font-mono tracking-tighter text-base transition-all duration-500 shadow-sm ${isCredit
                                                 ? (theme === 'dark' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-emerald-500/10' : 'bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-emerald-500/5')
                                                 : (theme === 'dark' ? 'bg-red-500/10 text-red-400 border border-red-500/20 shadow-red-500/10' : 'bg-red-50 text-red-600 border border-red-100 shadow-red-500/5')}`}>
-                                                {isCredit ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
+                                                {isCredit ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
                                                 {isCredit ? '+' : ''}{amount.toFixed(2)}
                                             </div>
                                         </td>
-                                        <td className="p-8">
+                                        <td className="p-5">
                                             <div className="flex items-center gap-3 italic">
                                                 <div className={`p-1.5 rounded-full ${isCredit ? 'bg-emerald-500/20 text-emerald-500' : 'bg-red-500/20 text-red-500'}`}>
                                                     <Activity size={10} />
                                                 </div>
-                                                <p className={`text-xs font-bold leading-relaxed max-w-sm ${theme === 'dark' ? 'text-slate-500' : 'text-slate-600'} group-hover:text-slate-400 transition-colors`}>
+                                                <p className={`text-[10px] font-bold leading-relaxed max-w-sm ${theme === 'dark' ? 'text-slate-500' : 'text-slate-600'} group-hover:text-slate-400 transition-colors`}>
                                                     {tx.description || 'Transaction processed.'}
                                                 </p>
                                             </div>

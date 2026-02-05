@@ -96,50 +96,50 @@ export default function ServiceManagement() {
     return (
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 max-w-7xl mx-auto pb-20 px-4 md:px-0">
             {/* Header section with Neural aesthetic */}
-            <div className="relative group overflow-hidden bg-[#0f172a] p-10 md:p-14 rounded-[3.5rem] text-white shadow-[0_35px_60px_-15px_rgba(30,58,138,0.3)]">
-                <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
+            <div className="relative group overflow-hidden bg-[#0f172a] p-6 md:p-8 rounded-3xl text-white shadow-[0_35px_60px_-15px_rgba(30,58,138,0.3)]">
+                <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div>
-                        <div className="flex items-center gap-3 mb-6">
+                        <div className="flex items-center gap-3 mb-4">
                             <div className="px-4 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center gap-2">
                                 <Layers size={14} className="text-indigo-300" />
                                 <span className="text-[10px] font-black uppercase tracking-[0.25em] text-indigo-300">Service Management</span>
                             </div>
                         </div>
-                        <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none mb-6">
+                        <h1 className="text-3xl md:text-4xl font-black tracking-tighter leading-none mb-4">
                             SERVICE <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">CATALOG</span>
                         </h1>
-                        <p className="max-w-md font-bold text-xl leading-relaxed text-slate-400">
+                        <p className="max-w-md font-bold text-lg leading-relaxed text-slate-400">
                             Create and manage services offered on the platform.
                         </p>
                     </div>
                     <div>
-                        <Button onClick={() => setShowAddForm(!showAddForm)} variant={showAddForm ? 'danger' : 'primary'} className="rounded-[1.5rem] px-8 h-16 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-1 transition-all duration-300">
-                            {showAddForm ? 'Close Designer' : <><Plus size={24} className="mr-3" /> Create New Service</>}
+                        <Button onClick={() => setShowAddForm(!showAddForm)} variant={showAddForm ? 'danger' : 'primary'} className="rounded-2xl px-6 h-14 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-1 transition-all duration-300">
+                            {showAddForm ? 'Close Designer' : <><Plus size={20} className="mr-3" /> Create New Service</>}
                         </Button>
                     </div>
                 </div>
                 {/* Background Decoration */}
                 <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-[100px] -mr-32 -mt-32" />
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/10 rounded-full blur-[100px] -ml-20 -mb-20" />
-                <Hexagon size={400} className="absolute -right-24 -bottom-24 opacity-[0.02] rotate-12 group-hover:rotate-0 transition-transform duration-1000 pointer-events-none" />
+                <Hexagon size={250} className="absolute -right-24 -bottom-24 opacity-[0.02] rotate-12 group-hover:rotate-0 transition-transform duration-1000 pointer-events-none" />
             </div>
 
             {showAddForm && (
-                <Card className={`p-10 border-none rounded-[3rem] animate-in slide-in-from-top-6 duration-700 ${theme === 'dark' ? 'bg-secondary-darker shadow-black/40' : 'bg-white shadow-2xl shadow-primary/5'}`}>
-                    <div className="flex items-center gap-4 mb-10">
-                        <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/10">
-                            <Layers size={28} />
+                <Card className={`p-6 border-none rounded-3xl animate-in slide-in-from-top-6 duration-700 ${theme === 'dark' ? 'bg-secondary-darker shadow-black/40' : 'bg-white shadow-2xl shadow-primary/5'}`}>
+                    <div className="flex items-center gap-4 mb-6">
+                        <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/10">
+                            <Layers size={24} />
                         </div>
                         <div>
-                            <h3 className={`text-2xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Add New Service</h3>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Configure service details & requirements</p>
+                            <h3 className={`text-xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Add New Service</h3>
+                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">Configure service details & requirements</p>
                         </div>
                     </div>
 
-                    <form onSubmit={handleAddService} className="space-y-12">
+                    <form onSubmit={handleAddService} className="space-y-8">
                         {/* Basic Info */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                            <div className="space-y-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div className="space-y-6">
                                 <Input
                                     label="Service Name"
                                     placeholder="e.g. Passport Application"
@@ -148,16 +148,16 @@ export default function ServiceManagement() {
                                     required
                                 />
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 ml-1">Description</label>
+                                    <label className="text-[9px] font-black uppercase tracking-wider text-slate-400 ml-1">Description</label>
                                     <textarea
-                                        className={`w-full px-6 py-5 border-none rounded-[1.5rem] text-sm font-bold placeholder:text-slate-400 focus:ring-4 focus:ring-primary/10 outline-none transition-all duration-300 min-h-[150px] ${theme === 'dark' ? 'bg-white/5 text-white focus:bg-white/10' : 'bg-slate-50 text-slate-900 focus:bg-white'}`}
+                                        className={`w-full px-4 py-3 border-none rounded-2xl text-sm font-bold placeholder:text-slate-400 focus:ring-4 focus:ring-primary/10 outline-none transition-all duration-300 min-h-[100px] ${theme === 'dark' ? 'bg-white/5 text-white focus:bg-white/10' : 'bg-slate-50 text-slate-900 focus:bg-white'}`}
                                         placeholder="Describe the service..."
                                         value={newService.description}
                                         onChange={e => setNewService({ ...newService, description: e.target.value })}
                                     />
                                 </div>
                             </div>
-                            <div className="grid grid-cols-1 gap-8">
+                            <div className="grid grid-cols-1 gap-6">
                                 <Input
                                     label="Standard Exchange Rate (₹)"
                                     type="number"
@@ -174,86 +174,86 @@ export default function ServiceManagement() {
                                     onChange={e => setNewService({ ...newService, price_b2b: e.target.value })}
                                     required
                                 />
-                                <div className={`p-6 rounded-[1.5rem] border flex items-center gap-4 transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5 text-slate-400' : 'bg-slate-50 border-slate-100 text-slate-500'}`}>
-                                    <Info size={20} className="text-primary flex-shrink-0" />
-                                    <p className="text-xs font-bold leading-relaxed">Rates are synchronized instantly across the user dashboard upon publication.</p>
+                                <div className={`p-4 rounded-2xl border flex items-center gap-4 transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5 text-slate-400' : 'bg-slate-50 border-slate-100 text-slate-500'}`}>
+                                    <Info size={18} className="text-primary flex-shrink-0" />
+                                    <p className="text-[10px] font-bold leading-relaxed">Rates are synchronized instantly across the user dashboard upon publication.</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                             {/* Document Builder */}
-                            <div className={`p-10 rounded-[2.5rem] border transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-slate-50 border-slate-100'}`}>
-                                <div className="flex items-center gap-4 mb-8">
-                                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                                        <FileCheck size={20} />
+                            <div className={`p-6 rounded-3xl border transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-slate-50 border-slate-100'}`}>
+                                <div className="flex items-center gap-4 mb-6">
+                                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                        <FileCheck size={18} />
                                     </div>
                                     <h4 className={`font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Documents Required</h4>
                                 </div>
 
-                                <div className="flex flex-wrap gap-3 mb-8">
+                                <div className="flex flex-wrap gap-2 mb-6">
                                     {docs.map(tag => (
-                                        <span key={tag} className={`px-5 py-2.5 border text-[10px] font-black uppercase tracking-widest rounded-xl flex items-center gap-3 shadow-lg transition-all duration-500 ${theme === 'dark' ? 'bg-secondary-dark border-white/5 text-slate-200' : 'bg-white border-slate-100 text-slate-700 shadow-primary/5'}`}>
+                                        <span key={tag} className={`px-3 py-1.5 border text-[9px] font-black uppercase tracking-widest rounded-lg flex items-center gap-2 shadow-sm transition-all duration-500 ${theme === 'dark' ? 'bg-secondary-dark border-white/5 text-slate-200' : 'bg-white border-slate-100 text-slate-700 shadow-primary/5'}`}>
                                             {tag.replace('_', ' ')}
-                                            <button type="button" onClick={() => removeDoc(tag)} className="p-1 hover:bg-red-500 hover:text-white rounded-lg transition-all">
-                                                <X size={12} />
+                                            <button type="button" onClick={() => removeDoc(tag)} className="p-0.5 hover:bg-red-500 hover:text-white rounded transition-all">
+                                                <X size={10} />
                                             </button>
                                         </span>
                                     ))}
-                                    {docs.length === 0 && <p className="text-xs text-slate-400 font-bold italic py-2">No documents required.</p>}
+                                    {docs.length === 0 && <p className="text-[10px] text-slate-400 font-bold italic py-2">No documents required.</p>}
                                 </div>
 
-                                <div className="flex gap-3">
+                                <div className="flex gap-2">
                                     <input
                                         placeholder="Add document name (e.g. PAN Card)"
                                         value={newDoc}
                                         onChange={e => setNewDoc(e.target.value)}
-                                        className={`flex-1 h-12 px-6 rounded-xl border-none outline-none font-bold text-xs transition-all ${theme === 'dark' ? 'bg-white/5 text-white' : 'bg-white text-slate-900 shadow-sm'}`}
+                                        className={`flex-1 h-10 px-4 rounded-xl border-none outline-none font-bold text-xs transition-all ${theme === 'dark' ? 'bg-white/5 text-white' : 'bg-white text-slate-900 shadow-sm'}`}
                                         onKeyPress={e => e.key === 'Enter' && (e.preventDefault(), addDoc())}
                                     />
-                                    <Button type="button" variant="secondary" onClick={addDoc} className="h-12 px-6 rounded-xl">Add</Button>
+                                    <Button type="button" variant="secondary" onClick={addDoc} className="h-10 px-4 rounded-xl text-xs">Add</Button>
                                 </div>
                             </div>
 
                             {/* Form Field Builder */}
-                            <div className={`p-10 rounded-[2.5rem] border transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-slate-50 border-slate-100'}`}>
-                                <div className="flex items-center gap-4 mb-8">
-                                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                                        <ListTree size={20} />
+                            <div className={`p-6 rounded-3xl border transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-slate-50 border-slate-100'}`}>
+                                <div className="flex items-center gap-4 mb-6">
+                                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                        <ListTree size={18} />
                                     </div>
                                     <h4 className={`font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Form Fields</h4>
                                 </div>
 
-                                <div className="space-y-4 mb-8 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                                <div className="space-y-3 mb-6 max-h-[250px] overflow-y-auto pr-2 custom-scrollbar">
                                     {fields.map((field, idx) => (
-                                        <div key={idx} className={`p-5 rounded-2xl flex items-center justify-between border shadow-sm group transition-all duration-500 ${theme === 'dark' ? 'bg-secondary-dark border-white/5' : 'bg-white border-slate-100'}`}>
-                                            <div className="flex items-center gap-5">
-                                                <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/10 flex items-center justify-center text-[9px] font-black uppercase text-slate-500 dark:text-slate-400">
-                                                    {field.type}
+                                        <div key={idx} className={`p-3 rounded-xl flex items-center justify-between border shadow-sm group transition-all duration-500 ${theme === 'dark' ? 'bg-secondary-dark border-white/5' : 'bg-white border-slate-100'}`}>
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-white/10 flex items-center justify-center text-[8px] font-black uppercase text-slate-500 dark:text-slate-400">
+                                                    {field.type.slice(0, 3)}
                                                 </div>
                                                 <div>
-                                                    <p className={`text-sm font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{field.label}</p>
-                                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mt-1">{field.name}</p>
+                                                    <p className={`text-xs font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{field.label}</p>
+                                                    <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mt-0.5">{field.name}</p>
                                                 </div>
                                             </div>
-                                            <button type="button" onClick={() => removeField(idx)} className="p-2 text-slate-300 hover:text-red-500 transition-colors">
-                                                <Trash2 size={18} />
+                                            <button type="button" onClick={() => removeField(idx)} className="p-1 text-slate-300 hover:text-red-500 transition-colors">
+                                                <Trash2 size={14} />
                                             </button>
                                         </div>
                                     ))}
-                                    {fields.length === 0 && <p className="text-xs text-slate-400 font-bold italic text-center py-6">Initialize fields to collect user information.</p>}
+                                    {fields.length === 0 && <p className="text-[10px] text-slate-400 font-bold italic text-center py-4">Initialize fields to collect user information.</p>}
                                 </div>
 
-                                <div className={`p-6 rounded-[2rem] border transition-all duration-500 ${theme === 'dark' ? 'bg-secondary-dark border-white/5 shadow-inner' : 'bg-white border-slate-100 shadow-inner'} space-y-4`}>
-                                    <div className="grid grid-cols-2 gap-4">
+                                <div className={`p-4 rounded-2xl border transition-all duration-500 ${theme === 'dark' ? 'bg-secondary-dark border-white/5 shadow-inner' : 'bg-white border-slate-100 shadow-inner'} space-y-3`}>
+                                    <div className="grid grid-cols-2 gap-3">
                                         <input
                                             placeholder="Label (e.g. Phone)"
-                                            className={`h-12 px-6 rounded-xl border-none outline-none font-bold text-xs transition-all ${theme === 'dark' ? 'bg-white/5 text-white' : 'bg-slate-50 text-slate-900 shadow-inner'}`}
+                                            className={`h-10 px-4 rounded-xl border-none outline-none font-bold text-xs transition-all ${theme === 'dark' ? 'bg-white/5 text-white' : 'bg-slate-50 text-slate-900 shadow-inner'}`}
                                             value={newField.label}
                                             onChange={e => setNewField({ ...newField, label: e.target.value, name: e.target.value })}
                                         />
                                         <select
-                                            className={`h-12 px-6 rounded-xl border-none outline-none font-bold text-xs transition-all ${theme === 'dark' ? 'bg-white/5 text-white' : 'bg-slate-50 text-slate-900 shadow-inner'}`}
+                                            className={`h-10 px-4 rounded-xl border-none outline-none font-bold text-xs transition-all ${theme === 'dark' ? 'bg-white/5 text-white' : 'bg-slate-50 text-slate-900 shadow-inner'}`}
                                             value={newField.type}
                                             onChange={e => setNewField({ ...newField, type: e.target.value })}
                                         >
@@ -263,19 +263,19 @@ export default function ServiceManagement() {
                                             <option value="number">Numeric Only</option>
                                         </select>
                                     </div>
-                                    <Button type="button" variant="outline" onClick={addField} className="w-full h-12 rounded-xl group">
-                                        <Plus size={16} className="mr-3 group-hover:rotate-90 transition-transform" /> Add Selection Field
+                                    <Button type="button" variant="outline" onClick={addField} className="w-full h-10 rounded-xl group text-xs">
+                                        <Plus size={14} className="mr-2 group-hover:rotate-90 transition-transform" /> Add Selection Field
                                     </Button>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="flex flex-col md:flex-row items-center justify-between gap-8 pt-10 border-t border-slate-100 dark:border-white/5">
-                            <div className="flex items-center gap-4 text-slate-400 font-bold text-sm">
-                                <Info size={18} className="text-primary" />
-                                <span>Deployment status: <span className="text-emerald-500 uppercase tracking-widest text-[10px] font-black">Ready to Publish</span></span>
+                        <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-6 border-t border-slate-100 dark:border-white/5">
+                            <div className="flex items-center gap-3 text-slate-400 font-bold text-xs">
+                                <Info size={16} className="text-primary" />
+                                <span>Deployment status: <span className="text-emerald-500 uppercase tracking-widest text-[9px] font-black">Ready to Publish</span></span>
                             </div>
-                            <Button type="submit" size="lg" className="w-full md:w-auto px-16 h-16 rounded-[1.5rem] shadow-2xl shadow-primary/20">Save Service</Button>
+                            <Button type="submit" size="lg" className="w-full md:w-auto px-10 h-12 rounded-2xl shadow-xl shadow-primary/20">Save Service</Button>
                         </div>
                     </form>
                 </Card>
@@ -289,40 +289,40 @@ export default function ServiceManagement() {
                     const paginatedServices = services.slice(startIndex, endIndex);
 
                     return paginatedServices.map(svc => (
-                        <Card key={svc.id} className={`group hover:-translate-y-2 transition-all duration-500 border-none p-10 rounded-[3rem] relative overflow-hidden ${theme === 'dark' ? 'bg-secondary-darker shadow-black/40 hover:bg-secondary-dark' : 'bg-white shadow-2xl shadow-primary/5 hover:shadow-primary/10'}`}>
+                        <Card key={svc.id} className={`group hover:-translate-y-2 transition-all duration-500 border-none p-6 rounded-2xl relative overflow-hidden ${theme === 'dark' ? 'bg-secondary-darker shadow-black/40 hover:bg-secondary-dark' : 'bg-white shadow-2xl shadow-primary/5 hover:shadow-primary/10'}`}>
                             <div className="relative z-10">
-                                <div className="flex justify-between items-start mb-8">
-                                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 text-primary' : 'bg-primary/10 text-primary shadow-lg shadow-primary/10'} group-hover:scale-110 group-hover:bg-primary group-hover:text-white`}>
-                                        <Activity size={28} />
+                                <div className="flex justify-between items-start mb-6">
+                                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 text-primary' : 'bg-primary/10 text-primary shadow-lg shadow-primary/10'} group-hover:scale-110 group-hover:bg-primary group-hover:text-white`}>
+                                        <Activity size={24} />
                                     </div>
                                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all duration-500">
-                                        <button className={`p-3 rounded-xl transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:text-primary hover:bg-white/10' : 'bg-slate-50 text-slate-400 hover:text-primary hover:bg-white hover:shadow-lg'}`}>
-                                            <Edit size={20} />
+                                        <button className={`p-2 rounded-xl transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:text-primary hover:bg-white/10' : 'bg-slate-50 text-slate-400 hover:text-primary hover:bg-white hover:shadow-lg'}`}>
+                                            <Edit size={16} />
                                         </button>
-                                        <button className={`p-3 rounded-xl transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:text-red-500 hover:bg-white/10' : 'bg-slate-50 text-slate-400 hover:text-red-500 hover:bg-white hover:shadow-lg'}`}>
-                                            <Trash2 size={20} />
+                                        <button className={`p-2 rounded-xl transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:text-red-500 hover:bg-white/10' : 'bg-slate-50 text-slate-400 hover:text-red-500 hover:bg-white hover:shadow-lg'}`}>
+                                            <Trash2 size={16} />
                                         </button>
                                     </div>
                                 </div>
 
-                                <h3 className={`font-black text-2xl tracking-tighter mb-3 leading-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'} group-hover:text-primary transition-colors`}>{svc.name}</h3>
-                                <p className={`text-sm font-bold mb-10 h-10 overflow-hidden line-clamp-2 leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>{svc.description}</p>
+                                <h3 className={`font-black text-lg tracking-tighter mb-2 leading-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'} group-hover:text-primary transition-colors`}>{svc.name}</h3>
+                                <p className={`text-xs font-bold mb-6 h-8 overflow-hidden line-clamp-2 leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>{svc.description}</p>
 
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className={`p-4 rounded-[1.5rem] transition-all duration-500 ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50'}`}>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className={`p-3 rounded-xl transition-all duration-500 ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50'}`}>
                                         <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Standard</p>
-                                        <p className={`text-lg font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>₹{svc.price_normal}</p>
+                                        <p className={`text-base font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>₹{svc.price_normal}</p>
                                     </div>
-                                    <div className={`p-4 rounded-[1.5rem] transition-all duration-500 ${theme === 'dark' ? 'bg-primary/5' : 'bg-primary/5 border border-primary/10'}`}>
+                                    <div className={`p-3 rounded-xl transition-all duration-500 ${theme === 'dark' ? 'bg-primary/5' : 'bg-primary/5 border border-primary/10'}`}>
                                         <p className="text-[9px] font-black text-primary uppercase tracking-[0.2em] mb-1">B2B Partner</p>
-                                        <p className="text-lg font-black text-primary">₹{svc.price_b2b}</p>
+                                        <p className="text-base font-black text-primary">₹{svc.price_b2b}</p>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Decorative element */}
                             <div className="absolute -right-8 -bottom-8 opacity-10 text-primary transform rotate-12 group-hover:rotate-0 transition-transform duration-1000">
-                                <Hexagon size={120} />
+                                <Hexagon size={100} />
                             </div>
                         </Card>
                     ));

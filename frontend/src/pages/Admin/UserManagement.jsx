@@ -132,19 +132,19 @@ export default function UserManagement() {
     return (
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 max-w-7xl mx-auto pb-20 px-4 md:px-0">
             {/* Header section with Neural aesthetic */}
-            <div className={`relative group overflow-hidden p-10 md:p-14 rounded-[3.5rem] transition-all duration-700 ${theme === 'dark' ? 'bg-secondary-darker text-white shadow-2xl shadow-black/40' : 'bg-white text-slate-900 border-2 border-slate-200 shadow-2xl shadow-slate-900/10'}`}>
-                <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
+            <div className={`relative group overflow-hidden p-6 md:p-8 rounded-3xl transition-all duration-700 ${theme === 'dark' ? 'bg-secondary-darker text-white shadow-2xl shadow-black/40' : 'bg-white text-slate-900 border-2 border-slate-200 shadow-2xl shadow-slate-900/10'}`}>
+                <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div>
-                        <div className="flex items-center gap-3 mb-6">
+                        <div className="flex items-center gap-3 mb-4">
                             <div className="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 flex items-center gap-2">
                                 <Users size={14} className="text-primary" />
                                 <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">User Management</span>
                             </div>
                         </div>
-                        <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none mb-6">
+                        <h1 className="text-4xl md:text-5xl font-black tracking-tighter leading-none mb-4">
                             USER <span className="text-gradient uppercase">Registry</span>
                         </h1>
-                        <p className={`max-w-md font-bold text-xl leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
+                        <p className={`max-w-md font-bold text-lg leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
                             Manage user accounts and their roles here.
                         </p>
                     </div>
@@ -152,25 +152,25 @@ export default function UserManagement() {
                         <div className="relative flex-1 md:w-96 group">
                             <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={20} />
                             <input
-                                className={`w-full h-16 pl-16 pr-6 rounded-[1.5rem] border-none focus:ring-4 focus:ring-primary/10 outline-none font-bold text-sm transition-all ${theme === 'dark' ? 'bg-white/5 text-white focus:bg-white/10' : 'bg-slate-50 text-slate-900 focus:bg-white'}`}
+                                className={`w-full h-14 pl-16 pr-6 rounded-2xl border-none focus:ring-4 focus:ring-primary/10 outline-none font-bold text-sm transition-all ${theme === 'dark' ? 'bg-white/5 text-white focus:bg-white/10' : 'bg-slate-50 text-slate-900 focus:bg-white'}`}
                                 placeholder="Search users..."
                                 value={searchTerm}
                                 onChange={e => setSearchTerm(e.target.value)}
                             />
                         </div>
-                        <Button onClick={() => setShowAddForm(!showAddForm)} variant={showAddForm ? 'danger' : 'primary'} className="rounded-[1.5rem] px-8 h-16 shadow-2xl hover:shadow-primary/20">
-                            {showAddForm ? 'Cancel' : <><Plus size={24} className="mr-3" /> Add New User</>}
+                        <Button onClick={() => setShowAddForm(!showAddForm)} variant={showAddForm ? 'danger' : 'primary'} className="rounded-2xl px-8 h-14 shadow-2xl hover:shadow-primary/20">
+                            {showAddForm ? 'Cancel' : <><Plus size={20} className="mr-3" /> Add New User</>}
                         </Button>
                     </div>
                 </div>
                 {/* Background Decoration */}
                 <div className={`absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l pointer-events-none ${theme === 'dark' ? 'from-primary/10 to-transparent' : 'from-primary/5 to-transparent'}`} />
-                <Users size={400} className="absolute -right-24 -bottom-24 opacity-[0.02] rotate-6 group-hover:rotate-0 transition-transform duration-1000 pointer-events-none" />
+                <Users size={250} className="absolute -right-24 -bottom-24 opacity-[0.02] rotate-6 group-hover:rotate-0 transition-transform duration-1000 pointer-events-none" />
             </div>
 
             {/* Tab System */}
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                <div className={`flex gap-2 p-2 rounded-[2rem] transition-all duration-500 ${theme === 'dark' ? 'bg-white/5' : 'bg-white border border-slate-100 shadow-xl shadow-primary/5'}`}>
+                <div className={`flex gap-2 p-2 rounded-2xl transition-all duration-500 ${theme === 'dark' ? 'bg-white/5' : 'bg-white border border-slate-100 shadow-xl shadow-primary/5'}`}>
                     <TabButton
                         active={activeTab === 'customer'}
                         onClick={() => setActiveTab('customer')}
@@ -201,15 +201,15 @@ export default function UserManagement() {
             </div>
 
             {editingUser && (
-                <Card className={`p-10 border-none rounded-[2.5rem] animate-in slide-in-from-top-6 duration-500 ${theme === 'dark' ? 'bg-secondary-darker shadow-black/40' : 'bg-white shadow-2xl shadow-blue-200/50'}`}>
-                    <div className="flex items-center gap-3 mb-8">
+                <Card className={`p-6 border-none rounded-3xl animate-in slide-in-from-top-6 duration-500 ${theme === 'dark' ? 'bg-secondary-darker shadow-black/40' : 'bg-white shadow-2xl shadow-blue-200/50'}`}>
+                    <div className="flex items-center gap-3 mb-6">
                         <div className="p-3 bg-blue-600 text-white rounded-2xl">
-                            <User size={24} />
+                            <User size={20} />
                         </div>
-                        <h3 className={`text-2xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Edit User Profile</h3>
+                        <h3 className={`text-xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Edit User Profile</h3>
                     </div>
-                    <form onSubmit={handleEditUser} className="space-y-8">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <form onSubmit={handleEditUser} className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <Input
                                 label="Full Legal Name"
                                 placeholder="Enter name"
@@ -271,15 +271,15 @@ export default function UserManagement() {
             )}
 
             {showAddForm && (
-                <Card className={`p-10 border-none rounded-[2.5rem] animate-in slide-in-from-top-6 duration-500 ${theme === 'dark' ? 'bg-secondary-darker shadow-black/40' : 'bg-white shadow-2xl shadow-indigo-200/50'}`}>
-                    <div className="flex items-center gap-3 mb-8">
+                <Card className={`p-6 border-none rounded-3xl animate-in slide-in-from-top-6 duration-500 ${theme === 'dark' ? 'bg-secondary-darker shadow-black/40' : 'bg-white shadow-2xl shadow-indigo-200/50'}`}>
+                    <div className="flex items-center gap-3 mb-6">
                         <div className="p-3 bg-indigo-600 text-white rounded-2xl">
-                            <Plus size={24} />
+                            <Plus size={20} />
                         </div>
-                        <h3 className={`text-2xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Create New User</h3>
+                        <h3 className={`text-xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Create New User</h3>
                     </div>
-                    <form onSubmit={handleAddUser} className="space-y-8">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <form onSubmit={handleAddUser} className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <Input
                                 label="Full Legal Name"
                                 placeholder="Enter name"
@@ -296,7 +296,7 @@ export default function UserManagement() {
                                 required
                             />
                             <div className="flex flex-col space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 ml-1">Role</label>
+                                <label className="text-[9px] font-black uppercase tracking-wider text-slate-400 ml-1">Role</label>
                                 <select
                                     className={`w-full px-5 py-3 border-2 border-transparent rounded-2xl text-sm font-bold focus:outline-none transition-all duration-300 ${theme === 'dark' ? 'bg-[#1e293b] text-white focus:bg-[#1e293b] focus:border-indigo-500/20' : 'bg-slate-50 text-slate-900 focus:bg-white focus:border-indigo-500/20'}`}
                                     value={newUser.role}
@@ -344,52 +344,52 @@ export default function UserManagement() {
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className={`${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50/50'} border-b ${theme === 'dark' ? 'border-white/5' : 'border-slate-100'}`}>
-                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">User Details</th>
-                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Role</th>
-                                {activeTab === 'customer' && <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Location</th>}
-                                <th className="p-8 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 text-right">Actions</th>
+                                <th className="p-5 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">User Details</th>
+                                <th className="p-5 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Role</th>
+                                {activeTab === 'customer' && <th className="p-5 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Location</th>}
+                                <th className="p-5 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-slate-50'}`}>
                             {paginatedUsers.map(user => (
                                 <tr key={user.id} className={`group transition-all duration-300 ${theme === 'dark' ? 'hover:bg-white/5' : 'hover:bg-primary/5'}`}>
-                                    <td className="p-8">
-                                        <div className="flex items-center gap-5">
-                                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary/10 to-neural-indigo/10 flex items-center justify-center font-black text-primary text-xl shadow-inner group-hover:scale-110 transition-transform">
+                                    <td className="p-5">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary/10 to-neural-indigo/10 flex items-center justify-center font-black text-primary text-base shadow-inner group-hover:scale-110 transition-transform">
                                                 {user.name[0]}
                                             </div>
                                             <div>
-                                                <p className={`text-lg font-black tracking-tight ${theme === 'dark' ? 'text-slate-100' : 'text-slate-900'} group-hover:text-primary transition-colors`}>{user.name}</p>
-                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">ID: #{user.id.toString().padStart(6, '0')}</p>
+                                                <p className={`text-base font-black tracking-tight ${theme === 'dark' ? 'text-slate-100' : 'text-slate-900'} group-hover:text-primary transition-colors`}>{user.name}</p>
+                                                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">ID: #{user.id.toString().padStart(6, '0')}</p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="p-8">
-                                        <div className="flex flex-col gap-2">
-                                            <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest inline-flex items-center gap-2 w-fit ${user.role === 'admin' ? 'bg-red-500/10 text-red-500 border border-red-500/20' : (user.role === 'staff' ? 'bg-primary/10 text-primary border border-primary/20' : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20')}`}>
+                                    <td className="p-5">
+                                        <div className="flex flex-col gap-1">
+                                            <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest inline-flex items-center gap-1.5 w-fit ${user.role === 'admin' ? 'bg-red-500/10 text-red-500 border border-red-500/20' : (user.role === 'staff' ? 'bg-primary/10 text-primary border border-primary/20' : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20')}`}>
                                                 <div className={`w-1.5 h-1.5 rounded-full ${user.role === 'admin' ? 'bg-red-500' : (user.role === 'staff' ? 'bg-primary' : 'bg-emerald-500')}`} />
                                                 {user.role}
                                             </span>
-                                            <p className={`text-[10px] font-black tracking-widest ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{user.phone}</p>
+                                            <p className={`text-[9px] font-black tracking-widest ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{user.phone}</p>
                                         </div>
                                     </td>
                                     {activeTab === 'customer' && (
-                                        <td className="p-8">
+                                        <td className="p-5">
                                             <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">
                                                 <MapPin size={10} className="text-primary" /> {user.village || 'Undefined'}
                                             </div>
                                         </td>
                                     )}
-                                    <td className="p-8">
-                                        <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all duration-300">
-                                            <button onClick={() => openVault(user)} className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-primary/20 hover:text-primary' : 'bg-slate-100 text-slate-600 hover:bg-primary hover:text-white shadow-lg shadow-primary/20'}`}>
-                                                <FolderLock size={20} />
+                                    <td className="p-5">
+                                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all duration-300">
+                                            <button onClick={() => openVault(user)} className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-primary/20 hover:text-primary' : 'bg-slate-100 text-slate-600 hover:bg-primary hover:text-white shadow-lg shadow-primary/20'}`}>
+                                                <FolderLock size={18} />
                                             </button>
-                                            <button onClick={() => setEditingUser({ ...user, password: '' })} className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-emerald-500/20 hover:text-emerald-500' : 'bg-slate-100 text-slate-600 hover:bg-emerald-500 hover:text-white shadow-lg shadow-emerald-500/20'}`}>
-                                                <Eye size={20} />
+                                            <button onClick={() => setEditingUser({ ...user, password: '' })} className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-emerald-500/20 hover:text-emerald-500' : 'bg-slate-100 text-slate-600 hover:bg-emerald-500 hover:text-white shadow-lg shadow-emerald-500/20'}`}>
+                                                <Eye size={18} />
                                             </button>
-                                            <button onClick={() => deleteUser(user.id)} className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-red-500/20 hover:text-red-500' : 'bg-slate-100 text-slate-600 hover:bg-red-500 hover:text-white shadow-lg shadow-red-500/20'}`}>
-                                                <Trash2 size={20} />
+                                            <button onClick={() => deleteUser(user.id)} className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-red-500/20 hover:text-red-500' : 'bg-slate-100 text-slate-600 hover:bg-red-500 hover:text-white shadow-lg shadow-red-500/20'}`}>
+                                                <Trash2 size={18} />
                                             </button>
                                         </div>
                                     </td>
@@ -424,13 +424,13 @@ export default function UserManagement() {
                 onClose={() => setIsVaultOpen(false)}
                 title={`Documents: ${vaultUser?.name}`}
             >
-                <div className="space-y-8 p-4">
-                    <div className={`p-8 rounded-[2.5rem] relative overflow-hidden transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 text-white' : 'bg-slate-900 text-white'}`}>
+                <div className="space-y-6 p-4">
+                    <div className={`p-6 rounded-2xl relative overflow-hidden transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 text-white' : 'bg-slate-900 text-white'}`}>
                         <div className="relative z-10">
-                            <h4 className="font-black text-2xl mb-1 tracking-tighter uppercase">{vaultUser?.name}</h4>
+                            <h4 className="font-black text-xl mb-1 tracking-tighter uppercase">{vaultUser?.name}</h4>
                             <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">{vaultUser?.role} STATUS: ACTIVE</p>
                         </div>
-                        <FolderLock className="absolute -right-8 -bottom-8 opacity-10 text-primary" size={150} />
+                        <FolderLock className="absolute -right-8 -bottom-8 opacity-10 text-primary" size={120} />
                     </div>
 
                     {loadingVault ? (
@@ -491,14 +491,14 @@ const TabButton = ({ active, onClick, icon: Icon, label, count }) => {
     return (
         <button
             onClick={onClick}
-            className={`flex items-center gap-4 px-8 py-4 rounded-[1.5rem] font-black transition-all duration-500 select-none ${active
-                ? (theme === 'dark' ? 'bg-white/10 text-white shadow-2xl scale-105' : 'bg-slate-900 text-white shadow-2xl scale-105')
+            className={`flex items-center gap-3 px-6 py-3 rounded-2xl font-black transition-all duration-500 select-none ${active
+                ? (theme === 'dark' ? 'bg-white/10 text-white shadow-xl scale-105' : 'bg-slate-900 text-white shadow-xl scale-105')
                 : (theme === 'dark' ? 'text-slate-500 hover:text-slate-300 hover:bg-white/5' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50')
                 }`}
         >
-            <Icon size={20} className={active ? 'text-primary' : ''} />
-            <span className="text-[11px] uppercase tracking-[0.2em]">{label}</span>
-            <span className={`text-[9px] px-2.5 py-1 rounded-full ${active ? 'bg-primary/20 text-primary-light' : 'bg-slate-200 dark:bg-white/5 text-slate-500'}`}>
+            <Icon size={18} className={active ? 'text-primary' : ''} />
+            <span className="text-[10px] uppercase tracking-[0.2em]">{label}</span>
+            <span className={`text-[9px] px-2 py-0.5 rounded-full ${active ? 'bg-primary/20 text-primary-light' : 'bg-slate-200 dark:bg-white/5 text-slate-500'}`}>
                 {count}
             </span>
         </button>

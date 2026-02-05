@@ -45,11 +45,11 @@ export default function Register() {
                 </button>
             </div>
 
-            <Card className="w-full max-w-md p-8 relative overflow-hidden group">
+            <Card className="w-full max-w-md p-6 relative overflow-hidden group">
                 <div className={`absolute -top-24 -right-24 w-48 h-48 rounded-full blur-[80px] transition-all duration-1000 ${theme === 'dark' ? 'bg-indigo-600/20 group-hover:bg-indigo-600/30' : 'bg-blue-100/50 group-hover:bg-blue-100'}`} />
 
-                <div className="text-center mb-10 relative z-10">
-                    <h1 className={`text-4xl font-black tracking-tighter uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                <div className="text-center mb-8 relative z-10">
+                    <h1 className={`text-3xl font-black tracking-tighter uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                         JASSI<span className="text-blue-600">PORTAL</span>
                     </h1>
                     <p className={`mt-2 font-bold uppercase text-[10px] tracking-[0.2em] ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>Create authorized node identity</p>

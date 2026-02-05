@@ -15,7 +15,10 @@ export default function AdminDashboard() {
     const [stats, setStats] = useState({ users: 0, orders: 0, revenue: 0 });
     const [analytics, setAnalytics] = useState(null);
     const [walletEnabled, setWalletEnabled] = useState(true);
+    const [orders, setOrders] = useState([]);
+    const [activeTab, setActiveTab] = useState('active');
     const [syncing, setSyncing] = useState(false);
+    const [loadingOrders, setLoadingOrders] = useState(true);
 
     // Broadcast State
     const [broadcast, setBroadcast] = useState('');
@@ -44,6 +47,17 @@ export default function AdminDashboard() {
                     if (data.revenue_week) {
                         setStats(prev => ({ ...prev, revenue: data.revenue_week }));
                     }
+                });
+
+            // Fetch Orders
+            setLoadingOrders(true);
+            fetch(`${API_BASE}/staff/orders`, {
+                headers: { 'Authorization': `mock_token_${user.id}` }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) setOrders(data);
+                    setLoadingOrders(false);
                 });
         }
     }, [user]);
@@ -102,27 +116,24 @@ export default function AdminDashboard() {
     return (
         <div className="space-y-10 animate-in fade-in zoom-in-95 duration-1000 max-w-7xl mx-auto pb-20 px-4 md:px-0">
             {/* 1. Futuristic Header (Admin Dashboard) */}
-            <header className="relative group overflow-hidden bg-[#0f172a] p-10 md:p-14 rounded-[3.5rem] text-white shadow-[0_35px_60px_-15px_rgba(30,58,138,0.3)]">
-                <div className="relative z-20 flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
+            <header className="relative group overflow-hidden bg-[#0f172a] p-6 md:p-8 rounded-2xl text-white shadow-[0_20px_40px_-15px_rgba(30,58,138,0.3)]">
+                <div className="relative z-20 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div>
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="px-4 py-1.5 rounded-full bg-primary/20 border border-primary/30 flex items-center gap-2">
-                                <div className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse shadow-[0_0_12px_rgba(37,99,235,0.8)]" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-blue-300">System Status: Online</span>
-                            </div>
-                            <div className="px-4 py-1.5 rounded-full bg-neural-cyan/20 border border-neural-cyan/30 flex items-center gap-2">
-                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-cyan-300">Security: Active</span>
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="px-3 py-1 rounded-full bg-primary/20 border border-primary/30 flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(37,99,235,0.8)]" />
+                                <span className="text-[8px] font-black uppercase tracking-[0.25em] text-blue-300">System Status: Online</span>
                             </div>
                         </div>
-                        <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none mb-6">
+                        <h1 className="text-3xl md:text-4xl font-black tracking-tighter leading-none mb-3">
                             ADMIN <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400">PANEL</span>
                         </h1>
-                        <p className="max-w-md font-bold text-xl leading-relaxed text-slate-400">
+                        <p className="max-w-md font-bold text-base leading-relaxed text-slate-400">
                             Manage all users, services, audits, and system settings from one central dashboard.
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-6 w-full md:w-auto">
+                    <div className="grid grid-cols-2 gap-3 w-full md:w-auto">
                         <QuickAction
                             icon={Users}
                             label="Identities"
@@ -145,7 +156,7 @@ export default function AdminDashboard() {
                 {/* Background Decoration */}
                 <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/10 rounded-full blur-[100px] -mr-32 -mt-32" />
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-600/10 rounded-full blur-[100px] -ml-20 -mb-20" />
-                <ShieldCheck size={350} className="absolute -right-20 -bottom-20 opacity-[0.03] rotate-12 group-hover:rotate-6 transition-transform duration-1000" />
+                <ShieldCheck size={250} className="absolute -right-20 -bottom-20 opacity-[0.03] rotate-12 group-hover:rotate-6 transition-transform duration-1000" />
             </header>
 
             {/* 1.5. Navigation Grid (Restored as per user request) */}
@@ -184,11 +195,11 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
                 {/* Neural Growth (Chart) */}
-                <div className="lg:col-span-8 flex flex-col gap-8">
-                    <Card className="flex-1 p-10 relative overflow-hidden group">
-                        <div className="flex items-center justify-between mb-12 relative z-10">
+                <div className="lg:col-span-8 flex flex-col gap-6">
+                    <Card className="flex-1 p-6 relative overflow-hidden group rounded-2xl">
+                        <div className="flex items-center justify-between mb-8 relative z-10">
                             <div>
-                                <h3 className="text-3xl font-black tracking-tight uppercase">Daily Activity</h3>
+                                <h3 className="text-2xl font-black tracking-tight uppercase">Daily Activity</h3>
                                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mt-2">Transactions - 7 day window</p>
                             </div>
                             <div className="flex items-center gap-3">
@@ -197,7 +208,7 @@ export default function AdminDashboard() {
                             </div>
                         </div>
 
-                        <div className="h-72 relative z-10">
+                        <div className="h-64 relative z-10">
                             <ResponsiveContainer width="100%" height="100%">
                                 <AreaChart data={analytics?.daily_orders || []}>
                                     <defs>
@@ -249,7 +260,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Live Neural Feed (Right Side) */}
-                <Card className={`lg:col-span-4 p-10 transition-all duration-700 flex flex-col ${theme === 'dark' ? 'bg-secondary-darker border-white/5' : 'bg-slate-900 border-none text-white'}`}>
+                <Card className={`lg:col-span-4 p-6 transition-all duration-700 flex flex-col rounded-2xl ${theme === 'dark' ? 'bg-secondary-darker border-white/5' : 'bg-slate-900 border-none text-white'}`}>
                     <div className="flex items-center justify-between mb-10">
                         <div>
                             <h3 className="text-2xl font-black flex items-center gap-3 uppercase tracking-tight">
@@ -366,15 +377,135 @@ export default function AdminDashboard() {
                 </Card>
             </div>
 
-            {/* 4. Staff Performance - Bottom Row */}
-            <Card className={`p-10 shadow-2xl overflow-hidden relative transition-all duration-700 ${theme === 'dark' ? 'bg-secondary-darker border-white/5' : 'bg-slate-900 border-none text-white'}`}>
-                <div className="flex items-center justify-between mb-12 relative z-10">
+            {/* 4. Service Applications Management (NEW) */}
+            <section className="space-y-6">
+                <div className="flex flex-col md:flex-row md:items-end justify-between px-4 gap-4">
+                    <div>
+                        <h2 className={`text-2xl font-black tracking-tight flex items-center gap-3 uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                            <FileText className="text-primary" size={28} /> Service Applications
+                        </h2>
+                        <p className="text-xs text-slate-400 font-bold uppercase tracking-[0.2em] mt-2 ml-10">Monitor and manage all system requests</p>
+                    </div>
+
+                    <div className={`flex p-1 rounded-xl ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-100'}`}>
+                        <button
+                            onClick={() => setActiveTab('active')}
+                            className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'active'
+                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20'
+                                : 'text-slate-500 hover:text-slate-400'
+                                }`}
+                        >
+                            Active ({orders.filter(o => o.status !== 'completed').length})
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('history')}
+                            className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'history'
+                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20'
+                                : 'text-slate-500 hover:text-slate-400'
+                                }`}
+                        >
+                            History ({orders.filter(o => o.status === 'completed').length})
+                        </button>
+                    </div>
+                </div>
+
+                <Card className={`rounded-3xl shadow-xl overflow-hidden border ${theme === 'dark' ? 'bg-white/5 border-white/10 shadow-black/40' : 'bg-white border-slate-50 shadow-slate-200/40'}`}>
+                    {loadingOrders ? (
+                        <div className="p-20 text-center">
+                            <div className="animate-spin w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-6"></div>
+                            <p className="font-black text-[10px] uppercase tracking-widest text-slate-500">Scanning Network...</p>
+                        </div>
+                    ) : (orders.filter(o => activeTab === 'active' ? o.status !== 'completed' : o.status === 'completed').length === 0) ? (
+                        <div className="p-20 text-center">
+                            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 border shadow-inner ${theme === 'dark' ? 'bg-white/5 text-slate-700 border-white/5' : 'bg-slate-50 text-slate-200 border-slate-100'}`}>
+                                <Zap size={32} />
+                            </div>
+                            <p className="text-slate-400 font-black uppercase tracking-widest text-[10px]">No synchronized records found for this sector.</p>
+                        </div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left">
+                                <thead className={`border-b ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-slate-50/80 border-slate-100'}`}>
+                                    <tr>
+                                        <th className="p-3 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Identity Details</th>
+                                        <th className="p-3 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Service Node</th>
+                                        <th className="p-3 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Staff Assigned</th>
+                                        <th className="p-3 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Status</th>
+                                        <th className="p-3 text-right text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-slate-50'}`}>
+                                    {orders
+                                        .filter(o => activeTab === 'active' ? o.status !== 'completed' : o.status === 'completed')
+                                        .slice(0, 10).map((order) => (
+                                            <tr key={order.id} className={`group transition-all duration-300 ${theme === 'dark' ? 'hover:bg-white/5' : 'hover:bg-blue-50/40'}`}>
+                                                <td className="p-3">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-[9px] font-black ${theme === 'dark' ? 'bg-white/5 text-slate-500' : 'bg-slate-100 text-slate-400'}`}>
+                                                            {order.customer_name?.[0]}
+                                                        </div>
+                                                        <div>
+                                                            <p className={`text-xs font-black tracking-tight ${theme === 'dark' ? 'text-slate-200' : 'text-slate-900'}`}>{order.customer_name}</p>
+                                                            <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Ref: #{order.id}</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td className="p-3">
+                                                    <span className={`text-xs font-black uppercase tracking-tight ${theme === 'dark' ? 'text-slate-300' : 'text-slate-700'}`}>{order.service_name}</span>
+                                                </td>
+                                                <td className="p-3">
+                                                    <div className="flex items-center gap-2">
+                                                        {order.staff_name ? (
+                                                            <>
+                                                                <div className="w-3.5 h-3.5 rounded-full bg-blue-500/20 flex items-center justify-center text-[7px] text-blue-400 font-bold">
+                                                                    {order.staff_name[0]}
+                                                                </div>
+                                                                <span className="text-[9px] font-bold text-slate-400">{order.staff_name}</span>
+                                                            </>
+                                                        ) : (
+                                                            <span className="text-[8px] font-black uppercase text-slate-400/50">Unassigned</span>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                                <td className="p-3">
+                                                    <span className={`px-2 py-1 rounded-full text-[7px] font-black uppercase tracking-widest inline-flex items-center gap-1.5 ${order.status === 'completed'
+                                                        ? (theme === 'dark' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-emerald-50 text-emerald-600')
+                                                        : order.status === 'action_required'
+                                                            ? (theme === 'dark' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-red-50 text-red-600')
+                                                            : (theme === 'dark' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-blue-50 text-blue-600')
+                                                        }`}>
+                                                        <div className={`w-1 h-1 rounded-full bg-current ${order.status === 'processing' ? 'animate-pulse' : ''}`} />
+                                                        {order.status}
+                                                    </span>
+                                                </td>
+                                                <td className="p-3 text-right">
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        onClick={() => navigate(`/dashboard/staff/verify/${order.id}`)}
+                                                        className="h-7 rounded-lg text-[8px] px-3 font-black"
+                                                    >
+                                                        Review
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </Card>
+            </section>
+
+            {/* 5. Staff Performance - Bottom Row */}
+            <Card className={`p-6 shadow-2xl overflow-hidden relative transition-all duration-700 rounded-2xl ${theme === 'dark' ? 'bg-secondary-darker border-white/5' : 'bg-slate-900 border-none text-white'}`}>
+                <div className="flex items-center justify-between mb-8 relative z-10">
                     <div className="flex items-center gap-5">
-                        <div className="w-16 h-16 rounded-[2rem] bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/20">
+                        <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/20">
                             <Award size={36} />
                         </div>
                         <div>
-                            <h3 className="text-3xl font-black tracking-tight uppercase">Staff Performance</h3>
+                            <h3 className="text-2xl font-black tracking-tight uppercase">Staff Performance</h3>
                             <p className={`text-[10px] font-bold uppercase tracking-[0.3em] mt-2 ${theme === 'dark' ? 'text-primary-light/60' : 'text-slate-400'}`}>Top performing staff members</p>
                         </div>
                     </div>
@@ -382,11 +513,11 @@ export default function AdminDashboard() {
 
                 <div className="grid grid-cols-2 lg:grid-cols-6 gap-8 relative z-10">
                     {analytics?.top_staff?.map((staff, idx) => (
-                        <div key={idx} className="group relative bg-white/5 p-8 rounded-[2.5rem] border border-white/5 hover:bg-white/10 hover:border-white/10 transition-all duration-500 cursor-default flex flex-col items-center">
+                        <div key={idx} className="group relative bg-white/5 p-6 rounded-2xl border border-white/5 hover:bg-white/10 hover:border-white/10 transition-all duration-500 cursor-default flex flex-col items-center">
                             <div className="absolute -top-3 -right-3 w-10 h-10 bg-primary rounded-full flex items-center justify-center font-black text-xs border-4 border-background-dark shadow-xl group-hover:scale-125 transition-transform z-20">
                                 #{idx + 1}
                             </div>
-                            <div className="w-20 h-20 rounded-[2rem] bg-gradient-to-tr from-primary to-neural-indigo flex items-center justify-center font-black text-3xl mb-5 shadow-2xl shadow-primary/30 group-hover:rotate-6 transition-transform">
+                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary to-neural-indigo flex items-center justify-center font-black text-2xl mb-4 shadow-2xl shadow-primary/30 group-hover:rotate-6 transition-transform">
                                 {staff.name[0]}
                             </div>
                             <h4 className="font-black text-[11px] text-center mb-1 group-hover:text-primary-light transition-colors uppercase tracking-widest">{staff.name}</h4>
@@ -400,7 +531,7 @@ export default function AdminDashboard() {
                     )}
                 </div>
 
-                <Activity size={350} className="absolute -left-20 -bottom-20 opacity-[0.03] text-primary pointer-events-none" />
+                <Activity size={250} className="absolute -left-20 -bottom-20 opacity-[0.03] text-primary pointer-events-none" />
             </Card>
         </div>
     );
@@ -414,20 +545,20 @@ const MetricCard = ({ title, value, trend, icon: Icon, color }) => {
         emerald: "from-emerald-500 to-teal-600 shadow-emerald-500/20"
     };
     return (
-        <div className={`bg-gradient-to-br ${colors[color]} p-8 rounded-[2.5rem] text-white shadow-2xl transition-all duration-700 hover:scale-[1.05] hover:shadow-primary/30 relative overflow-hidden group border-none`}>
+        <div className={`bg-gradient-to-br ${colors[color]} p-4 rounded-xl text-white shadow-lg transition-all duration-700 hover:scale-[1.05] hover:shadow-primary/30 relative overflow-hidden group border-none`}>
             <div className="relative z-10">
-                <div className="flex items-center justify-between mb-6">
-                    <span className="text-[10px] font-black uppercase tracking-[0.25em] opacity-80">{title}</span>
-                    <Icon size={20} className="opacity-80 group-hover:scale-125 transition-transform" />
+                <div className="flex items-center justify-between mb-4">
+                    <span className="text-[9px] font-black uppercase tracking-[0.2em] opacity-80">{title}</span>
+                    <Icon size={16} className="opacity-80 group-hover:scale-125 transition-transform" />
                 </div>
                 <div className="flex items-end justify-between">
-                    <h3 className="text-4xl font-black tracking-tighter drop-shadow-lg">{value}</h3>
-                    <div className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
-                        <TrendingUp size={10} /> {trend}
+                    <h3 className="text-2xl font-black tracking-tighter drop-shadow-lg">{value}</h3>
+                    <div className="px-2 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-[8px] font-black uppercase tracking-widest flex items-center gap-1">
+                        <TrendingUp size={8} /> {trend}
                     </div>
                 </div>
             </div>
-            <Icon size={120} className="absolute -right-6 -bottom-6 opacity-10 group-hover:scale-125 group-hover:rotate-12 transition-all duration-1000" />
+            <Icon size={100} className="absolute -right-6 -bottom-6 opacity-10 group-hover:scale-125 group-hover:rotate-12 transition-all duration-1000" />
         </div>
     );
 };
@@ -473,11 +604,11 @@ const QuickAction = ({ icon: Icon, label, count, onClick, color, forceDark }) =>
     return (
         <button
             onClick={onClick}
-            className={`flex flex-col items-center justify-center p-4 rounded-3xl border transition-all active:scale-95 ${themes[color]} group`}
+            className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all active:scale-95 ${themes[color]} group`}
         >
-            <Icon size={24} className="mb-2 group-hover:scale-110 transition-transform" />
-            <span className="text-[10px] font-black uppercase tracking-widest">{label}</span>
-            <span className="text-xl font-black mt-1 leading-none">{count}</span>
+            <Icon size={18} className="mb-1.5 group-hover:scale-110 transition-transform" />
+            <span className="text-[8px] font-black uppercase tracking-widest">{label}</span>
+            <span className="text-lg font-black mt-1 leading-none">{count}</span>
         </button>
     );
 };
@@ -498,14 +629,14 @@ const NavCard = ({ icon: Icon, title, desc, onClick, color }) => {
     return (
         <button
             onClick={onClick}
-            className={`group flex items-center gap-5 p-6 rounded-[2rem] border transition-all duration-300 hover:scale-[1.02] ${theme === 'dark' ? 'bg-white/5 border-white/5 hover:border-white/10' : 'bg-white border-slate-100 shadow-xl shadow-slate-200/50'}`}
+            className={`group flex items-center gap-3 p-3.5 rounded-xl border transition-all duration-300 hover:scale-[1.02] ${theme === 'dark' ? 'bg-white/5 border-white/5 hover:border-white/10' : 'bg-white border-slate-100 shadow-xl shadow-slate-200/50'}`}
         >
-            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-colors ${activeColor}`}>
-                <Icon size={28} />
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${activeColor}`}>
+                <Icon size={20} />
             </div>
             <div className="text-left">
-                <h3 className={`text-lg font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{title}</h3>
-                <p className={`text-xs font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-slate-500 group-hover:text-slate-400' : 'text-slate-400 group-hover:text-slate-500'}`}>{desc}</p>
+                <h3 className={`text-sm font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{title}</h3>
+                <p className={`text-[9px] font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-slate-500 group-hover:text-slate-400' : 'text-slate-400 group-hover:text-slate-500'}`}>{desc}</p>
             </div>
         </button>
     );

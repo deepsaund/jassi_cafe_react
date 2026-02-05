@@ -243,27 +243,27 @@ export default function AdminDashboard() {
             </div>
 
             {/* 3. Operational Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* Broadcaster (Left) */}
-                <Card className="lg:col-span-8 p-10 relative overflow-hidden group">
-                    <div className="flex items-center justify-between mb-10 relative z-10">
-                        <div className="flex items-center gap-5">
-                            <div className="w-16 h-16 rounded-[2rem] bg-orange-500/10 flex items-center justify-center text-orange-500 shadow-lg shadow-orange-500/10">
-                                <Radio size={32} />
+                <Card className="lg:col-span-8 p-6 relative overflow-hidden group">
+                    <div className="flex items-center justify-between mb-6 relative z-10">
+                        <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-2xl bg-orange-500/10 flex items-center justify-center text-orange-500">
+                                <Radio size={24} />
                             </div>
                             <div>
-                                <h3 className="text-3xl font-black tracking-tight uppercase">Neural Broadcast</h3>
-                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mt-2 leading-none">Global Node Interception</p>
+                                <h3 className="text-xl font-black tracking-tight uppercase">Neural Broadcast</h3>
+                                <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.25em] mt-1">Global Node Interception</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-4">
-                            <div className={`px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${broadcastStatus === 'enabled' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500' : 'bg-slate-500/10 border-slate-500/20 text-slate-400'}`}>
+                        <div className="flex items-center gap-3">
+                            <div className={`px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-wider border ${broadcastStatus === 'enabled' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500' : 'bg-slate-500/10 border-slate-500/20 text-slate-400'}`}>
                                 {broadcastStatus === 'enabled' ? 'Signal Live 🟢' : 'Signal Halted 🛑'}
                             </div>
                             <select
                                 value={broadcastStatus}
                                 onChange={(e) => setBroadcastStatus(e.target.value)}
-                                className={`rounded-2xl px-4 py-2 text-[10px] font-black uppercase cursor-pointer focus:ring-4 focus:ring-primary/10 border-none appearance-none transition-all ${theme === 'dark' ? 'bg-white/5 text-white' : 'bg-slate-100 text-slate-900'}`}
+                                className={`rounded-xl px-3 py-1.5 text-[9px] font-black uppercase cursor-pointer focus:ring-2 focus:ring-primary/10 border-none appearance-none ${theme === 'dark' ? 'bg-white/5 text-white' : 'bg-slate-100 text-slate-900'}`}
                             >
                                 <option value="enabled" className="text-white">Enable</option>
                                 <option value="disabled" className="text-white">Disable</option>
@@ -271,43 +271,39 @@ export default function AdminDashboard() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-8 relative z-10">
-                        <div className="flex-1">
-                            <textarea
-                                value={broadcast}
-                                onChange={(e) => setBroadcast(e.target.value)}
-                                placeholder="Syncing global directives..."
-                                className={`w-full h-40 p-8 border-none rounded-[2.5rem] text-sm font-bold placeholder:text-slate-400 focus:ring-8 focus:ring-primary/5 transition-all resize-none shadow-inner ${theme === 'dark' ? 'bg-white/5 text-slate-200' : 'bg-slate-50 text-slate-900'}`}
-                            />
-                        </div>
-                        <div className="flex flex-col justify-end">
-                            <Button
-                                onClick={saveBroadcast}
-                                loading={savingBroadcast}
-                                className="h-24 w-full md:w-40 rounded-[2.5rem] shadow-2xl hover:shadow-primary/20 transition-all active:scale-95 flex flex-col items-center justify-center gap-2 group p-0"
-                            >
-                                <Zap size={24} className="group-hover:animate-pulse" />
-                                <span className="text-[10px] font-black uppercase tracking-widest">Execute</span>
-                            </Button>
-                        </div>
+                    <div className="flex gap-4 relative z-10">
+                        <textarea
+                            value={broadcast}
+                            onChange={(e) => setBroadcast(e.target.value)}
+                            placeholder="Syncing global directives..."
+                            className={`flex-1 h-32 p-5 border-none rounded-2xl text-sm font-bold placeholder:text-slate-400 focus:ring-4 focus:ring-primary/5 transition-all resize-none ${theme === 'dark' ? 'bg-white/5 text-slate-200' : 'bg-slate-50 text-slate-900'}`}
+                        />
+                        <Button
+                            onClick={saveBroadcast}
+                            loading={savingBroadcast}
+                            className="h-32 w-32 rounded-2xl shadow-xl hover:shadow-primary/20 transition-all active:scale-95 flex flex-col items-center justify-center gap-2 group p-0"
+                        >
+                            <Zap size={20} className="group-hover:animate-pulse" />
+                            <span className="text-[9px] font-black uppercase tracking-wider">Execute</span>
+                        </Button>
                     </div>
 
-                    <Globe size={180} className="absolute -right-16 -bottom-16 opacity-[0.02] text-primary pointer-events-none group-hover:rotate-45 transition-transform duration-[4000ms]" />
+                    <Globe size={140} className="absolute -right-12 -bottom-12 opacity-[0.02] text-primary pointer-events-none group-hover:rotate-45 transition-transform duration-[4000ms]" />
                 </Card>
 
                 {/* System Protocols (Right) */}
-                <Card className="lg:col-span-4 p-10 flex flex-col">
-                    <div className="flex items-center justify-between mb-10">
+                <Card className="lg:col-span-4 p-6 flex flex-col">
+                    <div className="flex items-center justify-between mb-6">
                         <div>
-                            <h3 className="text-2xl font-black tracking-tight uppercase whitespace-nowrap">Core Directives</h3>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-2">Node Level Access</p>
+                            <h3 className="text-lg font-black tracking-tight uppercase">Core Directives</h3>
+                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.25em] mt-1">Node Level Access</p>
                         </div>
-                        <div className={`p-3 rounded-2xl ${walletEnabled ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'}`}>
-                            <ShieldCheck size={24} />
+                        <div className={`p-2 rounded-xl ${walletEnabled ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'}`}>
+                            <ShieldCheck size={20} />
                         </div>
                     </div>
 
-                    <div className="space-y-5 flex-1 pr-1 overflow-y-auto custom-scrollbar">
+                    <div className="space-y-3 flex-1">
                         <ProtocolItem
                             icon={Wallet}
                             label="Fin-Network"
@@ -316,23 +312,23 @@ export default function AdminDashboard() {
                             onToggle={toggleWallet}
                             syncing={syncing}
                         />
-                        <div className={`p-5 rounded-3xl border flex items-center justify-between transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-slate-50 border-slate-200/60'}`}>
-                            <div className="flex items-center gap-4">
-                                <div className="p-3 rounded-2xl bg-primary/10 text-primary">
-                                    <Activity size={20} />
+                        <div className={`p-4 rounded-2xl border flex items-center justify-between transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-slate-50 border-slate-200/60'}`}>
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-xl bg-primary/10 text-primary">
+                                    <Activity size={16} />
                                 </div>
-                                <span className={`text-xs font-black uppercase tracking-widest ${theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>Analytics</span>
+                                <span className={`text-[10px] font-black uppercase tracking-wider ${theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>Analytics</span>
                             </div>
-                            <span className="text-[10px] font-black text-emerald-500 uppercase bg-emerald-500/10 px-3 py-1 rounded-full">Active</span>
+                            <span className="text-[9px] font-black text-emerald-500 uppercase bg-emerald-500/10 px-2.5 py-1 rounded-full">Active</span>
                         </div>
-                        <div className={`p-5 rounded-3xl border flex items-center justify-between transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-slate-50 border-slate-200/60'}`}>
-                            <div className="flex items-center gap-4">
-                                <div className="p-3 rounded-2xl bg-neural-violet/10 text-neural-violet">
-                                    <Globe size={20} />
+                        <div className={`p-4 rounded-2xl border flex items-center justify-between transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-slate-50 border-slate-200/60'}`}>
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-xl bg-neural-violet/10 text-neural-violet">
+                                    <Globe size={16} />
                                 </div>
-                                <span className={`text-xs font-black uppercase tracking-widest ${theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>Identity CDN</span>
+                                <span className={`text-[10px] font-black uppercase tracking-wider ${theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>Identity CDN</span>
                             </div>
-                            <span className="text-[10px] font-black text-emerald-500 uppercase bg-emerald-500/10 px-3 py-1 rounded-full">100% Sync</span>
+                            <span className="text-[9px] font-black text-emerald-500 uppercase bg-emerald-500/10 px-2.5 py-1 rounded-full">100% Sync</span>
                         </div>
                     </div>
                 </Card>
@@ -407,23 +403,23 @@ const MetricCard = ({ title, value, trend, icon: Icon, color }) => {
 const ProtocolItem = ({ icon: Icon, label, desc, status, onToggle, syncing, danger }) => {
     const { theme } = useTheme();
     return (
-        <div className={`p-6 rounded-[2rem] border flex items-center justify-between group transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5 hover:bg-white/10' : 'bg-slate-50 border-slate-100 hover:bg-white hover:shadow-2xl hover:shadow-primary/5'}`}>
-            <div className="flex items-center gap-5">
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all shadow-lg ${danger ? 'bg-red-500/10 text-red-500 shadow-red-500/10' : (status ? 'bg-emerald-500/10 text-emerald-500 shadow-emerald-500/10' : 'bg-primary/10 text-primary shadow-primary/10')}`}>
-                    <Icon size={28} />
+        <div className={`p-4 rounded-2xl border flex items-center justify-between group transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5 hover:bg-white/10' : 'bg-slate-50 border-slate-100 hover:bg-white hover:shadow-xl hover:shadow-primary/5'}`}>
+            <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${danger ? 'bg-red-500/10 text-red-500' : (status ? 'bg-emerald-500/10 text-emerald-500' : 'bg-primary/10 text-primary')}`}>
+                    <Icon size={20} />
                 </div>
                 <div>
-                    <h4 className={`font-black text-sm uppercase tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{label}</h4>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{desc}</p>
+                    <h4 className={`font-black text-xs uppercase tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{label}</h4>
+                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">{desc}</p>
                 </div>
             </div>
             {onToggle && (
                 <button
                     onClick={onToggle}
                     disabled={syncing}
-                    className={`w-14 h-7 rounded-full transition-all relative shadow-inner ${status ? 'bg-emerald-500 shadow-emerald-900/20' : 'bg-slate-300 dark:bg-white/10 shadow-black/20'} ${syncing ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer active:scale-90'}`}
+                    className={`w-12 h-6 rounded-full transition-all relative shadow-inner ${status ? 'bg-emerald-500 shadow-emerald-900/20' : 'bg-slate-300 dark:bg-white/10 shadow-black/20'} ${syncing ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer active:scale-90'}`}
                 >
-                    <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-all shadow-md ${status ? 'right-1' : 'left-1'}`} />
+                    <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-all shadow-md ${status ? 'right-0.5' : 'left-0.5'}`} />
                 </button>
             )}
         </div>

@@ -4,10 +4,12 @@ import { Button } from '../../components/ui/Button';
 import { Users, ClipboardList, CheckSquare, Zap, Clock, ShieldCheck, Activity, Award, ArrowUpRight, Search, Terminal, Database, HardDrive, Cpu } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import { API_BASE } from '../../config';
 
 export default function StaffDashboard() {
     const { user } = useAuth();
+    const { theme } = useTheme();
     const [orders, setOrders] = useState([]);
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
@@ -95,7 +97,7 @@ export default function StaffDashboard() {
             <section>
                 <div className="flex items-end justify-between mb-10 px-4">
                     <div>
-                        <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-3 uppercase">
+                        <h2 className={`text-2xl font-black tracking-tight flex items-center gap-3 uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                             <Activity className="text-blue-600" size={28} /> Active Protocol Link
                         </h2>
                         <p className="text-xs text-slate-400 font-bold uppercase tracking-[0.2em] mt-2 ml-10">Real-time task synchronization</p>
@@ -104,12 +106,12 @@ export default function StaffDashboard() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {myTasks.length === 0 ? (
-                        <Card className="lg:col-span-3 p-20 border-2 border-dashed border-slate-200 bg-slate-50/30 flex flex-col items-center justify-center text-center rounded-[4rem] group overflow-hidden relative">
+                        <Card className={`lg:col-span-3 p-20 border-2 border-dashed flex flex-col items-center justify-center text-center rounded-[4rem] group overflow-hidden relative ${theme === 'dark' ? 'border-white/10 bg-white/5' : 'border-slate-200 bg-slate-50/30'}`}>
                             <div className="relative z-10">
-                                <div className="w-24 h-24 bg-white rounded-[2.5rem] shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] flex items-center justify-center text-slate-300 mb-8 mx-auto group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                                <div className={`w-24 h-24 rounded-[2.5rem] shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] flex items-center justify-center mb-8 mx-auto group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 text-slate-600' : 'bg-white text-slate-300'}`}>
                                     <HardDrive size={48} />
                                 </div>
-                                <h3 className="text-2xl font-black text-slate-900 mb-3 tracking-tight">System Idle</h3>
+                                <h3 className={`text-2xl font-black mb-3 tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>System Idle</h3>
                                 <p className="text-sm text-slate-500 font-bold uppercase tracking-widest max-w-xs">Zero active assignments detected in current neural space.</p>
                             </div>
                             <style jsx>{`
@@ -118,11 +120,11 @@ export default function StaffDashboard() {
                                     50% { opacity: 0.1; }
                                 }
                             `}</style>
-                            <Database className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-slate-900 opacity-[0.02] animate-[pulse-slow_3s_infinite]" size={300} />
+                            <Database className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.02] animate-[pulse-slow_3s_infinite] ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`} size={300} />
                         </Card>
                     ) : (
                         myTasks.map(task => (
-                            <Card key={task.id} className="p-0 border-none bg-white rounded-[3rem] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.06)] hover:shadow-[0_45px_100px_-20px_rgba(59,130,246,0.2)] transition-all duration-700 hover:-translate-y-2 group overflow-hidden">
+                            <Card key={task.id} className={`p-0 border-none rounded-[3rem] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.06)] hover:shadow-[0_45px_100px_-20px_rgba(59,130,246,0.2)] transition-all duration-700 hover:-translate-y-2 group overflow-hidden ${theme === 'dark' ? 'bg-white/5' : 'bg-white'}`}>
                                 <div className="p-10 flex flex-col h-full relative z-10">
                                     <div className="flex justify-between items-start mb-10">
                                         <div className={`px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-sm ${task.status === 'processing' ? 'bg-amber-50 text-amber-600' : 'bg-blue-50 text-blue-600'}`}>
@@ -136,18 +138,18 @@ export default function StaffDashboard() {
                                         </span>
                                     </div>
 
-                                    <h3 className="font-black text-2xl text-slate-900 group-hover:text-blue-600 transition-colors mb-4 uppercase tracking-tighter leading-none">
+                                    <h3 className={`font-black text-2xl group-hover:text-blue-600 transition-colors mb-4 uppercase tracking-tighter leading-none ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                                         {task.service_name}
                                     </h3>
 
                                     <div className="space-y-4 mb-10 mt-2">
-                                        <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-[1.8rem] border border-slate-100 transition-all group-hover:bg-blue-50/50 group-hover:border-blue-100">
-                                            <div className="w-10 h-10 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-blue-600 text-sm font-black shadow-sm group-hover:scale-110 transition-transform">
+                                        <div className={`flex items-center gap-4 p-4 rounded-[1.8rem] border transition-all group-hover:bg-blue-50/50 group-hover:border-blue-100 ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-100'}`}>
+                                            <div className={`w-10 h-10 rounded-2xl border flex items-center justify-center text-sm font-black shadow-sm group-hover:scale-110 transition-transform ${theme === 'dark' ? 'bg-white/5 border-white/10 text-blue-400' : 'bg-white border-slate-100 text-blue-600'}`}>
                                                 {task.customer_name?.[0].toUpperCase()}
                                             </div>
                                             <div className="flex flex-col">
                                                 <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Initiator</p>
-                                                <p className="text-sm font-black text-slate-800 tracking-tight">{task.customer_name}</p>
+                                                <p className={`text-sm font-black tracking-tight ${theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}`}>{task.customer_name}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -172,18 +174,18 @@ export default function StaffDashboard() {
             <section className="mt-20">
                 <div className="flex items-center justify-between mb-10 px-4">
                     <div>
-                        <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-3 uppercase">
+                        <h2 className={`text-2xl font-black tracking-tight flex items-center gap-3 uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                             <Users className="text-emerald-600" size={28} /> New Incoming Jobs
                         </h2>
                         <p className="text-xs text-slate-400 font-bold uppercase tracking-[0.2em] mt-2 ml-10">Select a job from the queue to start working</p>
                     </div>
                 </div>
 
-                <Card className="bg-white rounded-[3.5rem] shadow-[0_20px_50px_-20px_rgba(0,0,0,0.06)] border border-slate-50 overflow-hidden group">
+                <Card className={`rounded-[3.5rem] shadow-[0_20px_50px_-20px_rgba(0,0,0,0.06)] border overflow-hidden group ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white border-slate-50'}`}>
                     {pool.length === 0 ? (
                         <div className="p-32 text-center relative overflow-hidden">
                             <div className="relative z-10">
-                                <div className="w-20 h-20 bg-slate-50 border border-slate-100 rounded-[2rem] flex items-center justify-center text-slate-200 mx-auto mb-6 shadow-inner animate-pulse">
+                                <div className={`w-20 h-20 border rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-inner animate-pulse ${theme === 'dark' ? 'bg-white/5 border-white/10 text-slate-600' : 'bg-slate-50 border-slate-100 text-slate-200'}`}>
                                     <ShieldCheck size={40} />
                                 </div>
                                 <p className="text-slate-400 font-black uppercase tracking-[0.4em] text-[10px]">Matrix Clear · Zero Anomalies</p>
@@ -193,7 +195,7 @@ export default function StaffDashboard() {
                     ) : (
                         <div className="overflow-x-auto">
                             <table className="w-full text-left">
-                                <thead className="bg-slate-50/80 border-b border-slate-100">
+                                <thead className={`border-b ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-slate-50/80 border-slate-100'}`}>
                                     <tr>
                                         <th className="p-8 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Node Designation</th>
                                         <th className="p-8 text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Requesting Unit</th>
@@ -201,24 +203,24 @@ export default function StaffDashboard() {
                                         <th className="p-8 text-right text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-slate-50">
+                                <tbody className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-slate-50'}`}>
                                     {pool.map((order, idx) => (
-                                        <tr key={order.id} className="group hover:bg-blue-50/40 transition-all duration-300">
+                                        <tr key={order.id} className={`group transition-all duration-300 ${theme === 'dark' ? 'hover:bg-white/5' : 'hover:bg-blue-50/40'}`}>
                                             <td className="p-8">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="w-1.5 h-6 bg-slate-200 rounded-full group-hover:bg-blue-600 group-hover:h-10 transition-all duration-500" />
+                                                    <div className={`w-1.5 h-6 rounded-full group-hover:h-10 transition-all duration-500 ${theme === 'dark' ? 'bg-white/20 group-hover:bg-blue-500' : 'bg-slate-200 group-hover:bg-blue-600'}`} />
                                                     <div className="flex flex-col">
-                                                        <span className="font-black text-slate-900 text-lg uppercase tracking-tight">{order.service_name}</span>
+                                                        <span className={`font-black text-lg uppercase tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{order.service_name}</span>
                                                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Ref ID: #{order.id}</span>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="p-8">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-[11px] font-black text-slate-400 group-hover:bg-white group-hover:shadow-sm transition-all">
+                                                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-[11px] font-black group-hover:shadow-sm transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-500 group-hover:bg-white/10' : 'bg-slate-100 text-slate-400 group-hover:bg-white'}`}>
                                                         👤
                                                     </div>
-                                                    <span className="text-sm font-black text-slate-700 tracking-tight">{order.customer_name}</span>
+                                                    <span className={`text-sm font-black tracking-tight ${theme === 'dark' ? 'text-slate-300' : 'text-slate-700'}`}>{order.customer_name}</span>
                                                 </div>
                                             </td>
                                             <td className="p-8 text-xs font-mono text-slate-300 uppercase italic group-hover:text-slate-500 transition-colors">

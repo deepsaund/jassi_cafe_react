@@ -91,19 +91,19 @@ export default function ServiceManagement() {
     return (
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 max-w-7xl mx-auto pb-20 px-4 md:px-0">
             {/* Header section with Neural aesthetic */}
-            <div className={`relative group overflow-hidden p-10 md:p-14 rounded-[3.5rem] transition-all duration-700 ${theme === 'dark' ? 'bg-secondary-darker text-white shadow-2xl shadow-black/40' : 'bg-white text-slate-900 border-2 border-slate-200 shadow-2xl shadow-slate-900/10'}`}>
+            <div className="relative group overflow-hidden bg-[#0f172a] p-10 md:p-14 rounded-[3.5rem] text-white shadow-[0_35px_60px_-15px_rgba(30,58,138,0.3)]">
                 <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
                     <div>
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 flex items-center gap-2">
-                                <Zap size={14} className="text-primary" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">Service Forge</span>
+                            <div className="px-4 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center gap-2">
+                                <Layers size={14} className="text-indigo-300" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-indigo-300">Service Protocol</span>
                             </div>
                         </div>
                         <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none mb-6">
-                            SERVICE <span className="text-gradient uppercase">Matrix</span>
+                            SERVICE <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">MATRIX</span>
                         </h1>
-                        <p className={`max-w-md font-bold text-xl leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
+                        <p className="max-w-md font-bold text-xl leading-relaxed text-slate-400">
                             Architect and deploy high-performance digital protocols across the neural network.
                         </p>
                     </div>
@@ -114,7 +114,8 @@ export default function ServiceManagement() {
                     </div>
                 </div>
                 {/* Background Decoration */}
-                <div className={`absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l pointer-events-none ${theme === 'dark' ? 'from-primary/10 to-transparent' : 'from-primary/5 to-transparent'}`} />
+                <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-[100px] -mr-32 -mt-32" />
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/10 rounded-full blur-[100px] -ml-20 -mb-20" />
                 <Hexagon size={400} className="absolute -right-24 -bottom-24 opacity-[0.02] rotate-12 group-hover:rotate-0 transition-transform duration-1000 pointer-events-none" />
             </div>
 

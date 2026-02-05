@@ -102,22 +102,22 @@ export default function AdminDashboard() {
     return (
         <div className="space-y-10 animate-in fade-in zoom-in-95 duration-1000 max-w-7xl mx-auto pb-20 px-4 md:px-0">
             {/* 1. Futuristic Header (Neural Hub) */}
-            <header className={`relative group overflow-hidden p-8 md:p-14 rounded-[3.5rem] transition-all duration-700 ${theme === 'dark' ? 'bg-secondary-darker text-white shadow-2xl shadow-black/40' : 'bg-white text-slate-900 border border-slate-200 shadow-2xl shadow-primary/10'}`}>
+            <header className="relative group overflow-hidden bg-[#0f172a] p-10 md:p-14 rounded-[3.5rem] text-white shadow-[0_35px_60px_-15px_rgba(30,58,138,0.3)]">
                 <div className="relative z-20 flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
                     <div>
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 flex items-center gap-2">
+                            <div className="px-4 py-1.5 rounded-full bg-primary/20 border border-primary/30 flex items-center gap-2">
                                 <div className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse shadow-[0_0_12px_rgba(37,99,235,0.8)]" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">Core Node: Active</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-blue-300">Core Node: Active</span>
                             </div>
-                            <div className="px-4 py-1.5 rounded-full bg-neural-cyan/10 border border-neural-cyan/20 flex items-center gap-2">
-                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-neural-cyan">Security: Level 5</span>
+                            <div className="px-4 py-1.5 rounded-full bg-neural-cyan/20 border border-neural-cyan/30 flex items-center gap-2">
+                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-cyan-300">Security: Level 5</span>
                             </div>
                         </div>
                         <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none mb-6">
-                            NEURAL <span className="text-gradient uppercase">Command</span>
+                            NEURAL <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400">COMMAND</span>
                         </h1>
-                        <p className={`max-w-md font-bold text-xl leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
+                        <p className="max-w-md font-bold text-xl leading-relaxed text-slate-400">
                             Global orchestration engine. Overseeing cross-network transactions and entity verification.
                         </p>
                     </div>
@@ -141,8 +141,8 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Background Decoration */}
-                <div className={`absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l pointer-events-none ${theme === 'dark' ? 'from-primary/10 to-transparent' : 'from-primary/5 to-transparent'}`} />
-                <div className={`absolute -bottom-24 -left-24 w-96 h-96 rounded-full blur-[120px] ${theme === 'dark' ? 'bg-neural-indigo/10' : 'bg-primary/10'}`} />
+                <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/10 rounded-full blur-[100px] -mr-32 -mt-32" />
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-600/10 rounded-full blur-[100px] -ml-20 -mb-20" />
                 <ShieldCheck size={350} className="absolute -right-20 -bottom-20 opacity-[0.03] rotate-12 group-hover:rotate-6 transition-transform duration-1000" />
             </header>
 

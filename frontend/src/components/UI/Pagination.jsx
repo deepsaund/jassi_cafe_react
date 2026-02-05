@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 
 export const Pagination = ({
     currentPage,
@@ -8,6 +9,7 @@ export const Pagination = ({
     itemsPerPage = 10,
     totalItems = 0
 }) => {
+    const { theme } = useTheme();
     const pages = [];
     const maxVisiblePages = 5;
 
@@ -27,99 +29,85 @@ export const Pagination = ({
     const endItem = Math.min(currentPage * itemsPerPage, totalItems);
 
     return (
-        <div className="flex items-center justify-between px-6 py-4 bg-white border-t border-slate-100">
+        <div className={`flex flex-col md:flex-row items-center justify-between px-6 py-6 rounded-[2rem] gap-4 transition-all duration-500 ${theme === 'dark'
+                ? 'bg-white/5 border border-white/5'
+                : 'bg-white border border-slate-100 shadow-xl shadow-slate-200/50'
+            }`}>
             {/* Info Section */}
-            <div className="text-sm text-slate-600 font-bold">
-                Showing <span className="text-slate-900 font-black">{startItem}</span> to{' '}
-                <span className="text-slate-900 font-black">{endItem}</span> of{' '}
-                <span className="text-slate-900 font-black">{totalItems}</span> results
+            <div className={`text-xs uppercase tracking-[0.2em] font-black ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>
+                Showing <span className={theme === 'dark' ? 'text-blue-400' : 'text-slate-900'}>{startItem}</span> to{' '}
+                <span className={theme === 'dark' ? 'text-blue-400' : 'text-slate-900'}>{endItem}</span> of{' '}
+                <span className={theme === 'dark' ? 'text-blue-400' : 'text-slate-900'}>{totalItems}</span> identities
             </div>
 
             {/* Pagination Controls */}
-            <div className="flex items-center gap-2">
-                {/* First Page */}
-                <button
-                    onClick={() => onPageChange(1)}
-                    disabled={currentPage === 1}
-                    className="p-2 rounded-xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-                    title="First Page"
-                >
-                    <ChevronsLeft size={18} />
-                </button>
+            <div className="flex items-center gap-3">
+                {/* Navigation Group */}
+                <div className="flex items-center gap-1.5 p-1.5 rounded-2xl bg-black/20 backdrop-blur-md">
+                    <button
+                        onClick={() => onPageChange(1)}
+                        disabled={currentPage === 1}
+                        className={`p-2.5 rounded-xl transition-all ${theme === 'dark'
+                                ? 'text-slate-500 hover:text-white hover:bg-white/10'
+                                : 'text-slate-400 hover:text-slate-900 hover:bg-slate-100'
+                            } disabled:opacity-20 disabled:cursor-not-allowed`}
+                    >
+                        <ChevronsLeft size={16} />
+                    </button>
 
-                {/* Previous Page */}
-                <button
-                    onClick={() => onPageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="p-2 rounded-xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-                    title="Previous"
-                >
-                    <ChevronLeft size={18} />
-                </button>
+                    <button
+                        onClick={() => onPageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className={`p-2.5 rounded-xl transition-all ${theme === 'dark'
+                                ? 'text-slate-500 hover:text-white hover:bg-white/10'
+                                : 'text-slate-400 hover:text-slate-900 hover:bg-slate-100'
+                            } disabled:opacity-20 disabled:cursor-not-allowed`}
+                    >
+                        <ChevronLeft size={16} />
+                    </button>
+                </div>
 
                 {/* Page Numbers */}
-                <div className="flex gap-1">
-                    {startPage > 1 && (
-                        <>
-                            <button
-                                onClick={() => onPageChange(1)}
-                                className="min-w-[40px] h-10 px-3 rounded-xl text-sm font-black text-slate-600 hover:bg-slate-100 transition-all"
-                            >
-                                1
-                            </button>
-                            {startPage > 2 && (
-                                <span className="flex items-center px-2 text-slate-400 font-black">...</span>
-                            )}
-                        </>
-                    )}
-
+                <div className="flex gap-1.5">
                     {pages.map(page => (
                         <button
                             key={page}
                             onClick={() => onPageChange(page)}
-                            className={`min-w-[40px] h-10 px-3 rounded-xl text-sm font-black transition-all ${currentPage === page
-                                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-200'
-                                    : 'text-slate-600 hover:bg-slate-100'
+                            className={`min-w-[42px] h-[42px] rounded-xl text-[11px] font-black transition-all ${currentPage === page
+                                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20 scale-105 rotate-3'
+                                    : theme === 'dark'
+                                        ? 'text-slate-400 hover:bg-white/10 hover:text-white'
+                                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 shadow-sm border border-slate-100'
                                 }`}
                         >
                             {page}
                         </button>
                     ))}
-
-                    {endPage < totalPages && (
-                        <>
-                            {endPage < totalPages - 1 && (
-                                <span className="flex items-center px-2 text-slate-400 font-black">...</span>
-                            )}
-                            <button
-                                onClick={() => onPageChange(totalPages)}
-                                className="min-w-[40px] h-10 px-3 rounded-xl text-sm font-black text-slate-600 hover:bg-slate-100 transition-all"
-                            >
-                                {totalPages}
-                            </button>
-                        </>
-                    )}
                 </div>
 
-                {/* Next Page */}
-                <button
-                    onClick={() => onPageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className="p-2 rounded-xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-                    title="Next"
-                >
-                    <ChevronRight size={18} />
-                </button>
+                <div className="flex items-center gap-1.5 p-1.5 rounded-2xl bg-black/20 backdrop-blur-md">
+                    <button
+                        onClick={() => onPageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className={`p-2.5 rounded-xl transition-all ${theme === 'dark'
+                                ? 'text-slate-500 hover:text-white hover:bg-white/10'
+                                : 'text-slate-400 hover:text-slate-900 hover:bg-slate-100'
+                            } disabled:opacity-20 disabled:cursor-not-allowed`}
+                    >
+                        <ChevronRight size={16} />
+                    </button>
 
-                {/* Last Page */}
-                <button
-                    onClick={() => onPageChange(totalPages)}
-                    disabled={currentPage === totalPages}
-                    className="p-2 rounded-xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-                    title="Last Page"
-                >
-                    <ChevronsRight size={18} />
-                </button>
+                    <button
+                        onClick={() => onPageChange(totalPages)}
+                        disabled={currentPage === totalPages}
+                        className={`p-2.5 rounded-xl transition-all ${theme === 'dark'
+                                ? 'text-slate-500 hover:text-white hover:bg-white/10'
+                                : 'text-slate-400 hover:text-slate-900 hover:bg-slate-100'
+                            } disabled:opacity-20 disabled:cursor-not-allowed`}
+                    >
+                        <ChevronsRight size={16} />
+                    </button>
+                </div>
             </div>
         </div>
     );

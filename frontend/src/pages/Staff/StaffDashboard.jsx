@@ -124,32 +124,32 @@ export default function StaffDashboard() {
                         </Card>
                     ) : (
                         myTasks.map(task => (
-                            <Card key={task.id} className={`p-0 border-none rounded-[3rem] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.06)] hover:shadow-[0_45px_100px_-20px_rgba(59,130,246,0.2)] transition-all duration-700 hover:-translate-y-2 group overflow-hidden ${theme === 'dark' ? 'bg-white/5' : 'bg-white'}`}>
+                            <Card key={task.id} className={`p-0 rounded-[3rem] transition-all duration-700 hover:-translate-y-2 group overflow-hidden relative ${theme === 'dark' ? 'bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.4)] hover:shadow-[0_45px_100px_-20px_rgba(59,130,246,0.3)] hover:border-blue-500/30' : 'bg-white border-none shadow-[0_25px_60px_-15px_rgba(0,0,0,0.06)] hover:shadow-[0_45px_100px_-20px_rgba(59,130,246,0.2)}'}`}>
                                 <div className="p-10 flex flex-col h-full relative z-10">
-                                    <div className="flex justify-between items-start mb-10">
-                                        <div className={`px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-sm ${task.status === 'processing' ? 'bg-amber-50 text-amber-600' : 'bg-blue-50 text-blue-600'}`}>
+                                    <div className="flex justify-between items-start mb-8">
+                                        <div className={`px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] ${task.status === 'processing' ? (theme === 'dark' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'bg-amber-50 text-amber-600') : (theme === 'dark' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' : 'bg-blue-50 text-blue-600')}`}>
                                             <span className="flex items-center gap-2">
                                                 <div className={`w-1.5 h-1.5 rounded-full bg-current ${task.status === 'processing' ? 'animate-pulse' : ''}`} />
                                                 {task.status}
                                             </span>
                                         </div>
-                                        <span className="text-[10px] font-mono font-black text-slate-300 tracking-tighter uppercase italic">
+                                        <span className={`text-[10px] font-mono font-black tracking-tighter uppercase italic ${theme === 'dark' ? 'text-slate-500' : 'text-slate-300'}`}>
                                             SEQ #{task.id}
                                         </span>
                                     </div>
 
-                                    <h3 className={`font-black text-2xl group-hover:text-blue-600 transition-colors mb-4 uppercase tracking-tighter leading-none ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                                    <h3 className={`font-black text-2xl transition-colors mb-6 uppercase tracking-tighter leading-none ${theme === 'dark' ? 'text-white group-hover:text-blue-400' : 'text-slate-900 group-hover:text-blue-600'}`}>
                                         {task.service_name}
                                     </h3>
 
-                                    <div className="space-y-4 mb-10 mt-2">
-                                        <div className={`flex items-center gap-4 p-4 rounded-[1.8rem] border transition-all group-hover:bg-blue-50/50 group-hover:border-blue-100 ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-100'}`}>
-                                            <div className={`w-10 h-10 rounded-2xl border flex items-center justify-center text-sm font-black shadow-sm group-hover:scale-110 transition-transform ${theme === 'dark' ? 'bg-white/5 border-white/10 text-blue-400' : 'bg-white border-slate-100 text-blue-600'}`}>
+                                    <div className="space-y-4 mb-10">
+                                        <div className={`flex items-center gap-4 p-5 rounded-[2rem] border transition-all ${theme === 'dark' ? 'bg-slate-800/50 border-slate-700/50 group-hover:bg-slate-700/50 group-hover:border-blue-500/30' : 'bg-slate-50 border-slate-100 group-hover:bg-blue-50/50 group-hover:border-blue-100'}`}>
+                                            <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center text-base font-black shadow-lg group-hover:scale-110 transition-transform ${theme === 'dark' ? 'bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border-blue-500/30 text-blue-400' : 'bg-white border-slate-100 text-blue-600'}`}>
                                                 {task.customer_name?.[0].toUpperCase()}
                                             </div>
                                             <div className="flex flex-col">
-                                                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Initiator</p>
-                                                <p className={`text-sm font-black tracking-tight ${theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}`}>{task.customer_name}</p>
+                                                <p className={`text-[9px] font-black uppercase tracking-widest leading-none mb-1.5 ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>Initiator</p>
+                                                <p className={`text-base font-black tracking-tight ${theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}`}>{task.customer_name}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -163,7 +163,8 @@ export default function StaffDashboard() {
                                         Open Application <ArrowUpRight size={18} />
                                     </Button>
                                 </div>
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full -mr-16 -mt-16 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <div className={`absolute top-0 right-0 w-40 h-40 rounded-full -mr-20 -mt-20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity ${theme === 'dark' ? 'bg-blue-500/20' : 'bg-blue-500/5'}`} />
+                                <div className={`absolute bottom-0 left-0 w-32 h-32 rounded-full -ml-16 -mb-16 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity ${theme === 'dark' ? 'bg-indigo-500/20' : 'bg-indigo-500/5'}`} />
                             </Card>
                         ))
                     )}

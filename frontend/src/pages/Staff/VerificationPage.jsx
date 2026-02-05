@@ -45,7 +45,7 @@ export default function VerificationPage() {
                             id: d.id,
                             type: d.type,
                             name: d.type.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-                            url: d.file_path.startsWith('http') ? d.file_path : `http://localhost/WEBSITE${d.file_path}`
+                            url: d.file_path.startsWith('http') ? d.file_path : `${API_BASE.replace('/api', '')}${d.file_path}`
                         }));
 
                         setDocuments(formattedDocs);

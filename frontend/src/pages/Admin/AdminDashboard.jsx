@@ -129,6 +129,7 @@ export default function AdminDashboard() {
                             count="245"
                             onClick={() => navigate('/dashboard/admin/users')}
                             color="blue"
+                            forceDark={true}
                         />
                         <QuickAction
                             icon={Settings}
@@ -136,6 +137,7 @@ export default function AdminDashboard() {
                             count="12"
                             onClick={() => navigate('/dashboard/admin/services')}
                             color="indigo"
+                            forceDark={true}
                         />
                     </div>
                 </div>
@@ -228,7 +230,7 @@ export default function AdminDashboard() {
                         </div>
                     </div>
 
-                    <div className="flex-1 space-y-5 overflow-y-auto custom-scrollbar pr-3 max-h-[550px]">
+                    <div className="flex-1 space-y-5 overflow-y-auto custom-scrollbar pr-3 max-h-[400px]">
                         {analytics?.recent_activity?.map((log, i) => (
                             <div key={i} className="group p-5 bg-white/5 rounded-3xl border border-white/5 hover:bg-white/10 hover:border-white/10 transition-all duration-500 transform hover:-translate-y-1">
                                 <div className="flex items-center justify-between mb-3">
@@ -424,9 +426,11 @@ const ProtocolItem = ({ icon: Icon, label, desc, status, onToggle, syncing, dang
     );
 };
 
-const QuickAction = ({ icon: Icon, label, count, onClick, color }) => {
+const QuickAction = ({ icon: Icon, label, count, onClick, color, forceDark }) => {
     const { theme } = useTheme();
-    const themes = theme === 'dark' ? {
+    const isDark = forceDark || theme === 'dark';
+
+    const themes = isDark ? {
         blue: "text-blue-400 bg-blue-400/10 border-blue-400/20 hover:bg-blue-400/20",
         indigo: "text-indigo-400 bg-indigo-400/10 border-indigo-400/20 hover:bg-indigo-400/20"
     } : {

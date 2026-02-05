@@ -109,7 +109,7 @@ export default function ServiceManagement() {
                     </div>
                     <div>
                         <Button onClick={() => setShowAddForm(!showAddForm)} variant={showAddForm ? 'danger' : 'primary'} className="rounded-[1.5rem] px-8 h-16 shadow-2xl hover:shadow-primary/20">
-                            {showAddForm ? 'Close Designer' : <><Plus size={24} className="mr-3" /> Design New Protocol</>}
+                            {showAddForm ? 'Close Designer' : <><Plus size={24} className="mr-3" /> Create New Service</>}
                         </Button>
                     </div>
                 </div>
@@ -126,7 +126,7 @@ export default function ServiceManagement() {
                             <Layers size={28} />
                         </div>
                         <div>
-                            <h3 className={`text-2xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Protocol Architect</h3>
+                            <h3 className={`text-2xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Add New Service</h3>
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Configure service parameters & validation logic</p>
                         </div>
                     </div>
@@ -136,7 +136,7 @@ export default function ServiceManagement() {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                             <div className="space-y-8">
                                 <Input
-                                    label="Protocol Identifier (Service Name)"
+                                    label="Service Name"
                                     placeholder="e.g. Passport Application"
                                     value={newService.name}
                                     onChange={e => setNewService({ ...newService, name: e.target.value })}

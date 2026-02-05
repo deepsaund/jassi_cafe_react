@@ -146,9 +146,17 @@ export default function DashboardLayout() {
                 <div className={`backdrop-blur-md rounded-3xl p-5 border group transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5 hover:border-blue-500/20' : 'bg-slate-50 border-slate-200 hover:border-blue-500/10'}`}>
                     <div className="flex items-center gap-4 mb-4">
                         <div className="relative">
-                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-700 flex items-center justify-center text-white font-black shadow-lg">
-                                {user?.name ? user.name[0].toUpperCase() : 'U'}
-                            </div>
+                            {user?.profile_image ? (
+                                <img
+                                    src={`${API_BASE.replace('/api', '')}${user.profile_image}`}
+                                    alt="User"
+                                    className="w-12 h-12 rounded-2xl object-cover border border-blue-500/20 shadow-lg"
+                                />
+                            ) : (
+                                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-700 flex items-center justify-center text-white font-black shadow-lg">
+                                    {user?.name ? user.name[0].toUpperCase() : 'U'}
+                                </div>
+                            )}
                             <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-[#0a0f1c] rounded-full animate-pulse" title="Online" />
                         </div>
                         <div className="flex-1 overflow-hidden">

@@ -158,4 +158,29 @@ class UserController {
             echo json_encode(["error" => "Failed to update profile"]);
         }
     }
+
+    public function changePassword() {
+        $userId = $this->getUserId();
+        if (!$userId) {
+            http_response_code(401);
+            echo json_encode(["error" => "Unauthorized"]);
+            return;
+        }
+
+        $data = json_decode(file_get_contents("php://input"), true);
+        if (!isset($data['new_password'])) {
+            http_response_code(400);
+            echo json_encode(["error" => "New password required"]);
+            return;
+        }
+
+        $hash = password_hash($data['new_password'], PASSWORD_DEFAULT);
+        $stmt = $this->db->prepare("UPDATE users SET password = :hash WHERE id = :id");
+        if ($stmt->execute(['hash' => $hash, 'id' => $userId])) {
+            echo json_encode(["message" => "Security key updated successfully"]);
+        } else {
+            http_response_code(500);
+            echo json_encode(["error" => "Failed to update security key"]);
+        }
+    }
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
-import { User, Mail, Phone, MapPin, Shield, Camera, Save, Key, UserCircle } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Shield, Camera, Save, Key, UserCircle, X, CheckCircle } from 'lucide-react';
 import { API_BASE } from '../../config';
 
 const Card = ({ children, className = "" }) => {
@@ -18,6 +18,9 @@ export default function Profile() {
     const { theme } = useTheme();
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState(null);
+    const [showSecurityModal, setShowSecurityModal] = useState(false);
+    const [newPassword, setNewPassword] = useState('');
+    const [updatingPassword, setUpdatingPassword] = useState(false);
 
     const [formData, setFormData] = useState({
         name: user?.name || '',
@@ -80,18 +83,48 @@ export default function Profile() {
                 headers: { 'Authorization': `mock_token_${user.id}` },
                 body: uploadData
             });
+            const data = await res.json();
             if (res.ok) {
                 setMessage({ type: 'success', text: 'Authorized Portrait Uploaded' });
+                // Update local user state with new image path
+                refreshUser({ profile_image: data.path });
             }
         } catch (err) {
             console.error(err);
         }
     };
 
+    const handlePasswordUpdate = async () => {
+        if (!newPassword || newPassword.length < 4) {
+            alert("Security key must be at least 4 characters");
+            return;
+        }
+        setUpdatingPassword(true);
+        try {
+            const res = await fetch(`${API_BASE}/auth/security`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `mock_token_${user.id}`
+                },
+                body: JSON.stringify({ new_password: newPassword })
+            });
+            if (res.ok) {
+                setMessage({ type: 'success', text: 'Security Key Updated' });
+                setShowSecurityModal(false);
+                setNewPassword('');
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setUpdatingPassword(false);
+        }
+    }
+
     return (
-        <div className="space-y-8 max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
+        <div className="space-y-8 max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20 px-4 md:px-0">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
                     <h1 className={`text-4xl font-black tracking-tighter uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                         Identity <span className="text-blue-500">Profile</span>
@@ -111,23 +144,31 @@ export default function Profile() {
             </div>
 
             {message && (
-                <div className={`mx-4 p-4 rounded-2xl text-center text-[10px] font-black uppercase tracking-widest animate-in slide-in-from-top-2 duration-300 ${message.type === 'success' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}>
+                <div className={`p-4 rounded-2xl text-center text-[10px] font-black uppercase tracking-widest animate-in slide-in-from-top-2 duration-300 ${message.type === 'success' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}>
                     {message.text}
                 </div>
             )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Left Side: Identity Card */}
                 <div className="lg:col-span-1 space-y-6">
                     <Card className="text-center relative overflow-hidden group">
                         <div className="relative z-10 py-4">
                             <div className="relative w-32 h-32 mx-auto mb-6">
-                                <div className="w-full h-full rounded-[2.5rem] bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-700 flex items-center justify-center text-white text-5xl font-black shadow-2xl group-hover:rotate-6 transition-transform duration-700">
-                                    {formData.name[0]?.toUpperCase()}
-                                </div>
-                                <label className={`absolute -bottom-2 -right-2 p-3 rounded-2xl shadow-2xl border transition-all hover:scale-110 active:scale-90 cursor-pointer ${theme === 'dark' ? 'bg-white/10 text-white border-white/10' : 'bg-white text-slate-900 border-slate-100'}`}>
+                                {user?.profile_image ? (
+                                    <img
+                                        src={`${API_BASE.replace('/api', '')}${user.profile_image}`}
+                                        alt="Profile"
+                                        className="w-full h-full rounded-[2.5rem] object-cover border-4 border-blue-500/20 shadow-2xl group-hover:scale-105 transition-transform duration-700"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full rounded-[2.5rem] bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-700 flex items-center justify-center text-white text-5xl font-black shadow-2xl group-hover:rotate-6 transition-transform duration-700">
+                                        {formData.name[0]?.toUpperCase()}
+                                    </div>
+                                )}
+                                <label className={`absolute -bottom-2 -right-2 p-3 rounded-2xl shadow-2xl border transition-all hover:scale-110 active:scale-90 cursor-pointer ${theme === 'dark' ? 'bg-white/10 text-white border-white/10 backdrop-blur-md' : 'bg-white text-slate-900 border-slate-100'}`}>
                                     <Camera size={18} />
-                                    <input type="file" className="hidden" onChange={handleAvatarUpload} />
+                                    <input type="file" className="hidden" onChange={handleAvatarUpload} accept="image/*" />
                                 </label>
                             </div>
                             <h2 className={`font-black text-2xl tracking-tight mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{formData.name}</h2>
@@ -151,7 +192,9 @@ export default function Profile() {
                                     <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Level 1 Encryption Active</p>
                                 </div>
                             </div>
-                            <button className={`w-full py-4 text-[10px] font-black uppercase tracking-widest rounded-2xl border flex items-center justify-center gap-3 transition-all ${theme === 'dark' ? 'bg-orange-500/5 border-orange-500/10 text-orange-400 hover:bg-orange-500/10' : 'bg-orange-50 border-orange-100 text-orange-600 hover:bg-orange-100'}`}>
+                            <button
+                                onClick={() => setShowSecurityModal(true)}
+                                className={`w-full py-4 text-[10px] font-black uppercase tracking-widest rounded-2xl border flex items-center justify-center gap-3 transition-all ${theme === 'dark' ? 'bg-orange-500/5 border-orange-500/10 text-orange-400 hover:bg-orange-500/10' : 'bg-orange-50 border-orange-100 text-orange-600 hover:bg-orange-100'}`}>
                                 <Key size={16} /> Update Security Key
                             </button>
                         </div>
@@ -179,7 +222,7 @@ export default function Profile() {
                                         <field.icon size={18} className="text-slate-400" />
                                         <input
                                             className="bg-transparent border-none outline-none w-full text-xs font-black placeholder:text-slate-500"
-                                            value={formData[field.key]}
+                                            value={formData[field.key] || ''}
                                             placeholder={field.placeholder || ''}
                                             disabled={field.disabled}
                                             onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
@@ -196,6 +239,46 @@ export default function Profile() {
                     </Card>
                 </div>
             </div>
+
+            {/* Security Modal */}
+            {showSecurityModal && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+                    <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl" onClick={() => setShowSecurityModal(false)} />
+                    <Card className="relative w-full max-w-md animate-in zoom-in-95 duration-300 overflow-hidden">
+                        <div className="flex items-center justify-between mb-8">
+                            <h2 className={`text-xl font-black uppercase tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Security Overhaul</h2>
+                            <button onClick={() => setShowSecurityModal(false)} className="text-slate-500 hover:text-white transition-colors"><X size={24} /></button>
+                        </div>
+                        <div className="space-y-6">
+                            <div className="p-4 rounded-2xl bg-orange-500/5 border border-orange-500/10">
+                                <p className="text-[10px] font-bold text-orange-400 uppercase tracking-widest leading-relaxed">
+                                    Updating your security key will change your authentication password. Ensure you remember the new sequence.
+                                </p>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">New Security Sequence</label>
+                                <div className={`flex items-center gap-4 p-5 rounded-2xl border transition-all ${theme === 'dark' ? 'bg-white/5 border-white/10 focus-within:border-blue-500/50' : 'bg-slate-50 border-slate-100'}`}>
+                                    <Key size={18} className="text-slate-500" />
+                                    <input
+                                        type="password"
+                                        placeholder="Min 4 characters..."
+                                        className="bg-transparent border-none outline-none w-full text-sm font-black text-white"
+                                        value={newPassword}
+                                        onChange={(e) => setNewPassword(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            <button
+                                onClick={handlePasswordUpdate}
+                                disabled={updatingPassword}
+                                className="w-full py-5 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] shadow-2xl shadow-blue-500/30 hover:bg-blue-700 active:scale-95 transition-all flex items-center justify-center gap-3">
+                                {updatingPassword ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <CheckCircle size={18} />}
+                                {updatingPassword ? 'Overhauling...' : 'Confirm Update'}
+                            </button>
+                        </div>
+                    </Card>
+                </div>
+            )}
         </div>
     );
 }

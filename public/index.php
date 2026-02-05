@@ -51,6 +51,11 @@ $router->add('POST', '/api/auth/profile', function() use ($db) {
     $controller->updateProfile();
 });
 
+$router->add('POST', '/api/auth/security', function() use ($db) {
+    $controller = new UserController($db);
+    $controller->changePassword();
+});
+
 $router->add('GET', '/api/services', function() use ($db) {
     $controller = new ServiceController($db);
     $controller->index();

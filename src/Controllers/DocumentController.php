@@ -88,6 +88,11 @@ class DocumentController {
             $stmt->bindParam(":name", $file['name']);
             
             if ($stmt->execute()) {
+                // If this is a profile photo, sync to users table
+                if ($type === 'profile_photo') {
+                    $uStmt = $this->db->prepare("UPDATE users SET profile_image = :path WHERE id = :uid");
+                    $uStmt->execute(['path' => $dbPath, 'uid' => $ownerId]);
+                }
                 echo json_encode(["message" => "File uploaded", "path" => $dbPath, "id" => $this->db->lastInsertId()]);
             } else {
                 http_response_code(500);

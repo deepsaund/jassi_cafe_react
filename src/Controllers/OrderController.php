@@ -203,10 +203,22 @@ class OrderController {
         } elseif ($action === 'reject_doc') {
              $docType = $data['doc_type'] ?? '';
              $reason = $data['reason'] ?? 'Document Rejected';
-             // Append to rejected_docs JSON
+             
+             // Fetch current rejected docs
+             $fetchStmt = $this->db->prepare("SELECT rejected_docs FROM orders WHERE id = :oid");
+             $fetchStmt->execute(['oid' => $orderId]);
+             $row = $fetchStmt->fetch(PDO::FETCH_ASSOC);
+             $rejectedList = $row['rejected_docs'] ? json_decode($row['rejected_docs'], true) : [];
+             
+             // Add if not already in list
+             if (!in_array($docType, $rejectedList)) {
+                 $rejectedList[] = $docType;
+             }
+             $newRejectedJson = json_encode($rejectedList);
+
              $query = "UPDATE orders SET status = 'action_required', 
                        rejection_reason = :reason,
-                       rejected_docs = JSON_ARRAY_APPEND(IFNULL(rejected_docs, JSON_ARRAY()), '$', :docType) 
+                       rejected_docs = :rdocs
                        WHERE id = :oid AND assigned_staff_id = :sid";
              $logAction = "Doc Rejected: " . $docType;
         } else {
@@ -219,7 +231,7 @@ class OrderController {
         $stmt->bindParam(":oid", $orderId);
         $stmt->bindParam(":sid", $staffId);
         if ($action === 'reject' || $action === 'reject_doc') $stmt->bindParam(":reason", $reason);
-        if ($action === 'reject_doc') $stmt->bindParam(":docType", $docType);
+        if ($action === 'reject_doc') $stmt->bindParam(":rdocs", $newRejectedJson);
         if ($action === 'complete' && isset($outDocs)) $stmt->bindParam(":outdocs", $outDocs);
         
         if ($stmt->execute()) {

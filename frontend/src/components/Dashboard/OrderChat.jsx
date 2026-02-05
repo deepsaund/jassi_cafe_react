@@ -1,3 +1,7 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Send, Bot } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { API_BASE } from '../../config';
 import { useTheme } from '../../context/ThemeContext';
 
 export const OrderChat = ({ orderId }) => {

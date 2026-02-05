@@ -160,6 +160,19 @@ export default function VerificationPage() {
                                         <ExternalLink size={20} />
                                     </a>
                                 </div>
+                                <div className="absolute top-6 left-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                                    <Button
+                                        variant="danger"
+                                        size="sm"
+                                        className="h-12 px-6 rounded-2xl backdrop-blur-md border-none shadow-xl"
+                                        onClick={() => {
+                                            const r = prompt(`Why reject ${currentDoc.name}?`);
+                                            if (r) handleAction('reject_doc', r, currentDoc.type);
+                                        }}
+                                    >
+                                        <XCircle size={18} className="mr-2" /> Reject This Doc
+                                    </Button>
+                                </div>
                             </div>
                         ) : (
                             <div className="text-slate-700 text-center">
@@ -212,6 +225,6 @@ export default function VerificationPage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

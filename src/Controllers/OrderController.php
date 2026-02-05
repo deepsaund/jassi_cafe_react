@@ -200,7 +200,15 @@ class OrderController {
              } else {
                  $query = "UPDATE orders SET status = 'completed' WHERE id = :oid AND assigned_staff_id = :sid";
              }
-             $logAction = "Order Completed";
+        } elseif ($action === 'reject_doc') {
+             $docType = $data['doc_type'] ?? '';
+             $reason = $data['reason'] ?? 'Document Rejected';
+             // Append to rejected_docs JSON
+             $query = "UPDATE orders SET status = 'action_required', 
+                       rejection_reason = :reason,
+                       rejected_docs = JSON_ARRAY_APPEND(IFNULL(rejected_docs, JSON_ARRAY()), '$', :docType) 
+                       WHERE id = :oid AND assigned_staff_id = :sid";
+             $logAction = "Doc Rejected: " . $docType;
         } else {
              http_response_code(400);
              echo json_encode(["error" => "Invalid action"]);
@@ -210,7 +218,8 @@ class OrderController {
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(":oid", $orderId);
         $stmt->bindParam(":sid", $staffId);
-        if ($action === 'reject') $stmt->bindParam(":reason", $reason);
+        if ($action === 'reject' || $action === 'reject_doc') $stmt->bindParam(":reason", $reason);
+        if ($action === 'reject_doc') $stmt->bindParam(":docType", $docType);
         if ($action === 'complete' && isset($outDocs)) $stmt->bindParam(":outdocs", $outDocs);
         
         if ($stmt->execute()) {
@@ -311,11 +320,33 @@ class OrderController {
         $currentDocs[$docType] = $newDocId;
         $newDocsJson = json_encode($currentDocs);
 
-        // 3. Update Order Status
-        $updateQuery = "UPDATE orders SET document_ids = :docs, status = 'processing', rejection_reason = NULL WHERE id = :oid";
+        // 3. Remove from rejected_docs (PHP side logic)
+        $rejectedDocs = $order['rejected_docs'] ? json_decode($order['rejected_docs'], true) : [];
+        if (($key = array_search($docType, $rejectedDocs)) !== false) {
+            unset($rejectedDocs[$key]);
+            $rejectedDocs = array_values($rejectedDocs); // Re-index
+        }
+        $newRejectedDocsJson = json_encode($rejectedDocs);
+
+        // 4. Update Order Status and Doc IDs
+        $status = empty($rejectedDocs) ? 'processing' : 'action_required';
+        $reason = empty($rejectedDocs) ? null : $order['rejection_reason'];
+
+        $updateQuery = "UPDATE orders SET 
+                        document_ids = :docs, 
+                        rejected_docs = :rdocs,
+                        status = :status, 
+                        rejection_reason = :reason
+                        WHERE id = :oid";
         $uStmt = $this->db->prepare($updateQuery);
         
-        if ($uStmt->execute(['docs' => $newDocsJson, 'oid' => $orderId])) {
+        if ($uStmt->execute([
+            'docs' => $newDocsJson, 
+            'rdocs' => $newRejectedDocsJson,
+            'status' => $status,
+            'reason' => $reason,
+            'oid' => $orderId
+        ])) {
             // 4. Log
             $logQuery = "INSERT INTO order_logs (order_id, action, actor_id, details) VALUES (:oid, 'Document Re-uploaded', :aid, :det)";
             $this->db->prepare($logQuery)->execute([

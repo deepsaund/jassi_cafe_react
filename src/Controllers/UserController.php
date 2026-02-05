@@ -11,10 +11,10 @@ class UserController {
     private function getUserId() {
         $headers = getallheaders();
         $auth = $headers['Authorization'] ?? $headers['authorization'] ?? '';
-        if (strpos($auth, 'mock_token_') === 0) {
-            return (int) str_replace('mock_token_', '', $auth);
+        if (preg_match('/mock_token_(\d+)/', $auth, $matches)) {
+            return (int) $matches[1];
         }
-        return 1;
+        return null;
     }
 
     public function getSettings() {
@@ -128,6 +128,34 @@ class UserController {
         } else {
             http_response_code(500);
             echo json_encode(["error" => "Failed to update user"]);
+        }
+    }
+
+    public function updateProfile() {
+        $userId = $this->getUserId();
+        if (!$userId) {
+            http_response_code(401);
+            echo json_encode(["error" => "Unauthorized"]);
+            return;
+        }
+
+        $data = json_decode(file_get_contents("php://input"), true);
+        if (!$data) return;
+
+        $query = "UPDATE users SET email = :email, father_name = :fname, village = :village WHERE id = :id";
+        $params = [
+            ':email' => $data['email'] ?? null,
+            ':fname' => $data['father_name'] ?? null,
+            ':village' => $data['village'] ?? null,
+            ':id' => $userId
+        ];
+
+        $stmt = $this->db->prepare($query);
+        if ($stmt->execute($params)) {
+            echo json_encode(["message" => "Profile updated successfully"]);
+        } else {
+            http_response_code(500);
+            echo json_encode(["error" => "Failed to update profile"]);
         }
     }
 }

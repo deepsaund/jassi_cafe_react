@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
-import { Database, File, Upload, Trash2, Search, Filter, MoreVertical, Download, Eye, Plus, Lock, Send, UserSearch } from 'lucide-react';
+import { Database, File, Upload, Trash2, Search, Filter, MoreVertical, Download, Eye, Plus, Lock, Send, UserSearch, AlertCircle } from 'lucide-react';
 import { API_BASE } from '../../config';
 
 const Card = ({ children, className = "" }) => {
@@ -19,6 +19,7 @@ export default function DocumentVault() {
     const [search, setSearch] = useState('');
     const [documents, setDocuments] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     // Admin/Staff States
     const [userSearchQuery, setUserSearchQuery] = useState('');
@@ -29,47 +30,61 @@ export default function DocumentVault() {
     // Fetch documents for a specific user (Admin context) or self (Customer context)
     const fetchDocuments = (userId = null) => {
         setLoading(true);
+        setError(null);
+        // Ensure we absolute path if possible or at least standard
         const url = userId
             ? `${API_BASE}/admin/documents?user_id=${userId}`
             : `${API_BASE}/documents`;
 
         fetch(url, {
-            headers: { 'Authorization': `mock_token_${currentUser.id}` }
+            headers: {
+                'Authorization': `mock_token_${currentUser.id}`,
+                'Accept': 'application/json'
+            }
         })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
+                return res.json();
+            })
             .then(data => {
+                if (data && data.error) throw new Error(data.error);
                 setDocuments(Array.isArray(data) ? data : []);
-                setLoading(false);
             })
             .catch(err => {
-                console.error(err);
+                console.error("Vault Fetch Error:", err);
+                setError(err.message);
+                setDocuments([]);
+            })
+            .finally(() => {
                 setLoading(false);
             });
     };
 
     // Customer Initialization
     useEffect(() => {
-        if (currentUser && currentUser.role === 'customer') {
+        if (currentUser && (currentUser.role === 'customer' || currentUser.role === 'b2b')) {
             fetchDocuments();
         }
     }, [currentUser]);
 
     // Admin/Staff User Search
     useEffect(() => {
-        if (userSearchQuery.length < 2) {
+        if (!userSearchQuery || userSearchQuery.length < 2) {
             setUserSearchResults([]);
             return;
         }
         setSearchingUsers(true);
         const timeout = setTimeout(() => {
-            fetch(`${API_BASE}/admin/users?search=${userSearchQuery}`)
+            fetch(`${API_BASE}/admin/users?search=${encodeURIComponent(userSearchQuery)}`, {
+                headers: { 'Authorization': `mock_token_${currentUser.id}` }
+            })
                 .then(res => res.json())
                 .then(data => {
                     setUserSearchResults(Array.isArray(data) ? data : []);
-                    setSearchingUsers(false);
                 })
-                .catch(() => setSearchingUsers(false));
-        }, 300);
+                .catch(err => console.error(err))
+                .finally(() => setSearchingUsers(false));
+        }, 400);
         return () => clearTimeout(timeout);
     }, [userSearchQuery]);
 
@@ -86,10 +101,16 @@ export default function DocumentVault() {
         doc.type?.toLowerCase().includes(search.toLowerCase())
     );
 
+    const formatDate = (dateStr) => {
+        if (!dateStr) return 'Pending...';
+        const d = new Date(dateStr);
+        return isNaN(d.getTime()) ? 'Recently' : d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: '2-digit' });
+    };
+
     return (
-        <div className="space-y-10 max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700 pb-20">
+        <div className="space-y-10 max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700 pb-20 px-4 md:px-0">
             {/* Header Area */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 px-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                 <div className="flex items-center gap-6">
                     <div className="w-16 h-16 bg-blue-600/10 rounded-[2rem] flex items-center justify-center text-blue-500 shadow-2xl shadow-blue-500/10 border border-blue-500/20">
                         <Database size={32} />
@@ -147,7 +168,6 @@ export default function DocumentVault() {
                                                         <p className={`text-sm font-black uppercase tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{u.name}</p>
                                                         <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{u.phone}</p>
                                                     </div>
-                                                    <div className="ml-auto opacity-40 group-hover:opacity-100"><ArrowRight size={16} /></div>
                                                 </button>
                                             ))}
                                         </div>
@@ -179,7 +199,7 @@ export default function DocumentVault() {
             {(!isAdmin || selectedUser) && (
                 <div className="space-y-6">
                     {/* Toolbar */}
-                    <div className="flex flex-col md:flex-row gap-4 px-2">
+                    <div className="flex flex-col md:flex-row gap-4">
                         <div className={`flex-1 flex items-center gap-4 p-5 px-8 rounded-2xl border transition-all ${theme === 'dark' ? 'bg-white/5 border-white/5 shadow-2xl' : 'bg-white border-slate-100 shadow-xl shadow-slate-200/50'}`}>
                             <Search size={22} className="text-slate-500" />
                             <input
@@ -190,6 +210,13 @@ export default function DocumentVault() {
                             />
                         </div>
                     </div>
+
+                    {error && (
+                        <div className="p-6 rounded-3xl bg-red-500/10 border border-red-500/20 flex items-center gap-4 text-red-500">
+                            <AlertCircle size={24} />
+                            <p className="text-xs font-black uppercase tracking-widest">{error}</p>
+                        </div>
+                    )}
 
                     {/* Document List */}
                     <Card className="p-0 overflow-hidden border-none shadow-none bg-transparent">
@@ -243,7 +270,7 @@ export default function DocumentVault() {
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-6 text-[10px] font-bold text-slate-500 whitespace-nowrap">
-                                                    {new Date(doc.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: '2-digit' })}
+                                                    {formatDate(doc.created_at)}
                                                 </td>
                                                 <td className="px-8 py-6 text-right">
                                                     <div className="flex items-center justify-end gap-3 translate-x-2 group-hover:translate-x-0 transition-transform duration-500">
@@ -288,9 +315,3 @@ export default function DocumentVault() {
         </div>
     );
 }
-
-const ArrowRight = ({ size, className }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}>
-        <path d="M5 12h14M12 5l7 7-7 7" />
-    </svg>
-);

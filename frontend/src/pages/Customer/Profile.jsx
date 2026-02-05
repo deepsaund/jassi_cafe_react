@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { User, Mail, Phone, MapPin, Shield, Camera, Save, Key, UserCircle } from 'lucide-react';
+import { API_BASE } from '../../config';
 
 const Card = ({ children, className = "" }) => {
     const { theme } = useTheme();
@@ -13,9 +14,10 @@ const Card = ({ children, className = "" }) => {
 };
 
 export default function Profile() {
-    const { user } = useAuth();
+    const { user, refreshUser } = useAuth();
     const { theme } = useTheme();
     const [saving, setSaving] = useState(false);
+    const [message, setMessage] = useState(null);
 
     const [formData, setFormData] = useState({
         name: user?.name || '',
@@ -37,15 +39,59 @@ export default function Profile() {
         }
     }, [user]);
 
-    const handleSave = () => {
+    const handleSave = async () => {
         setSaving(true);
-        setTimeout(() => setSaving(false), 1500);
+        setMessage(null);
+        try {
+            const res = await fetch(`${API_BASE}/auth/profile`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `mock_token_${user.id}`
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (res.ok) {
+                setMessage({ type: 'success', text: 'Identity Records Updated Successfully' });
+                refreshUser(formData);
+            } else {
+                setMessage({ type: 'error', text: 'Failed to Sync Profile Data' });
+            }
+        } catch (err) {
+            setMessage({ type: 'error', text: 'Network connection interrupted' });
+        } finally {
+            setSaving(false);
+            setTimeout(() => setMessage(null), 3000);
+        }
+    };
+
+    const handleAvatarUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const uploadData = new FormData();
+        uploadData.append('file', file);
+        uploadData.append('type', 'profile_photo');
+
+        try {
+            const res = await fetch(`${API_BASE}/documents/upload`, {
+                method: 'POST',
+                headers: { 'Authorization': `mock_token_${user.id}` },
+                body: uploadData
+            });
+            if (res.ok) {
+                setMessage({ type: 'success', text: 'Authorized Portrait Uploaded' });
+            }
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     return (
-        <div className="space-y-8 max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="space-y-8 max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-4">
                 <div>
                     <h1 className={`text-4xl font-black tracking-tighter uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                         Identity <span className="text-blue-500">Profile</span>
@@ -64,7 +110,13 @@ export default function Profile() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {message && (
+                <div className={`mx-4 p-4 rounded-2xl text-center text-[10px] font-black uppercase tracking-widest animate-in slide-in-from-top-2 duration-300 ${message.type === 'success' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}>
+                    {message.text}
+                </div>
+            )}
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-4">
                 {/* Left Side: Identity Card */}
                 <div className="lg:col-span-1 space-y-6">
                     <Card className="text-center relative overflow-hidden group">
@@ -73,9 +125,10 @@ export default function Profile() {
                                 <div className="w-full h-full rounded-[2.5rem] bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-700 flex items-center justify-center text-white text-5xl font-black shadow-2xl group-hover:rotate-6 transition-transform duration-700">
                                     {formData.name[0]?.toUpperCase()}
                                 </div>
-                                <button className={`absolute -bottom-2 -right-2 p-3 rounded-2xl shadow-2xl border transition-all hover:scale-110 active:scale-90 ${theme === 'dark' ? 'bg-white/10 text-white border-white/10' : 'bg-white text-slate-900 border-slate-100'}`}>
+                                <label className={`absolute -bottom-2 -right-2 p-3 rounded-2xl shadow-2xl border transition-all hover:scale-110 active:scale-90 cursor-pointer ${theme === 'dark' ? 'bg-white/10 text-white border-white/10' : 'bg-white text-slate-900 border-slate-100'}`}>
                                     <Camera size={18} />
-                                </button>
+                                    <input type="file" className="hidden" onChange={handleAvatarUpload} />
+                                </label>
                             </div>
                             <h2 className={`font-black text-2xl tracking-tight mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{formData.name}</h2>
                             <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-blue-500/10 rounded-full border border-blue-500/20">
@@ -114,20 +167,21 @@ export default function Profile() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {[
-                                { label: 'Registered Full Name', icon: User, key: 'name' },
+                                { label: 'Registered Full Name', icon: User, key: 'name', disabled: true },
                                 { label: 'Auth Communication Node', icon: Mail, key: 'email', placeholder: 'Not Linked' },
-                                { label: 'Validated Contact Number', icon: Phone, key: 'phone' },
+                                { label: 'Validated Contact Number', icon: Phone, key: 'phone', disabled: true },
                                 { label: 'Assigned Village/Sector', icon: MapPin, key: 'village' },
                                 { label: "Guardian's Identity (Father)", icon: User, key: 'father_name' },
                             ].map((field) => (
                                 <div key={field.key} className="space-y-2">
                                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1 opacity-70">{field.label}</label>
-                                    <div className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-300 focus-within:ring-4 focus-within:ring-blue-500/5 ${theme === 'dark' ? 'bg-white/5 border-white/5 focus-within:border-blue-500/50' : 'bg-slate-50 border-slate-100 focus-within:border-blue-500/20 focus-within:bg-white focus-within:shadow-xl'}`}>
+                                    <div className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-300 focus-within:ring-4 focus-within:ring-blue-500/5 ${theme === 'dark' ? 'bg-white/5 border-white/5 focus-within:border-blue-500/50' : 'bg-slate-50 border-slate-100 focus-within:border-blue-500/20 focus-within:bg-white focus-within:shadow-xl'} ${field.disabled ? 'opacity-50 grayscale cursor-not-allowed' : ''}`}>
                                         <field.icon size={18} className="text-slate-400" />
                                         <input
                                             className="bg-transparent border-none outline-none w-full text-xs font-black placeholder:text-slate-500"
                                             value={formData[field.key]}
                                             placeholder={field.placeholder || ''}
+                                            disabled={field.disabled}
                                             onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
                                         />
                                     </div>

@@ -260,14 +260,12 @@ export default function AdminDashboard() {
                             <div className={`px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-wider border ${broadcastStatus === 'enabled' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500' : 'bg-slate-500/10 border-slate-500/20 text-slate-400'}`}>
                                 {broadcastStatus === 'enabled' ? 'Signal Live 🟢' : 'Signal Halted 🛑'}
                             </div>
-                            <select
-                                value={broadcastStatus}
-                                onChange={(e) => setBroadcastStatus(e.target.value)}
-                                className={`rounded-xl px-3 py-1.5 text-[9px] font-black uppercase cursor-pointer focus:ring-2 focus:ring-primary/10 border-none appearance-none ${theme === 'dark' ? 'bg-white/5 text-white' : 'bg-slate-100 text-slate-900'}`}
+                            <button
+                                onClick={() => setBroadcastStatus(broadcastStatus === 'enabled' ? 'disabled' : 'enabled')}
+                                className={`px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all border ${broadcastStatus === 'enabled' ? 'bg-red-500/10 border-red-500/20 text-red-500 hover:bg-red-500/20' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500 hover:bg-emerald-500/20'}`}
                             >
-                                <option value="enabled" className="text-white">Enable</option>
-                                <option value="disabled" className="text-white">Disable</option>
-                            </select>
+                                {broadcastStatus === 'enabled' ? 'Disable' : 'Enable'}
+                            </button>
                         </div>
                     </div>
 

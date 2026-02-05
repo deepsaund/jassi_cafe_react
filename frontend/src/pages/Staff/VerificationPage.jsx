@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Eye, XCircle, CheckCircle, ExternalLink, MessageSquare } from 'lucide-react';
+import { ArrowLeft, Eye, XCircle, CheckCircle, ExternalLink, MessageSquare, PanelRightClose, PanelRightOpen } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { useAuth } from '../../context/AuthContext';
 import { OrderChat } from '../../components/Dashboard/OrderChat';
@@ -17,6 +17,7 @@ export default function VerificationPage() {
     const [currentDoc, setCurrentDoc] = useState(null);
     const [internalNote, setInternalNote] = useState("");
     const [isProcessing, setIsProcessing] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     useEffect(() => {
         if (!user) return;
@@ -56,7 +57,7 @@ export default function VerificationPage() {
             });
     }, [id, user]);
 
-    const handleAction = async (action, reason = '') => {
+    const handleAction = async (action, reason = '', docType = null) => {
         setIsProcessing(true);
         try {
             await fetch(`${API_BASE}/staff/orders/update`, {
@@ -65,9 +66,13 @@ export default function VerificationPage() {
                     'Content-Type': 'application/json',
                     'Authorization': `mock_token_${user.id}`
                 },
-                body: JSON.stringify({ action, order_id: order.id, reason, internal_note: internalNote })
+                body: JSON.stringify({ action, order_id: order.id, reason, doc_type: docType, internal_note: internalNote })
             });
-            navigate('/dashboard/staff');
+            if (action !== 'reject_doc') navigate('/dashboard/staff');
+            else {
+                // Update local state for doc rejection if needed
+                alert("Document rejected. Customer will be notified.");
+            }
         } catch (err) {
             console.error(err);
         } finally {
@@ -87,24 +92,34 @@ export default function VerificationPage() {
     return (
         <div className={`h-[calc(100vh-80px)] -m-6 flex flex-col overflow-hidden transition-colors duration-500 ${theme === 'dark' ? 'bg-[#070b14]' : 'bg-slate-100'}`}>
             {/* Header / Toolbar */}
-            <div className={`border-b px-6 py-4 flex items-center justify-between shadow-sm z-10 ${theme === 'dark' ? 'bg-[#0f172a] border-white/5' : 'bg-white border-slate-200'}`}>
+            <div className={`border-b px-6 py-4 flex items-center justify-between shadow-sm z-10 ${theme === 'dark' ? 'bg-[#0f172a] border-white/5 shadow-2xl shadow-blue-900/10' : 'bg-white border-slate-200'}`}>
                 <div className="flex items-center gap-4">
-                    <button onClick={() => navigate('/dashboard/staff')} className={`p-2 rounded-xl transition-all ${theme === 'dark' ? 'hover:bg-white/5 text-slate-400' : 'hover:bg-slate-100 text-slate-600'}`}>
+                    <button onClick={() => navigate('/dashboard/staff')} className={`p-2 rounded-xl transition-all ${theme === 'dark' ? 'hover:bg-white/5 text-slate-400 font-black' : 'hover:bg-slate-100 text-slate-600'}`}>
                         <ArrowLeft size={20} />
                     </button>
                     <div>
                         <h1 className={`text-lg font-black tracking-tight flex items-center gap-3 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                             Verifying Order #{order.id}
-                            <span className={`px-2 py-0.5 text-[10px] rounded uppercase font-black tracking-widest ${theme === 'dark' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-blue-100 text-blue-700'}`}>{order.service_name}</span>
+                            <span className={`px-2 py-0.5 text-[10px] rounded-lg uppercase font-black tracking-[0.2em] ${theme === 'dark' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-blue-100 text-blue-700'}`}>{order.service_name}</span>
                         </h1>
                         <p className={`text-xs font-bold ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>{order.customer_name} • {order.customer_phone}</p>
                     </div>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex gap-4 items-center">
+                    <button
+                        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                        className={`p-3 rounded-2xl transition-all ${theme === 'dark' ? 'bg-white/5 text-blue-400 hover:bg-white/10' : 'bg-slate-50 text-blue-600 hover:bg-blue-50'}`}
+                        title={isSidebarOpen ? "Close Information Panel" : "Open Information Panel"}
+                    >
+                        {isSidebarOpen ? <PanelRightClose size={20} /> : <PanelRightOpen size={20} />}
+                    </button>
+
+                    <div className="w-[1px] h-8 bg-white/10 mx-2" />
+
                     <Button
-                        variant="danger"
+                        variant="secondary"
                         size="sm"
-                        className="rounded-xl px-6"
+                        className={`rounded-xl px-6 border border-red-500/30 ${theme === 'dark' ? 'text-red-400 hover:bg-red-500 hover:text-white' : 'text-red-600 hover:bg-red-600 hover:text-white'}`}
                         loading={isProcessing}
                         onClick={() => {
                             const r = prompt("Rejection Reason:");
@@ -116,7 +131,7 @@ export default function VerificationPage() {
                     <Button
                         variant="primary"
                         size="sm"
-                        className="bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/20 rounded-xl px-6 border-none"
+                        className="bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-500/20 rounded-xl px-8 border-none text-white"
                         loading={isProcessing}
                         onClick={() => handleAction('complete')}
                     >
@@ -184,8 +199,8 @@ export default function VerificationPage() {
                 </div>
 
                 {/* Right Side: Data & Chat */}
-                <div className={`w-[480px] border-l flex flex-col shadow-2xl z-20 transition-colors duration-500 ${theme === 'dark' ? 'bg-[#0f172a] border-white/5' : 'bg-white border-slate-200'}`}>
-                    <div className="flex-1 overflow-y-auto custom-scrollbar">
+                <div className={`transition-all duration-500 ease-in-out flex flex-col shadow-2xl z-20 overflow-hidden ${isSidebarOpen ? 'w-[480px] border-l' : 'w-0 border-none'} ${theme === 'dark' ? 'bg-[#0f172a] border-white/5' : 'bg-white border-slate-200'}`}>
+                    <div className="flex-1 overflow-y-auto custom-scrollbar min-w-[480px]">
                         {/* Section: Application Data */}
                         <div className={`p-8 border-b ${theme === 'dark' ? 'border-white/5' : 'border-slate-100'}`}>
                             <h3 className="text-[10px] uppercase font-black text-slate-500 tracking-[0.2em] mb-6">Application Details</h3>
@@ -216,15 +231,15 @@ export default function VerificationPage() {
                         </div>
 
                         {/* Section: Chat Integration */}
-                        <div className="p-8">
-                            <h3 className="text-[10px] uppercase font-black text-slate-500 tracking-[0.2em] mb-6">Messages</h3>
-                            <div className="rounded-[2rem] overflow-hidden border border-transparent">
+                        <div className="p-8 pb-12">
+                            <h3 className="text-[10px] uppercase font-black text-slate-500 tracking-[0.2em] mb-6">Neural Messages</h3>
+                            <div className="rounded-[2.5rem] overflow-hidden border border-transparent shadow-2xl">
                                 <OrderChat orderId={order.id} />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div >
+        </div>
     );
 }

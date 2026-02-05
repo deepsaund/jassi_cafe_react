@@ -1,11 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Button } from '../ui/Button';
-import { Send, User, Bot } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
-import { API_BASE } from '../../config';
+import { useTheme } from '../../context/ThemeContext';
 
 export const OrderChat = ({ orderId }) => {
     const { user } = useAuth();
+    const { theme } = useTheme();
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [loading, setLoading] = useState(true);
@@ -55,15 +52,18 @@ export const OrderChat = ({ orderId }) => {
     };
 
     return (
-        <div className="flex flex-col h-[500px] bg-slate-50 rounded-2xl overflow-hidden border border-slate-200 shadow-inner">
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className={`flex flex-col h-[600px] rounded-[2rem] overflow-hidden border transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/5 shadow-inner' : 'bg-slate-50 border-slate-100 shadow-inner'}`}>
+            <div className="flex-1 overflow-y-auto p-6 space-y-5 custom-scrollbar">
                 {messages.map((m, idx) => {
                     const isMe = m.sender_id === user?.id;
                     return (
-                        <div key={idx} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`max-w-[80%] p-3 rounded-2xl shadow-sm ${isMe ? 'bg-blue-600 text-white rounded-tr-none' : 'bg-white text-slate-800 border border-slate-100 rounded-tl-none'}`}>
-                                <p className="text-sm font-medium">{m.message}</p>
-                                <span className={`text-[10px] mt-1 block opacity-60 ${isMe ? 'text-right' : 'text-left'}`}>
+                        <div key={idx} className={`flex ${isMe ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2`}>
+                            <div className={`max-w-[85%] p-4 rounded-2xl shadow-xl transition-all hover:scale-[1.02] ${isMe
+                                ? 'bg-blue-600 text-white rounded-tr-none shadow-blue-500/10'
+                                : (theme === 'dark' ? 'bg-white/10 text-slate-200 border border-white/5 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-100 rounded-tl-none')
+                                }`}>
+                                <p className="text-xs font-bold leading-relaxed">{m.message}</p>
+                                <span className={`text-[9px] mt-2 block font-black uppercase tracking-widest opacity-40 ${isMe ? 'text-right' : 'text-left'}`}>
                                     {new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </span>
                             </div>
@@ -71,22 +71,26 @@ export const OrderChat = ({ orderId }) => {
                     );
                 })}
                 {messages.length === 0 && !loading && (
-                    <div className="text-center py-10 opacity-40">
-                        <Bot size={40} className="mx-auto mb-2" />
-                        <p className="text-sm">No messages yet. Send one to start the conversation!</p>
+                    <div className="text-center py-20 opacity-20">
+                        <div className={`w-16 h-16 rounded-3xl flex items-center justify-center mx-auto mb-4 border-2 border-dashed ${theme === 'dark' ? 'border-white/10' : 'border-slate-300'}`}>
+                            <Bot size={32} />
+                        </div>
+                        <p className="text-[10px] font-black uppercase tracking-[0.3em]">Neural Link Empty</p>
                     </div>
                 )}
                 <div ref={scrollRef} />
             </div>
-            <form onSubmit={handleSend} className="p-4 bg-white border-t border-slate-100 flex gap-2">
+            <form onSubmit={handleSend} className={`p-4 flex gap-3 border-t ${theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-white border-slate-100'}`}>
                 <input
                     type="text"
-                    placeholder="Type your message..."
-                    className="flex-1 bg-slate-50 border-none rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500/20 outline-none text-sm font-medium"
+                    placeholder="Dispatch message..."
+                    className={`flex-1 rounded-xl px-5 py-3 text-xs font-bold outline-none transition-all ${theme === 'dark'
+                        ? 'bg-white/5 border border-white/5 text-white focus:border-blue-500/50'
+                        : 'bg-slate-50 border border-slate-100 text-slate-900 focus:border-blue-300'}`}
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                 />
-                <button type="submit" className="p-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors shadow-md shadow-blue-200">
+                <button type="submit" className="w-12 h-12 flex items-center justify-center bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/20">
                     <Send size={18} />
                 </button>
             </form>

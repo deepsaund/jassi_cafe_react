@@ -74,7 +74,7 @@ const OrderStatusTracker = ({ status }) => {
 
 import { OrderFix } from '../../components/Dashboard/OrderFix';
 
-const ServiceCard = ({ id, service_name, status, created_at, onChatOpen, onFixOpen }) => {
+const ServiceCard = ({ id, service_name, status, created_at, output_document_ids, user, onChatOpen, onFixOpen }) => {
     const navigate = useNavigate();
     const { theme } = useTheme();
     const statusText = {
@@ -119,6 +119,32 @@ const ServiceCard = ({ id, service_name, status, created_at, onChatOpen, onFixOp
                 </div>
 
                 <div className="flex items-center justify-end gap-2">
+                    {status === 'completed' && output_document_ids && (
+                        <Button
+                            size="sm"
+                            variant="secondary"
+                            className={`h-9 px-4 text-[9px] uppercase font-black rounded-lg shadow-lg border-emerald-500/30 ${theme === 'dark' ? 'text-emerald-400 hover:bg-emerald-500 hover:text-white' : 'text-emerald-600 hover:bg-emerald-600 hover:text-white'}`}
+                            onClick={async (e) => {
+                                e.stopPropagation();
+                                try {
+                                    const outDocs = typeof output_document_ids === 'string' ? JSON.parse(output_document_ids) : output_document_ids;
+                                    const firstId = Object.values(outDocs)[0];
+                                    if (!firstId) return;
+
+                                    const res = await fetch(`${API_BASE}/documents/batch?ids=${firstId}`, {
+                                        headers: { 'Authorization': `mock_token_${user.id}` }
+                                    });
+                                    const docs = await res.json();
+                                    if (docs.length > 0) {
+                                        const url = docs[0].file_path.startsWith('http') ? docs[0].file_path : `${API_BASE.replace('/api', '')}${docs[0].file_path}`;
+                                        window.open(url, '_blank');
+                                    }
+                                } catch (err) { console.error(err); }
+                            }}
+                        >
+                            <CheckCircle size={12} className="mr-2" /> Download Result
+                        </Button>
+                    )}
                     {status === 'action_required' && (
                         <Button
                             size="sm"
@@ -178,6 +204,9 @@ export default function CustomerDashboard() {
 
     useEffect(() => {
         fetchOrders();
+        // Point 3: Pseudo Real-time polling every 10 seconds
+        const interval = setInterval(fetchOrders, 10000);
+        return () => clearInterval(interval);
     }, [user]);
 
     const openChat = (id) => {
@@ -265,6 +294,33 @@ export default function CustomerDashboard() {
                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl opacity-50" />
             </header>
 
+            {/* Attention Required Banner */}
+            {stats.action > 0 && (
+                <div
+                    className={`p-6 rounded-3xl border-2 border-dashed transition-all duration-500 flex flex-col md:flex-row items-center justify-between gap-6 cursor-pointer group shadow-2xl shadow-red-500/5 ${theme === 'dark' ? 'bg-red-500/10 border-red-500/20' : 'bg-red-50 border-red-100 hover:border-red-200'}`}
+                    onClick={() => {
+                        const firstActionOrder = orders.find(o => o.status === 'action_required');
+                        if (firstActionOrder) openFix(firstActionOrder.id);
+                    }}
+                >
+                    <div className="flex items-center gap-6">
+                        <div className="w-16 h-16 rounded-[2rem] bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500/30 group-hover:scale-110 transition-transform">
+                            <AlertCircle size={30} className="animate-pulse" />
+                        </div>
+                        <div>
+                            <h3 className={`text-xl font-black uppercase tracking-tight ${theme === 'dark' ? 'text-red-400' : 'text-red-600'}`}>Attention Required</h3>
+                            <p className={`text-sm font-bold ${theme === 'dark' ? 'text-red-300/60' : 'text-red-500/80'}`}>You have {stats.action} {stats.action === 1 ? 'application' : 'applications'} that {stats.action === 1 ? 'needs' : 'need'} immediate action.</p>
+                        </div>
+                    </div>
+                    <Button
+                        variant="danger"
+                        className="bg-red-500 hover:bg-red-600 text-white border-none rounded-2xl h-14 px-8 font-black uppercase tracking-widest text-xs shadow-xl shadow-red-500/20 active:scale-95 transition-all"
+                    >
+                        Resolve Issues <ArrowRight size={16} className="ml-3 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                </div>
+            )}
+
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <StatCard
@@ -333,7 +389,7 @@ export default function CustomerDashboard() {
                                 .filter(o => activeTab === 'active' ? o.status !== 'completed' : o.status === 'completed')
                                 .slice(0, 10)
                                 .map(order => (
-                                    <ServiceCard key={order.id} {...order} onChatOpen={openChat} onFixOpen={openFix} />
+                                    <ServiceCard key={order.id} {...order} user={user} onChatOpen={openChat} onFixOpen={openFix} />
                                 ))}
                         </div>
                     ) : (

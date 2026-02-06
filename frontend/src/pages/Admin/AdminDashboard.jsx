@@ -17,7 +17,8 @@ import {
     ArrowRight,
     Radio,
     Wallet,
-    Award
+    Award,
+    AlertCircle
 } from 'lucide-react';
 import { API_BASE } from '../../config';
 import { useAuth } from '../../context/AuthContext';
@@ -142,8 +143,9 @@ export default function AdminDashboard() {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 w-full md:w-auto">
-                        <QuickStat icon={Users} label="Identities" value={analytics?.total_users || '245'} color="blue" />
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 w-full md:w-auto">
+                        <QuickStat icon={Users} label="Identities" value={analytics?.total_users || '4.2k'} color="blue" />
+                        <QuickStat icon={AlertCircle} label="Active Issues" value={analytics?.action_required_count || '0'} color="red" />
                         <QuickStat icon={Zap} label="Revenue" value={`₹${analytics?.revenue_week || '0'}`} color="indigo" />
                     </div>
                 </div>
@@ -399,13 +401,21 @@ export default function AdminDashboard() {
     );
 }
 
-const QuickStat = ({ icon: Icon, label, value, color }) => (
-    <div className={`p-4 rounded-3xl border border-white/5 bg-white/5 flex flex-col items-center justify-center text-center min-w-[120px]`}>
-        <Icon size={18} className="text-blue-400 mb-2" />
-        <span className="text-[8px] font-black uppercase text-slate-500 tracking-widest">{label}</span>
-        <span className="text-xl font-black mt-1 leading-none">{value}</span>
-    </div>
-);
+const QuickStat = ({ icon: Icon, label, value, color }) => {
+    const colors = {
+        blue: "text-blue-400",
+        red: "text-red-400",
+        indigo: "text-indigo-400",
+        emerald: "text-emerald-400"
+    };
+    return (
+        <div className={`p-4 rounded-3xl border border-white/5 bg-white/5 flex flex-col items-center justify-center text-center min-w-[120px]`}>
+            <Icon size={18} className={`${colors[color] || 'text-blue-400'} mb-2`} />
+            <span className="text-[8px] font-black uppercase text-slate-500 tracking-widest">{label}</span>
+            <span className="text-xl font-black mt-1 leading-none">{value}</span>
+        </div>
+    );
+};
 
 const NavCard = ({ icon: Icon, title, desc, onClick, color }) => {
     const { theme } = useTheme();

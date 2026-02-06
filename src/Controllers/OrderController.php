@@ -419,12 +419,19 @@ class OrderController {
         $logStmt->execute();
         $recentActivity = $logStmt->fetchAll(PDO::FETCH_ASSOC);
 
+        // 6. Action Required Count
+        $actionQuery = "SELECT COUNT(*) as count FROM orders WHERE status = 'action_required'";
+        $actStmt = $this->db->prepare($actionQuery);
+        $actStmt->execute();
+        $actionCount = $actStmt->fetch(PDO::FETCH_ASSOC)['count'] ?? 0;
+
         echo json_encode([
             "revenue_week" => $revenue,
             "top_staff" => $topStaff,
             "top_services" => $topServices,
             "daily_orders" => $dailyOrders,
-            "recent_activity" => $recentActivity
+            "recent_activity" => $recentActivity,
+            "action_required_count" => $actionCount
         ]);
     }
 }

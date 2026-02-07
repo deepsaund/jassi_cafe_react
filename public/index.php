@@ -155,6 +155,11 @@ $router->add('POST', '/api/orders/messages', function() use ($db) {
     $controller->sendMessage();
 });
 
+$router->add('GET', '/api/settings', function() use ($db) {
+    $controller = new UserController($db);
+    $controller->getSettings();
+});
+
 $router->add('GET', '/api/admin/settings', function() use ($db) {
     $controller = new UserController($db);
     $controller->getSettings();

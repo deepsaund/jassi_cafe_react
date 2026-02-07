@@ -27,7 +27,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsToolti
 
 export default function AdminDashboard() {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, refreshSettings } = useAuth();
     const { theme } = useTheme();
     const [orders, setOrders] = useState([]);
     const [analytics, setAnalytics] = useState(null);
@@ -84,7 +84,10 @@ export default function AdminDashboard() {
                 headers: { 'Content-Type': 'application/json', 'Authorization': `mock_token_${user.id}` },
                 body: JSON.stringify({ wallet_system_status: newState })
             });
-            if (res.ok) setWalletEnabled(!walletEnabled);
+            if (res.ok) {
+                setWalletEnabled(!walletEnabled);
+                refreshSettings();
+            }
         } catch (err) {
             console.error(err);
         } finally {
@@ -100,6 +103,7 @@ export default function AdminDashboard() {
                 headers: { 'Content-Type': 'application/json', 'Authorization': `mock_token_${user.id}` },
                 body: JSON.stringify({ global_broadcast_message: broadcast, global_broadcast_status: broadcastStatus })
             });
+            refreshSettings();
             alert("Broadcast Protocol Updated");
         } catch (e) {
             console.error(e);
@@ -154,12 +158,109 @@ export default function AdminDashboard() {
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-600/10 rounded-full blur-[100px] -ml-20 -mb-20" />
             </header>
 
-            {/* 2. Navigation Matrix */}
+            {/* 2. Main Work: Service Applications */}
+            <section className="space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-4">
+                    <div className="flex items-center gap-5">
+                        <div className="w-14 h-14 bg-blue-600/10 rounded-2xl flex items-center justify-center text-blue-500 shadow-xl shadow-blue-500/5">
+                            <FileText size={32} />
+                        </div>
+                        <div>
+                            <h2 className={`text-3xl font-black uppercase tracking-tighter ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                                Service <span className="text-blue-500">Applications</span>
+                            </h2>
+                            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mt-1">Primary work queue - Monitor and manage all customer requests</p>
+                        </div>
+                    </div>
+
+                    <div className={`flex p-1.5 rounded-2xl ${theme === 'dark' ? 'bg-white/5 border border-white/5' : 'bg-slate-100'}`}>
+                        <button onClick={() => setActiveTab('active')} className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 ${activeTab === 'active' ? 'bg-blue-600 text-white shadow-xl' : 'text-slate-500'}`}>Active ({activeOrders.length})</button>
+                        <button onClick={() => setActiveTab('history')} className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 ${activeTab === 'history' ? 'bg-blue-600 text-white shadow-xl' : 'text-slate-500'}`}>History ({historyOrders.length})</button>
+                    </div>
+                </div>
+
+                <Card className={`rounded-[3rem] overflow-hidden border shadow-2xl transition-all duration-500 ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white border-slate-100'}`}>
+                    {loading ? (
+                        <div className="p-24 text-center">
+                            <div className="animate-spin w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-6"></div>
+                            <p className="font-black text-[10px] uppercase tracking-widest text-slate-500">Loading Records...</p>
+                        </div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left">
+                                <thead className={`border-b ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-100'}`}>
+                                    <tr>
+                                        <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Customer Details</th>
+                                        <th className="px-6 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Service Name</th>
+                                        <th className="px-6 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Assigned Staff</th>
+                                        <th className="px-6 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Current Status</th>
+                                        <th className="px-8 py-6 text-right text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-slate-50'}`}>
+                                    {paginatedOrders.map((order) => (
+                                        <tr key={order.id} className="group hover:bg-blue-600/5 transition-all duration-300">
+                                            <td className="px-8 py-6">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-10 h-10 rounded-2xl bg-slate-500/10 flex items-center justify-center font-black text-slate-400 group-hover:scale-110 transition-transform">{order.customer_name?.[0]}</div>
+                                                    <div>
+                                                        <p className={`text-sm font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{order.customer_name}</p>
+                                                        <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest italic">Reference: #{order.id}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-6">
+                                                <span className={`text-xs font-black uppercase tracking-tight ${theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>{order.service_name}</span>
+                                            </td>
+                                            <td className="px-6 py-6 text-[10px] font-black uppercase text-slate-500 tracking-widest">{order.staff_name || 'Not Assigned'}</td>
+                                            <td className="px-6 py-6">
+                                                <span className={`px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest border transition-all ${order.status === 'completed' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : order.status === 'action_required' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-blue-500/10 text-blue-400 border-blue-500/20'}`}>
+                                                    {order.status.replace('_', ' ')}
+                                                </span>
+                                            </td>
+                                            <td className="px-8 py-6 text-right">
+                                                <Button onClick={() => navigate(`/dashboard/staff/verify/${order.id}`)} className="h-10 px-6 rounded-2xl text-[9px] font-black uppercase tracking-widest hover:scale-105 active:scale-95">Open Record</Button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+
+                            {/* Pagination Controls */}
+                            {totalPages > 1 && (
+                                <div className={`p-6 border-t flex items-center justify-between ${theme === 'dark' ? 'border-white/5 bg-white/5' : 'border-slate-50 bg-slate-50/30'}`}>
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                                        Page <span className="text-blue-500">{currentPage}</span> of {totalPages}
+                                    </p>
+                                    <div className="flex gap-2">
+                                        <button
+                                            disabled={currentPage === 1}
+                                            onClick={() => setCurrentPage(prev => prev - 1)}
+                                            className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${currentPage === 1 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-blue-600 hover:text-white border border-white/10 hover:scale-105'}`}
+                                        >
+                                            Previous
+                                        </button>
+                                        <button
+                                            disabled={currentPage === totalPages}
+                                            onClick={() => setCurrentPage(prev => prev + 1)}
+                                            className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${currentPage === totalPages ? 'opacity-30 cursor-not-allowed' : 'hover:bg-blue-600 hover:text-white border border-white/10 hover:scale-105'}`}
+                                        >
+                                            Next
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </Card>
+            </section>
+
+            {/* 3. Navigation Matrix */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <NavCard icon={Users} title="User Management" desc="Manage access & identities" onClick={() => navigate('/dashboard/admin/users')} color="blue" />
-                <NavCard icon={Settings} title="Service Management" desc="Configure rates & rules" onClick={() => navigate('/dashboard/admin/services')} color="indigo" />
-                <NavCard icon={FileText} title="Audit Logs" desc="Track system-wide events" onClick={() => navigate('/dashboard/admin/logs')} color="amber" />
-                <NavCard icon={CreditCard} title="Settlements" desc="Reconcile financial data" onClick={() => navigate('/dashboard/admin/settlements')} color="emerald" />
+                <NavCard icon={Users} title="Users" desc="Manage client accounts" onClick={() => navigate('/dashboard/admin/users')} color="blue" />
+                <NavCard icon={Settings} title="Services" desc="Edit rates and rules" onClick={() => navigate('/dashboard/admin/services')} color="indigo" />
+                <NavCard icon={FileText} title="Activity Logs" desc="View system history" onClick={() => navigate('/dashboard/admin/logs')} color="amber" />
+                <NavCard icon={CreditCard} title="Payments" desc="Check transactions" onClick={() => navigate('/dashboard/admin/settlements')} color="emerald" />
             </div>
 
             {/* 3. Analytics & Activity Sector */}
@@ -268,102 +369,6 @@ export default function AdminDashboard() {
                 </Card>
             </div>
 
-            {/* 5. Service Applications (From Reference Pic) */}
-            <section className="space-y-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-4">
-                    <div className="flex items-center gap-5">
-                        <div className="w-14 h-14 bg-blue-600/10 rounded-2xl flex items-center justify-center text-blue-500 shadow-xl shadow-blue-500/5">
-                            <FileText size={32} />
-                        </div>
-                        <div>
-                            <h2 className={`text-3xl font-black uppercase tracking-tighter ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                                Service <span className="text-blue-500">Applications</span>
-                            </h2>
-                            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mt-1">Monitor and manage all system requests</p>
-                        </div>
-                    </div>
-
-                    <div className={`flex p-1.5 rounded-2xl ${theme === 'dark' ? 'bg-white/5 border border-white/5' : 'bg-slate-100'}`}>
-                        <button onClick={() => setActiveTab('active')} className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'active' ? 'bg-blue-600 text-white shadow-xl' : 'text-slate-500'}`}>Active ({activeOrders.length})</button>
-                        <button onClick={() => setActiveTab('history')} className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'history' ? 'bg-blue-600 text-white shadow-xl' : 'text-slate-500'}`}>History ({historyOrders.length})</button>
-                    </div>
-                </div>
-
-                <Card className={`rounded-[3rem] overflow-hidden border shadow-2xl ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white border-slate-100'}`}>
-                    {loading ? (
-                        <div className="p-24 text-center">
-                            <div className="animate-spin w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-6"></div>
-                            <p className="font-black text-[10px] uppercase tracking-widest text-slate-500">Retrieving Records...</p>
-                        </div>
-                    ) : (
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left">
-                                <thead className={`border-b ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-100'}`}>
-                                    <tr>
-                                        <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Identity Details</th>
-                                        <th className="px-6 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Service Node</th>
-                                        <th className="px-6 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Staff Assigned</th>
-                                        <th className="px-6 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Status</th>
-                                        <th className="px-8 py-6 text-right text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-slate-50'}`}>
-                                    {paginatedOrders.map((order) => (
-                                        <tr key={order.id} className="group hover:bg-blue-600/5 transition-all duration-300">
-                                            <td className="px-8 py-6">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-10 h-10 rounded-2xl bg-slate-500/10 flex items-center justify-center font-black text-slate-400">{order.customer_name?.[0]}</div>
-                                                    <div>
-                                                        <p className={`text-sm font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{order.customer_name}</p>
-                                                        <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Ref: #{order.id}</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-6">
-                                                <span className={`text-xs font-black uppercase tracking-tight ${theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>{order.service_name}</span>
-                                            </td>
-                                            <td className="px-6 py-6 text-[10px] font-black uppercase text-slate-500 tracking-widest">{order.staff_name || 'Unassigned'}</td>
-                                            <td className="px-6 py-6">
-                                                <span className={`px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest border ${order.status === 'completed' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : order.status === 'action_required' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-blue-500/10 text-blue-400 border-blue-500/20'}`}>
-                                                    {order.status}
-                                                </span>
-                                            </td>
-                                            <td className="px-8 py-6 text-right">
-                                                <Button onClick={() => navigate(`/dashboard/staff/verify/${order.id}`)} className="h-10 px-6 rounded-2xl text-[9px] font-black uppercase tracking-widest">Review</Button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-
-                            {/* Pagination Controls */}
-                            {totalPages > 1 && (
-                                <div className={`p-6 border-t flex items-center justify-between ${theme === 'dark' ? 'border-white/5 bg-white/5' : 'border-slate-50 bg-slate-50/30'}`}>
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">
-                                        Page <span className="text-blue-500">{currentPage}</span> of {totalPages}
-                                    </p>
-                                    <div className="flex gap-2">
-                                        <button
-                                            disabled={currentPage === 1}
-                                            onClick={() => setCurrentPage(prev => prev - 1)}
-                                            className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${currentPage === 1 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-blue-600 hover:text-white border border-white/10'}`}
-                                        >
-                                            Prev
-                                        </button>
-                                        <button
-                                            disabled={currentPage === totalPages}
-                                            onClick={() => setCurrentPage(prev => prev + 1)}
-                                            className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${currentPage === totalPages ? 'opacity-30 cursor-not-allowed' : 'hover:bg-blue-600 hover:text-white border border-white/10'}`}
-                                        >
-                                            Next
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </Card>
-            </section>
 
             {/* 6. Staff Performance Section (Restored) */}
             <Card className={`p-8 rounded-[3rem] shadow-2xl overflow-hidden relative transition-all duration-700 ${theme === 'dark' ? 'bg-[#0f172a] border-white/5' : 'bg-slate-900 border-none text-white'}`}>

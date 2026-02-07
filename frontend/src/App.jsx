@@ -18,6 +18,7 @@ import Settlements from './pages/Admin/Settlements';
 import Profile from './pages/Customer/Profile';
 import DocumentVault from './pages/Customer/DocumentVault';
 import Notifications from './pages/Customer/Notifications';
+import Wallet from './pages/Customer/Wallet';
 import B2BBulkUpload from './components/B2B/B2BBulkUpload';
 
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -59,6 +60,7 @@ function App() {
                 <Route path="bulk" element={<B2BBulkUpload />} />
                 <Route path="vault" element={<DocumentVault />} />
                 <Route path="notifications" element={<Notifications />} />
+                <Route path="wallet" element={<Wallet />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="admin" element={<AdminDashboard />} />
                 <Route path="admin/users" element={<UserManagement />} />

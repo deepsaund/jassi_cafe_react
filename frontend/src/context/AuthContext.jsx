@@ -5,19 +5,34 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [settings, setSettings] = useState({});
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+    const fetchSettings = async () => {
         try {
-            const storedUser = localStorage.getItem('user');
-            if (storedUser && storedUser !== "undefined") {
-                setUser(JSON.parse(storedUser));
-            }
-        } catch (e) {
-            console.error("Auth init error:", e);
-        } finally {
-            setLoading(false);
+            const res = await fetch(`${API_BASE}/settings`);
+            const data = await res.json();
+            setSettings(data);
+        } catch (err) {
+            console.error("Settings fetch error:", err);
         }
+    };
+
+    useEffect(() => {
+        const init = async () => {
+            try {
+                const storedUser = localStorage.getItem('user');
+                if (storedUser && storedUser !== "undefined") {
+                    setUser(JSON.parse(storedUser));
+                }
+                await fetchSettings();
+            } catch (e) {
+                console.error("Auth init error:", e);
+            } finally {
+                setLoading(false);
+            }
+        };
+        init();
     }, []);
 
     const login = async (phone, password) => {
@@ -56,7 +71,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, refreshUser, loading }}>
+        <AuthContext.Provider value={{ user, settings, refreshSettings: fetchSettings, login, logout, refreshUser, loading }}>
             {!loading && children}
         </AuthContext.Provider>
     );

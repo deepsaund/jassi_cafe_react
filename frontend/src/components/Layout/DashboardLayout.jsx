@@ -25,7 +25,8 @@ import {
     Search,
     FolderLock,
     Eye,
-    Download
+    Download,
+    Wallet
 } from 'lucide-react';
 import { Drawer } from '../ui/Drawer';
 import { API_BASE } from '../../config';
@@ -57,7 +58,7 @@ const SidebarItem = ({ icon: Icon, label, onClick, active }) => {
 };
 
 export default function DashboardLayout() {
-    const { user, logout } = useAuth();
+    const { user, logout, settings } = useAuth();
     const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
@@ -99,6 +100,9 @@ export default function DashboardLayout() {
                 <SidebarItem icon={FileText} label="Services" active={isActive('/dashboard/services')} onClick={() => { navigate('/dashboard/services'); setMobileMenuOpen(false); }} />
                 <SidebarItem icon={Database} label="Document Vault" active={isActive('/dashboard/vault')} onClick={() => { navigate('/dashboard/vault'); setMobileMenuOpen(false); }} />
                 <SidebarItem icon={Bell} label="Notifications" active={isActive('/dashboard/notifications')} onClick={() => { navigate('/dashboard/notifications'); setMobileMenuOpen(false); }} />
+                {settings?.wallet_system_status === 'enabled' && (
+                    <SidebarItem icon={Wallet} label="My Wallet" active={isActive('/dashboard/wallet')} onClick={() => { navigate('/dashboard/wallet'); setMobileMenuOpen(false); }} />
+                )}
 
                 {user?.role === 'b2b' && (
                     <SidebarItem icon={FileSpreadsheet} label="Bulk Portal" active={isActive('/dashboard/bulk')} onClick={() => { navigate('/dashboard/bulk'); setMobileMenuOpen(false); }} />

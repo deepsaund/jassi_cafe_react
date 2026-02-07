@@ -34,8 +34,13 @@ export default function VerificationPage() {
 
                 if (ord && ord.document_ids) {
                     try {
-                        const docObj = JSON.parse(ord.document_ids);
-                        const ids = Object.values(docObj).join(',');
+                        const docObj = typeof ord.document_ids === 'string' ? JSON.parse(ord.document_ids) : ord.document_ids;
+                        const ids = Object.values(docObj).filter(id => id).join(',');
+
+                        if (!ids) {
+                            setDocuments([]);
+                            return;
+                        }
 
                         const docRes = await fetch(`${API_BASE}/documents/batch?ids=${ids}`, {
                             headers: { 'Authorization': `mock_token_${user.id}` }

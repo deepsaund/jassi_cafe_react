@@ -1,5 +1,7 @@
 <?php
 $db = new PDO('mysql:host=localhost;dbname=jassi_cafe', 'root', '');
-$stmt = $db->query('DESCRIBE orders');
+$stmt = $db->query('DESCRIBE documents');
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-echo json_encode($results, JSON_PRETTY_PRINT);
+foreach($results as $r) {
+    echo $r['Field'] . "\n";
+}
